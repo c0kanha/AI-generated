@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phone Bill Payment — Terminology</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #6366f1, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    header p { color: #64748b; font-size: 0.95rem; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: #1e2130;
+      border: 1px solid #2d3148;
+      border-radius: 12px;
+      padding: 20px 24px;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+
+    .card:hover {
+      border-color: #6366f1;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(99,102,241,0.15);
+    }
+
+    .card-hint {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      font-size: 0.7rem;
+      color: #3d4466;
+      letter-spacing: 0.04em;
+    }
+
+    .card:hover .card-hint { color: #6366f1; }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .badge-party    { background: #1e3a5f; color: #60a5fa; }
+    .badge-action   { background: #1a3a2a; color: #4ade80; }
+    .badge-system   { background: #3b1f5e; color: #c084fc; }
+    .badge-concept  { background: #3d2a10; color: #fb923c; }
+    .badge-network  { background: #1a3535; color: #2dd4bf; }
+    .badge-security { background: #3d1515; color: #f87171; }
+
+    .card h2 { font-size: 1rem; font-weight: 600; color: #f1f5f9; }
+    .card p  { font-size: 0.875rem; color: #94a3b8; line-height: 1.6; }
+
+    .section-title {
+      max-width: 1200px;
+      margin: 40px auto 16px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #475569;
+      padding-left: 4px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 60px;
+      color: #334155;
+      font-size: 0.8rem;
+    }
+
+    /* ── MODAL ── */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 20px;
+      overflow-y: auto;
+    }
+
+    .overlay.open { display: flex; }
+
+    .modal {
+      background: #161824;
+      border: 1px solid #2d3148;
+      border-radius: 16px;
+      max-width: 740px;
+      width: 100%;
+      padding: 36px 40px;
+      position: relative;
+      animation: slideUp 0.25s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: #475569;
+      font-size: 1.4rem;
+      cursor: pointer;
+      line-height: 1;
+      transition: color 0.15s;
+    }
+
+    .modal-close:hover { color: #e2e8f0; }
+
+    .modal-badge { margin-bottom: 12px; }
+
+    .modal h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 6px;
+    }
+
+    .modal-tagline {
+      font-size: 0.95rem;
+      color: #64748b;
+      margin-bottom: 28px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid #1e2538;
+    }
+
+    .modal section { margin-bottom: 28px; }
+
+    .modal section h3 {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #475569;
+      margin-bottom: 10px;
+    }
+
+    .modal section p {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      line-height: 1.75;
+    }
+
+    .example-box {
+      background: #0f1117;
+      border: 1px solid #1e2538;
+      border-left: 3px solid #6366f1;
+      border-radius: 8px;
+      padding: 16px 18px;
+      font-size: 0.875rem;
+      color: #94a3b8;
+      line-height: 1.7;
+    }
+
+    .example-box strong { color: #c7d2fe; }
+
+    .flow-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .flow-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .step-num {
+      min-width: 26px;
+      height: 26px;
+      background: #1e2538;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #6366f1;
+      margin-top: 2px;
+    }
+
+    .step-text { font-size: 0.875rem; color: #94a3b8; line-height: 1.6; }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .tag {
+      background: #1e2538;
+      border: 1px solid #2d3a5e;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      color: #7c8db5;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Phone Bill Payment — Terminology</h1>
+    <p>Click any card to explore a detailed explanation with examples</p>
+  </header>
+
+  <!-- PARTIES -->
+  <div class="section-title">Parties</div>
+  <div class="grid">
+
+    <div class="card" onclick="openModal('payer')">
+      <span class="card-hint">click to explore →</span>
+      <div class="card-header"><span class="badge badge-party">Party</span><h2>Payer</h2></div>
+      <p>The customer initiating the payment — you, the phone bill holder.</p>
+    </div>
+
+    <div class="card" onclick="openModal('merchant')">
+      <span class="card-hint">click to explore →</span>
+      <div class="card-header"><span class="badge badge-party">Party</span><h2>Merchant</h2></div>
+      <p>The entity receiving payment. In this context, your mobile carrier (e.g., AT&T, Verizon, T-Mobile).</p>
+    </div>
+
+    <div class="card" onclick="openModal('issuing-bank')">
+      <span class="card-hint">click to explore →</span>
+      <div class="card-header"><span class="badge badge-party">Party</span><h2>Issuing Bank</h2></div>
+      <p>The bank that issued your credit or debit card. It approves or declines the transaction after checking your balance and fraud signals.</p>
+    </div>
+
+    <div class="card" onclick="openModal('acquiring-bank')">
+      <span class="card-hint">click to explore →</span>
+      <div class="card-header"><span class="badge badge-party">Party</span><h2>Acquiring Bank</h2></div>
+      <p>The merchant's bank. It receives the settled funds on behalf of the carrier after the transaction is approved.</p>
+    </div>
+
+    <div class="card" onclick="openModal('payment-processor')">
+      <span class="card-hint">click to explore →</span>
+      <div class="card-header"><span class="badge badge-party">Party</span><h2>Payment Processor</h2></div>
+      <p>The intermediary that routes transaction data between the merchant, card networks, and banks.</p>
+    </div>
+
+  </div>
+
+  <!-- SYSTEMS -->
+  <div class="section-title">Systems &amp; Infrastructure</div>
+  <div class="grid">
+
+    <div class="card" onclick="openModal('payment-gateway')">
+      <span class="card-hint">click to explore →</span>
+      <div class="card-header"><span class="badge badge-system">System</span><h2>Payment Gateway</h2></div>
+      <p>Software that securely transmits payment data from the merchant to the processor. Examples: Stripe, Braintree, Adyen.</p>
+    </div>
+
+    <div class="card" onclick="openModal('card-network')">
+      <span class="card-hint">click to explore →</span>
+      <div class="card-header"><span class="badge badge-network">Network</span><h2>Card Network</h2></div>
+      <p>The rails that connect issuing and acquiring banks. Examples: Visa, Mastercard, Amex, Discover.</p>
+    </div>
+
+    <div class="card" onclick="openModal('ach-network')">
+      <span class="card-hint">click to explore →</span>
+      <div class="card-header"><span class="badge badge-network">Network</span><h2>ACH Network</h2></div>
+      <p>Automated Clearing House — the electronic network for bank-to-bank transfers in the US.</p>
+    </div>
+
+    <div class="card" onclick="openModal('digital-wallet')">
+      <span class="card-hint">click to explore →</span>
+      <div class="card-header"><span class="badge badge-system">System</span><h2>Digital Wallet</h2></div>
+      <p>An app or service that stores payment credentials and initiates payments on your behalf.</p>
+    </div>
+
+    <div class="card" onclick="openModal('autopay')">
+      <span class="card-hint">click to explore →</span>
+      <div class="card-header"><span class="badge badge-system">System</span><h2>Autopay</h2></div>
+      <p>A recurring payment instruction that automatically charges a saved payment method on the bill due date.</p>
+    </div>
+
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="section-title">Actions &amp; Stages</div>
+  <div class="grid">
+
+    <div class="card" onclick="openModal('authorization')">
+      <span class="card-hint">click to explore →</span>
+      <div class="card-header"><span class="badge badge-action">Action</span><h2>Authorization</h2></div>
+      <p>The issuing bank's approval (or decline) of a transaction. Holds the funds but does not transfer them yet.</p>
+    </div>
+
+    <div class="card" onclick="openModal('capture')">
+      <span class="card-hint">click to explore →</span>
+      <div class="card-header"><span class="badge badge-action">Action</span><h2>Capture</h2></div>
+      <p>The step that converts an authorization into an actual charge. Often happens at end-of-day in a batch process.</p>
+    </div>
+
+    <div class="card" onclick="openModal('settlement')">
+      <span class="card-hint">click to explore →</span>
+      <div class="card-header"><span class="badge badge-action">Action</span><h2>Settlement</h2></div>
+      <p>The final transfer of funds from the payer's bank to the merchant's acquiring bank. Takes 1–3 business days.</p>
+    </div>
+
+    <div class="card" onclick="openModal('batch-processing')">
+      <span class="card-hint">click to explore →</span>
+      <div class="card-header"><span class="badge badge-action">Action</span><h2>Batch Processing</h2></div>
+      <p>Grouping multiple captures and submitting them to the processor at once, usually at end of day.</p>
+    </div>
+
+    <div class="card" onclick="openModal('direct-debit')">
+      <span class="card-hint">click to explore →</span>
+      <div class="card-header"><span class="badge badge-action">Action</span><h2>Direct Debit</h2></div>
+      <p>A payment method where the merchant is authorized to pull funds directly from your bank account.</p>
+    </div>
+
+  </div>
+
+  <!-- CONCEPTS -->
+  <div class="section-title">Concepts &amp; Financial Terms</div>
+  <div class="grid">
+
+    <div class="card" onclick="openModal('interchange-fee')">
+      <span class="card-hint">click to explore →</span>
+      <div class="card-header"><span class="badge badge-concept">Concept</span><h2>Interchange Fee</h2></div>
+      <p>A fee paid by the acquiring bank to the issuing bank per transaction. Set by the card network.</p>
+    </div>
+
+    <div class="card" onclick="openModal('authorization-code')">
+      <span class="card-hint">click to explore →</span>
+      <div class="card-header"><span class="badge badge-concept">Concept</span><h2>Authorization Code</h2></div>
+      <p>A unique code returned by the issuing bank to confirm a transaction has been approved.</p>
+    </div>
+
+    <div class="card" onclick="openModal('fund-hold')">
+      <span class="card-hint">click to explore →</span>
+      <div class="card-header"><span class="badge badge-concept">Concept</span><h2>Fund Hold</h2></div>
+      <p>A temporary reservation of funds in the payer's account following authorization.</p>
+    </div>
+
+    <div class="card" onclick="openModal('receipt')">
+      <span class="card-hint">click to explore →</span>
+      <div class="card-header"><span class="badge badge-concept">Concept</span><h2>Receipt / Confirmation</h2></div>
+      <p>A record issued to the payer after a successful transaction. Digital (email, SMS, in-app) or printed.</p>
+    </div>
+
+  </div>
+
+  <!-- SECURITY -->
+  <div class="section-title">Security</div>
+  <div class="grid">
+
+    <div class="card" onclick="openModal('encryption')">
+      <span class="card-hint">click to explore →</span>
+      <div class="card-header"><span class="badge badge-security">Security</span><h2>Encryption</h2></div>
+      <p>Encoding payment data in transit so it cannot be read by unauthorized parties. Uses TLS/SSL.</p>
+    </div>
+
+    <div class="card" onclick="openModal('fraud-detection')">
+      <span class="card-hint">click to explore →</span>
+      <div class="card-header"><span class="badge badge-security">Security</span><h2>Fraud Detection</h2></div>
+      <p>Automated checks to flag suspicious transactions based on patterns, location, velocity, and other signals.</p>
+    </div>
+
+    <div class="card" onclick="openModal('tokenization')">
+      <span class="card-hint">click to explore →</span>
+      <div class="card-header"><span class="badge badge-security">Security</span><h2>Tokenization</h2></div>
+      <p>Replacing sensitive card data with a non-sensitive placeholder so the merchant never stores raw card numbers.</p>
+    </div>
+
+    <div class="card" onclick="openModal('pci-dss')">
+      <span class="card-hint">click to explore →</span>
+      <div class="card-header"><span class="badge badge-security">Security</span><h2>PCI DSS</h2></div>
+      <p>Payment Card Industry Data Security Standard — compliance requirements for all parties handling card data.</p>
+    </div>
+
+  </div>
+
+  <footer><p>Phone Bill Payment Terminology Reference &mdash; 2026</p></footer>
+
+  <!-- ── OVERLAY ── -->
+  <div class="overlay" id="overlay" onclick="closeOnOverlay(event)">
+    <div class="modal" id="modal">
+      <button class="modal-close" onclick="closeModal()">&#x2715;</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <script>
+    const data = {
+
+      'payer': {
+        badge: 'Party', badgeClass: 'badge-party',
+        title: 'Payer',
+        tagline: 'The person who owes money and initiates the payment.',
+        what: `The payer is you — the account holder responsible for settling the phone bill. You choose when, how, and through which channel to pay (app, website, phone, autopay). You are the starting point of every transaction.`,
+        how: [
+          'You log into your carrier\'s app and see a $85 bill due.',
+          'You tap "Pay Now" and select your Visa card ending in 4242.',
+          'Your payment details are securely passed to the gateway.',
+          'You receive a confirmation once the payment is processed.'
+        ],
+        example: `<strong>Real example:</strong> You open the Verizon app on your iPhone, see your monthly bill of $120, and tap "Pay with Apple Pay." You are the payer. The moment you authenticate with Face ID, the payment journey begins.`,
+        related: ['Merchant', 'Issuing Bank', 'Digital Wallet', 'Autopay']
+      },
+
+      'merchant': {
+        badge: 'Party', badgeClass: 'badge-party',
+        title: 'Merchant',
+        tagline: 'The business that provides the service and receives payment.',
+        what: `In a phone bill context, the merchant is your mobile carrier — AT&T, Verizon, T-Mobile, etc. They have a merchant account with an acquiring bank, a contract with a payment processor, and infrastructure to accept payments through their app or website.`,
+        how: [
+          'Carrier presents you with a bill at the end of the cycle.',
+          'Their system initiates a payment request when you click "Pay."',
+          'They receive an approved/declined signal back from the network.',
+          'They mark your account as "Paid" and send you a receipt.'
+        ],
+        example: `<strong>Real example:</strong> AT&T is the merchant. When you pay your bill, AT&T's payment system creates a charge request for $95.00 and forwards it through their payment gateway to collect the money owed to them.`,
+        related: ['Payer', 'Acquiring Bank', 'Payment Gateway', 'Payment Processor']
+      },
+
+      'issuing-bank': {
+        badge: 'Party', badgeClass: 'badge-party',
+        title: 'Issuing Bank',
+        tagline: 'Your bank — the one that gave you the card and approves the charge.',
+        what: `The issuing bank is the financial institution that issued your credit or debit card. When a payment request comes in, it's the issuing bank that makes the final approve/decline decision. It checks your available balance, credit limit, fraud risk score, and whether the card is active.`,
+        how: [
+          'Processor sends an authorization request to your card\'s network.',
+          'Network routes it to your issuing bank.',
+          'Bank runs balance check + fraud scoring in milliseconds.',
+          'Bank sends back: Approved (with auth code) or Declined (with reason code).'
+        ],
+        example: `<strong>Real example:</strong> You have a Chase Visa card. When you pay your T-Mobile bill, Chase is your issuing bank. Chase receives the $75 charge request, confirms you have sufficient credit, gives it a green light, and sends back authorization code "AUTH-77821."`,
+        related: ['Card Network', 'Authorization', 'Fund Hold', 'Fraud Detection']
+      },
+
+      'acquiring-bank': {
+        badge: 'Party', badgeClass: 'badge-party',
+        title: 'Acquiring Bank',
+        tagline: 'The carrier\'s bank — where your payment money ultimately lands.',
+        what: `The acquiring bank (also called the merchant bank) holds the merchant's business account. After settlement, it's the bank that actually deposits funds into the carrier's account. It sponsors the merchant's ability to accept card payments and bears some fraud/chargeback risk.`,
+        how: [
+          'Merchant signs up for a merchant account with an acquiring bank.',
+          'Authorization is approved by issuing bank.',
+          'After capture, processor initiates settlement.',
+          'Acquiring bank receives net funds (gross amount minus fees) and credits merchant account.'
+        ],
+        example: `<strong>Real example:</strong> Verizon uses JPMorgan Chase as its acquiring bank. When you pay Verizon $110, Chase (as acquirer) eventually receives those funds from your issuing bank, takes out interchange fees, and deposits the remainder into Verizon's business account.`,
+        related: ['Issuing Bank', 'Settlement', 'Payment Processor', 'Interchange Fee']
+      },
+
+      'payment-processor': {
+        badge: 'Party', badgeClass: 'badge-party',
+        title: 'Payment Processor',
+        tagline: 'The behind-the-scenes router connecting all parties.',
+        what: `The payment processor is the technical and financial intermediary that handles the actual movement of transaction data. It sits between the merchant (via gateway) and the card networks/banks. It routes authorization requests, manages settlement, and handles the reporting. Some processors also serve as acquirers.`,
+        how: [
+          'Gateway sends encrypted transaction data to the processor.',
+          'Processor identifies the card network (Visa/MC) and routes the auth request.',
+          'Receives approved/declined response and relays it back to the merchant.',
+          'At end of day, handles batch settlement across all transactions.'
+        ],
+        example: `<strong>Real example:</strong> A carrier uses Fiserv as its processor. When you swipe your Mastercard, Fiserv receives the transaction from the gateway, routes it to Mastercard's network, gets Chase's approval, and reports the result back — all in under 2 seconds.`,
+        related: ['Payment Gateway', 'Card Network', 'Acquiring Bank', 'Settlement']
+      },
+
+      'payment-gateway': {
+        badge: 'System', badgeClass: 'badge-system',
+        title: 'Payment Gateway',
+        tagline: 'The secure tunnel between the merchant\'s website and the payment processor.',
+        what: `A payment gateway is software (usually an API or hosted form) that captures your payment details, encrypts them, and passes them securely to the payment processor. It's the merchant-facing side of the payment infrastructure. Without it, merchants would have to handle raw card data — a huge security liability.`,
+        how: [
+          'You enter card details on the carrier\'s payment page.',
+          'Gateway captures and encrypts the data using TLS.',
+          'Sends the encrypted payload to the payment processor.',
+          'Receives the response (approved/declined) and relays it to the merchant\'s system.'
+        ],
+        example: `<strong>Real example:</strong> T-Mobile's website uses Stripe as its payment gateway. When you type your card number, Stripe's JavaScript library captures it client-side, tokenizes it, and sends a secure charge request to Stripe's servers — your raw card number never touches T-Mobile's servers.`,
+        related: ['Payment Processor', 'Encryption', 'Tokenization', 'Merchant']
+      },
+
+      'card-network': {
+        badge: 'Network', badgeClass: 'badge-network',
+        title: 'Card Network',
+        tagline: 'The global rails that connect every bank transaction.',
+        what: `Card networks (also called payment schemes) are the infrastructure that connects issuing banks and acquiring banks worldwide. They set the rules for how transactions work, define interchange fees, handle dispute resolution, and route authorization messages between banks. They don't hold money themselves — they're the message layer.`,
+        how: [
+          'Processor identifies the card brand (Visa, Mastercard, Amex).',
+          'Routes auth request through that network\'s infrastructure.',
+          'Network finds the issuing bank and forwards the request.',
+          'Response (approve/decline) flows back through the same network.'
+        ],
+        example: `<strong>Real example:</strong> You use your Mastercard to pay your Sprint bill. The payment processor sends the charge to the Mastercard network. Mastercard identifies your issuing bank (Bank of America), forwards the request, gets the approval, and routes it back. Mastercard never touched your money — just the message.`,
+        related: ['Issuing Bank', 'Acquiring Bank', 'Interchange Fee', 'Payment Processor']
+      },
+
+      'ach-network': {
+        badge: 'Network', badgeClass: 'badge-network',
+        title: 'ACH Network',
+        tagline: 'Direct bank-to-bank transfers — no cards involved.',
+        what: `ACH (Automated Clearing House) is a US electronic funds transfer network operated by Nacha. It moves money directly between bank accounts in batches. It's used for direct debit payments, payroll deposits, and bill pay. ACH is slower than card payments (1–3 business days) but has much lower fees (often cents vs. percentage of transaction).`,
+        how: [
+          'You provide your bank account + routing number to the carrier.',
+          'Carrier submits an ACH debit entry to their bank (originating depository).',
+          'Entry is batched and sent through ACH operator (FedACH or The Clearing House).',
+          'Your bank (receiving depository) receives the debit and moves the funds.'
+        ],
+        example: `<strong>Real example:</strong> You set up bank account autopay for your AT&T bill. On the 15th, AT&T submits an ACH pull for $95 to your Chase checking account. Chase processes it overnight and the funds transfer by the 17th. No card network, no interchange fee — AT&T pays just ~$0.25 for the transaction.`,
+        related: ['Direct Debit', 'Autopay', 'Settlement', 'Payer']
+      },
+
+      'digital-wallet': {
+        badge: 'System', badgeClass: 'badge-system',
+        title: 'Digital Wallet',
+        tagline: 'A secure app that pays on your behalf using stored credentials.',
+        what: `A digital wallet stores your payment credentials (card numbers, bank accounts) and presents them to merchants using tokenization and device authentication. When you pay, the wallet provides a one-time token — not your actual card number — making it more secure than typing card details manually.`,
+        how: [
+          'You add your card to Apple Pay / Google Pay.',
+          'Wallet tokenizes the card number (creates a device-specific token).',
+          'When you pay, the wallet sends the token + a cryptogram (one-time code).',
+          'Processor validates the token with the card network, authorizes the payment.'
+        ],
+        example: `<strong>Real example:</strong> You tap your iPhone at a Verizon store to pay your bill. Apple Pay sends a 16-digit device token (not your real Visa number) plus a transaction-specific cryptogram. Even if someone intercepted this, they couldn't reuse it. Your actual card number was never transmitted.`,
+        related: ['Tokenization', 'Encryption', 'Card Network', 'Payer']
+      },
+
+      'autopay': {
+        badge: 'System', badgeClass: 'badge-system',
+        title: 'Autopay',
+        tagline: 'Set it and forget it — automatic charges on your due date.',
+        what: `Autopay is a standing instruction that authorizes a merchant to charge your payment method automatically on each billing cycle. You set it up once and don't need to take action each month. Carriers often offer discounts (e.g., $5–10/month off) for enabling autopay since it reduces late payment risk for them.`,
+        how: [
+          'You enroll in autopay and save a card or bank account.',
+          'Each month, the carrier automatically initiates a charge on your due date.',
+          'The payment flows through the normal authorization → capture → settlement process.',
+          'You receive a confirmation notification but no action is needed.'
+        ],
+        example: `<strong>Real example:</strong> You enroll in T-Mobile autopay with your debit card. On the 8th of each month, T-Mobile automatically charges $65 to your card. You get a $5/line discount for doing so. The charge appears on your bank statement as "T-MOBILE AUTO PAY."`,
+        related: ['Direct Debit', 'ACH Network', 'Merchant', 'Payer']
+      },
+
+      'authorization': {
+        badge: 'Action', badgeClass: 'badge-action',
+        title: 'Authorization',
+        tagline: 'The bank\'s approval — funds reserved but not yet moved.',
+        what: `Authorization is the real-time process where the issuing bank reviews and approves (or declines) a transaction. It places a hold on the funds equal to the transaction amount. The money doesn't move yet — it's just "earmarked." Authorizations can expire if not captured (typically within 7 days).`,
+        how: [
+          'Merchant sends auth request through gateway → processor → card network → issuing bank.',
+          'Issuing bank checks: Is the card valid? Enough funds/credit? Fraud flags?',
+          'Bank responds: Approved (with 6-digit auth code) or Declined (with decline code).',
+          'Approved amount is "held" — subtracted from available balance but not transferred.'
+        ],
+        example: `<strong>Real example:</strong> You pay your $80 Verizon bill. Verizon's system sends an auth request. Bank of America (your issuing bank) checks your $500 available balance, sees no fraud flags, and responds: "Approved — AUTH CODE: 482931." Your available balance drops to $420 immediately, but the $80 hasn't left your account yet.`,
+        related: ['Capture', 'Fund Hold', 'Authorization Code', 'Issuing Bank']
+      },
+
+      'capture': {
+        badge: 'Action', badgeClass: 'badge-action',
+        title: 'Capture',
+        tagline: 'Converting the authorization into a real charge.',
+        what: `Capture is the instruction from the merchant to the processor to actually collect the authorized funds. It's a separate step from authorization — you can authorize without capturing (e.g., if an order is cancelled). Most bill payments are "auth + capture" simultaneously (auto-capture), but some merchants batch captures at end of day.`,
+        how: [
+          'Merchant confirms the transaction is valid and sends a capture request.',
+          'Processor submits it in a batch to the card network.',
+          'Issuing bank moves the held funds to settlement.',
+          'Merchant\'s acquiring bank queues the incoming funds.'
+        ],
+        example: `<strong>Real example:</strong> AT&T receives 50,000 bill payments on a given day. Rather than capturing each one individually, their system batches all of them at 11 PM and submits them to Fiserv (processor) at once. Each capture converts its authorization hold into an actual transfer.`,
+        related: ['Authorization', 'Settlement', 'Batch Processing', 'Payment Processor']
+      },
+
+      'settlement': {
+        badge: 'Action', badgeClass: 'badge-action',
+        title: 'Settlement',
+        tagline: 'The actual money movement — funds arrive in the merchant\'s account.',
+        what: `Settlement is the final stage where funds physically move from the cardholder's issuing bank to the merchant's acquiring bank. This happens after capture, usually within 1–3 business days. The amount received by the merchant is net of interchange fees and processor fees.`,
+        how: [
+          'Processor submits captured transactions to card networks for settlement.',
+          'Card network facilitates the interbank fund transfer.',
+          'Issuing bank sends funds to acquiring bank (minus interchange fee).',
+          'Acquiring bank deposits net amount into merchant\'s account (minus processor fee).'
+        ],
+        example: `<strong>Real example:</strong> You paid your $100 Sprint bill on Monday. After capture Monday night, Visa processes the interbank transfer Tuesday. By Wednesday, Sprint's JPMorgan acquiring account receives $97.50 — the $100 minus a $1.80 interchange fee and a $0.70 processor fee. The $2.50 difference is the cost Sprint pays to accept your Visa card.`,
+        related: ['Capture', 'Interchange Fee', 'Acquiring Bank', 'Issuing Bank']
+      },
+
+      'batch-processing': {
+        badge: 'Action', badgeClass: 'badge-action',
+        title: 'Batch Processing',
+        tagline: 'Grouping many transactions and processing them all at once.',
+        what: `Instead of settling each transaction individually in real time, merchants group (batch) all their day's authorized transactions and submit them together — usually once per day. This is more efficient and reduces processing overhead. It's the reason there can be a delay between your authorization and when the charge fully posts.`,
+        how: [
+          'Merchant\'s system accumulates authorized transactions throughout the day.',
+          'At a set time (often midnight), the batch is "closed" and submitted to the processor.',
+          'Processor routes each transaction to the appropriate card network for settlement.',
+          'Banks exchange funds; merchant receives a lump settlement deposit.'
+        ],
+        example: `<strong>Real example:</strong> T-Mobile processes 2 million bill payments a month. Rather than real-time individual settlements, their system closes a batch at 11:59 PM each day and submits all that day's captures to Worldpay. Worldpay sends one large settlement file to the card networks. T-Mobile receives a consolidated deposit from their acquiring bank the next business day.`,
+        related: ['Capture', 'Settlement', 'Payment Processor', 'Merchant']
+      },
+
+      'direct-debit': {
+        badge: 'Action', badgeClass: 'badge-action',
+        title: 'Direct Debit',
+        tagline: 'The merchant pulls money from your bank account directly.',
+        what: `Direct debit is a pull-based payment mechanism where you give the merchant permission to withdraw funds directly from your bank account. Unlike card payments (where you push a payment), the merchant initiates the pull. It uses the ACH network in the US (or BACS/SEPA in other countries) and typically has very low fees.`,
+        how: [
+          'You provide your bank routing number and account number to the carrier.',
+          'You sign a mandate authorizing the merchant to debit your account.',
+          'On the due date, merchant submits an ACH debit request.',
+          'Funds are pulled from your account and deposited to the merchant\'s account within 1–3 days.'
+        ],
+        example: `<strong>Real example:</strong> You set up direct debit for your AT&T bill. You give AT&T your Wells Fargo account details. Each month, AT&T sends an ACH debit instruction to their bank, which sends it through the ACH network to Wells Fargo. Wells Fargo debits your checking account and the funds reach AT&T 2 days later.`,
+        related: ['ACH Network', 'Autopay', 'Issuing Bank', 'Acquiring Bank']
+      },
+
+      'interchange-fee': {
+        badge: 'Concept', badgeClass: 'badge-concept',
+        title: 'Interchange Fee',
+        tagline: 'The fee that flows from the merchant\'s bank to your bank per transaction.',
+        what: `Interchange is a fee set by card networks (Visa, Mastercard) and paid by the acquiring bank to the issuing bank for every card transaction. It compensates the issuing bank for the risk, fraud management, and cost of providing credit. Merchants ultimately bear this cost because it's deducted from their settlement amount. Rates vary by card type, merchant category, and transaction method.`,
+        how: [
+          'You pay with a rewards credit card (higher interchange = more rewards funded).',
+          'The card network applies the interchange rate for that card type.',
+          'Acquiring bank pays that fee to your issuing bank.',
+          'Merchant receives settlement amount minus interchange + processor markup.'
+        ],
+        example: `<strong>Real example:</strong> You pay your $100 Verizon bill with a Chase Sapphire card. Visa's interchange rate for rewards cards is ~1.8%. Chase (issuing bank) receives $1.80 from Verizon's acquiring bank. That $1.80 partially funds your Chase rewards points. Verizon only receives ~$97.50 after all fees.`,
+        related: ['Card Network', 'Acquiring Bank', 'Issuing Bank', 'Settlement']
+      },
+
+      'authorization-code': {
+        badge: 'Concept', badgeClass: 'badge-concept',
+        title: 'Authorization Code',
+        tagline: 'The unique stamp that proves your bank said yes.',
+        what: `An authorization code is a 6-character alphanumeric string returned by the issuing bank when it approves a transaction. It's the bank's official confirmation that funds are reserved. Merchants store this code as proof of approval. If a dispute arises later, the authorization code is key evidence that the transaction was legitimately approved.`,
+        how: [
+          'Issuing bank approves the transaction.',
+          'Bank generates a unique code (e.g., "A8K3F2") tied to that specific transaction.',
+          'Code is returned through the network → processor → gateway → merchant.',
+          'Merchant stores the code in their transaction record.'
+        ],
+        example: `<strong>Real example:</strong> You pay your $75 Sprint bill. Bank of America approves it and returns auth code "748291." Sprint's system stores this. Three weeks later, you dispute the charge. Sprint provides auth code "748291" as proof that Bank of America explicitly approved the $75 charge on that date — the dispute is closed in Sprint's favor.`,
+        related: ['Authorization', 'Issuing Bank', 'Fraud Detection']
+      },
+
+      'fund-hold': {
+        badge: 'Concept', badgeClass: 'badge-concept',
+        title: 'Fund Hold',
+        tagline: 'Money reserved but not yet transferred — a temporary lock.',
+        what: `A fund hold (or authorization hold) is placed on your account as soon as an authorization is approved. The held amount is subtracted from your available balance but hasn't actually left your account. The hold converts to a real debit when capture occurs, or it expires and is released if capture never happens (typically after 7 days).`,
+        how: [
+          'Authorization approved → issuing bank places a hold equal to the charge amount.',
+          'Your available balance decreases immediately.',
+          'Hold remains until: (a) capture occurs and the debit finalizes, or (b) hold expires.',
+          'If merchant never captures, the hold releases automatically and your balance is restored.'
+        ],
+        example: `<strong>Real example:</strong> Your bank account has $200. You pay a $90 T-Mobile bill. Authorization is approved and a $90 hold is placed. Your available balance now shows $110, even though the $90 hasn't left yet. Two days later, T-Mobile captures the payment — the $90 fully posts as a debit, and your actual balance drops to $110.`,
+        related: ['Authorization', 'Capture', 'Issuing Bank']
+      },
+
+      'receipt': {
+        badge: 'Concept', badgeClass: 'badge-concept',
+        title: 'Receipt / Confirmation',
+        tagline: 'Proof that your payment was received and accepted.',
+        what: `A receipt or payment confirmation is the final acknowledgment sent to the payer after a successful transaction. It typically includes the amount paid, date, payment method (last 4 digits of card), a transaction or confirmation number, and billing period covered. It serves as your record and can be used to resolve any billing disputes.`,
+        how: [
+          'Merchant receives successful authorization response.',
+          'Merchant\'s system records the payment against your account.',
+          'Confirmation is generated with transaction ID, amount, date, payment method.',
+          'Sent to you via email, SMS, or shown in-app. Your account status updates to "Paid."'
+        ],
+        example: `<strong>Real example:</strong> After paying your $95 AT&T bill, you get an email: "Payment Confirmed — $95.00 charged to Visa ending 4242 on March 15, 2026. Confirmation #: ATT-20260315-88291. Your account is paid through April 14, 2026." Keep this if you ever need to dispute an incorrect charge.`,
+        related: ['Authorization Code', 'Payer', 'Merchant']
+      },
+
+      'encryption': {
+        badge: 'Security', badgeClass: 'badge-security',
+        title: 'Encryption',
+        tagline: 'Scrambling your payment data so only the intended recipient can read it.',
+        what: `Encryption converts your sensitive payment data (card number, CVV, expiry) into unreadable ciphertext during transmission. Payment gateways use TLS (Transport Layer Security) to encrypt data in transit. Even if intercepted by a hacker, encrypted data is useless without the decryption key. Modern TLS uses 256-bit AES encryption.`,
+        how: [
+          'You enter card details on the payment page.',
+          'Browser establishes a TLS handshake with the gateway server (look for https:// + padlock).',
+          'Data is encrypted before it leaves your browser.',
+          'Only the gateway server — with the correct private key — can decrypt and read it.'
+        ],
+        example: `<strong>Real example:</strong> You type your Visa number on Verizon's payment page. Your browser encrypts it into something like "4f3a8b2c..." before sending it. A hacker sitting on your WiFi intercepting traffic sees only gibberish. The raw card number never travels unprotected across the internet.`,
+        related: ['Payment Gateway', 'Tokenization', 'PCI DSS']
+      },
+
+      'fraud-detection': {
+        badge: 'Security', badgeClass: 'badge-security',
+        title: 'Fraud Detection',
+        tagline: 'Real-time AI analysis to spot and block suspicious transactions.',
+        what: `Fraud detection systems run automated checks on every transaction in real time — usually in milliseconds. Both the issuing bank and payment processor run their own models. They analyze dozens of signals: transaction velocity, location, device fingerprint, spending patterns, IP address, and more. A high fraud score triggers a decline or step-up verification (like a one-time code).`,
+        how: [
+          'Transaction request arrives at the issuing bank.',
+          'Fraud scoring engine analyzes: location match? Normal spending pattern? New device? VPN?',
+          'Risk score is calculated (e.g., 0–100, higher = more suspicious).',
+          'Score below threshold → approve. Above threshold → decline or trigger 3DS challenge.'
+        ],
+        example: `<strong>Real example:</strong> You normally pay your phone bill from Chicago. Today someone tries to pay your bill using your card number from a device in Romania at 3 AM. Chase's fraud system flags it: unusual location (score +40), unusual time (score +20), new device (score +30) → total score 90/100 → automatic decline and fraud alert sent to you.`,
+        related: ['Issuing Bank', 'Authorization', 'Encryption', 'Tokenization']
+      },
+
+      'tokenization': {
+        badge: 'Security', badgeClass: 'badge-security',
+        title: 'Tokenization',
+        tagline: 'Swapping your real card number for a fake one that\'s useless to thieves.',
+        what: `Tokenization replaces your sensitive card number (PAN — Primary Account Number) with a randomly generated substitute called a token. The token has the same format as a card number but cannot be reverse-engineered to reveal the original. Tokens are specific to a merchant, device, or transaction — so even if stolen, they can't be used elsewhere.`,
+        how: [
+          'You add your card to a digital wallet or save it with a merchant.',
+          'The card network\'s token service generates a device/merchant-specific token.',
+          'The token is stored (by the wallet or merchant) instead of your real card number.',
+          'At payment time, the token is sent — the real PAN never travels across the internet.'
+        ],
+        example: `<strong>Real example:</strong> You save your Mastercard to your Google Pay. Google doesn't store "5412 7534 1234 5678" — instead, Mastercard's MDES (token service) generates a token like "5412 8800 9987 3341." This token only works on your specific Android device. If your phone is stolen and the token is extracted, it's useless on any other device.`,
+        related: ['Digital Wallet', 'Encryption', 'PCI DSS', 'Card Network']
+      },
+
+      'pci-dss': {
+        badge: 'Security', badgeClass: 'badge-security',
+        title: 'PCI DSS',
+        tagline: 'The global rulebook every company touching card data must follow.',
+        what: `PCI DSS (Payment Card Industry Data Security Standard) is a set of 12 security requirements developed by Visa, Mastercard, Amex, Discover, and JCB to protect cardholder data. Any company that stores, processes, or transmits card data must comply. Violations can result in fines, higher interchange rates, or being banned from accepting cards entirely.`,
+        how: [
+          'A company handles card payments → must become PCI compliant.',
+          'Compliance level (1–4) depends on transaction volume (Level 1 = >6M/year).',
+          'Requirements include: firewall, encryption, access controls, vulnerability scanning, audit logs.',
+          'Annual audit by a Qualified Security Assessor (QSA) for large merchants.'
+        ],
+        example: `<strong>Real example:</strong> AT&T processes hundreds of millions of card payments per year (PCI Level 1 — the highest). They must: encrypt all stored card data, restrict access to payment systems to authorized staff only, run quarterly network vulnerability scans, and submit to an annual audit by an independent QSA. Failure would risk Visa revoking their ability to accept Visa cards.`,
+        related: ['Encryption', 'Tokenization', 'Payment Gateway', 'Merchant']
+      }
+
+    };
+
+    function openModal(key) {
+      const d = data[key];
+      if (!d) return;
+
+      const relatedTags = d.related.map(r => `<span class="tag">${r}</span>`).join('');
+      const steps = d.how.map((s, i) =>
+        `<div class="flow-step"><span class="step-num">${i+1}</span><span class="step-text">${s}</span></div>`
+      ).join('');
+
+      document.getElementById('modal-content').innerHTML = `
+        <div class="modal-badge"><span class="badge ${d.badgeClass}">${d.badge}</span></div>
+        <h2>${d.title}</h2>
+        <p class="modal-tagline">${d.tagline}</p>
+
+        <section>
+          <h3>What it is</h3>
+          <p>${d.what}</p>
+        </section>
+
+        <section>
+          <h3>How it works — step by step</h3>
+          <div class="flow-steps">${steps}</div>
+        </section>
+
+        <section>
+          <h3>Real-world example</h3>
+          <div class="example-box">${d.example}</div>
+        </section>
+
+        <section>
+          <h3>Related terms</h3>
+          <div class="tag-list">${relatedTags}</div>
+        </section>
+      `;
+
+      document.getElementById('overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function closeOnOverlay(e) {
+      if (e.target === document.getElementById('overlay')) closeModal();
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  </script>
+
+</body>
+</html>

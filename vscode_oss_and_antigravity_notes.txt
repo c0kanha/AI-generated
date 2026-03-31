@@ -1,0 +1,38 @@
+Q1: What is Antigravity?
+-----------------------
+Antigravity is a VSCode-based application/tool (version 1.21.9) built on top of VSCode OSS.
+It runs on Electron 39.2.3, Chromium 142.0.7444.175, Node.js 22.21.1, and macOS (Darwin arm64).
+Like Cursor and VSCodium, Antigravity uses the open-source VSCode codebase as its foundation.
+
+Version Info:
+  Antigravity: 1.21.9
+  VSCode OSS:  1.107.0
+  Electron:    39.2.3
+  Node.js:     22.21.1
+  OS:          Darwin arm64 25.0.0
+
+
+Q2: What is VSCode OSS?
+-----------------------
+VSCode OSS (Open Source Software) is the fully open-source build of Visual Studio Code.
+
+  VSCode OSS (open source build)     vs     VS Code (Microsoft product)
+  - MIT license (fully open)                - Proprietary (Microsoft)
+  - No telemetry                            - Microsoft telemetry
+  - Open VSX extension registry            - Microsoft Marketplace
+  - No Microsoft branding                   - Microsoft branding
+  - Core features only                      - GitHub Copilot, Live Share, etc.
+
+Microsoft takes the VSCode OSS base and adds proprietary components to produce
+the "Visual Studio Code" product available at microsoft.com.
+
+
+Q3: Is VSCode OSS owned by Microsoft?
+--------------------------------------
+Yes — Microsoft owns VSCode OSS. They created and maintain it at github.com/microsoft/vscode.
+It is released under the MIT license, which means anyone can freely use, modify, and
+redistribute it. "OSS" refers to the license model, not the ownership.
+
+  - Microsoft owns the source code
+  - MIT license lets others build on top of it
+  - Projects like VSCodium, Cursor, and Antigravity are built from this open-source base
