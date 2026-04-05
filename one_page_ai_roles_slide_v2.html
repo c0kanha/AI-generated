@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI and Job Fear - One Slide</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+    }
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      padding: 48px 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      background:
+        radial-gradient(circle at top right, rgba(59,130,246,0.18), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(168,85,247,0.16), transparent 30%),
+        #0f172a;
+    }
+    h1 {
+      margin: 0 0 24px 0;
+      font-size: 38px;
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 22px;
+      width: 100%;
+    }
+    .item {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-size: 21px;
+      line-height: 1.28;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    }
+    .role {
+      font-weight: 800;
+      color: #93c5fd;
+    }
+    .footer {
+      margin-top: 18px;
+      font-size: 24px;
+      line-height: 1.25;
+      font-weight: 700;
+      color: #fde68a;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <h1>Most roles think AI is coming to replace them.</h1>
+
+    <div class="grid">
+      <div class="item"><span class="role">Business:</span> “AI can write my docs, plans, and presentations... so even my meetings may become optional.”</div>
+      <div class="item"><span class="role">Developers:</span> “AI can generate my code... so typing fast is no longer a superpower.”</div>
+      <div class="item"><span class="role">SMEs:</span> “AI can learn the business rules in my head... so my ‘only I know this’ advantage feels shaky.”</div>
+      <div class="item"><span class="role">QA:</span> “AI can create test cases and catch bugs faster... so even my defect list is not safe.”</div>
+      <div class="item"><span class="role">Technical Architects:</span> “AI can suggest system designs and integration patterns... so high-level thinking no longer feels untouchable.”</div>
+      <div class="item"><span class="role">PMs / BAs:</span> “AI can turn meetings into requirements, tasks, and updates... so even status calls are starting to look dangerous.”</div>
+      <div class="item"><span class="role">Incident Teams:</span> “AI can read tickets, spot patterns, suggest root causes, and draft resolutions... so even production panic now has competition.”</div>
+      <div class="item"><span class="role">Support Teams:</span> “AI can answer the same questions instantly, politely, and 24/7... so patience is no longer a job skill.”</div>
+      <div class="item"><span class="role">Operations Teams:</span> “AI can monitor systems, raise alerts, and handle routine issues automatically... so night support may sleep before we do.”</div>
+      <div class="item"><span class="role">Designers:</span> “AI can generate screens, flows, and variations in seconds... so blank canvases are scared too.”</div>
+    </div>
+  </div>
+</body>
+</html>

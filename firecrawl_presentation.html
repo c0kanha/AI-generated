@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Firecrawl — Truth-Based Presentation</title>
+  <style>
+    :root {
+      --bg1: #0b1020;
+      --bg2: #131a2f;
+      --panel: rgba(255,255,255,0.08);
+      --text: #f7f9fc;
+      --muted: #c9d2e3;
+      --accent: #7dd3fc;
+      --accent2: #a78bfa;
+      --good: #86efac;
+      --warn: #fca5a5;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background: radial-gradient(circle at top left, #1d2848 0%, var(--bg1) 45%, #090d18 100%);
+      color: var(--text);
+    }
+    .deck {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+    }
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 4.2vh 5.2vw;
+      display: none;
+      grid-template-rows: auto 1fr auto;
+      gap: 2.2vh;
+      background:
+        linear-gradient(135deg, rgba(125,211,252,0.10), transparent 25%),
+        linear-gradient(315deg, rgba(167,139,250,0.10), transparent 25%);
+    }
+    .slide.active { display: grid; }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.25rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+    .badge {
+      display: inline-block;
+      padding: 10px 16px;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      font-weight: 600;
+      color: var(--accent);
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(2.8rem, 5vw, 4.6rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+    h2 {
+      margin: 0;
+      font-size: clamp(2.2rem, 4.2vw, 3.6rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+    .subtitle {
+      font-size: clamp(1.35rem, 2.25vw, 2rem);
+      color: var(--muted);
+      max-width: 1000px;
+      line-height: 1.35;
+    }
+    .content {
+      display: grid;
+      align-content: center;
+      gap: 1.4rem;
+    }
+    .big-point {
+      font-size: clamp(2rem, 3.2vw, 3rem);
+      line-height: 1.18;
+      font-weight: 700;
+      max-width: 1100px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 24px;
+      padding: 24px 28px;
+      backdrop-filter: blur(8px);
+    }
+    .card h3 {
+      margin: 0 0 12px;
+      font-size: clamp(1.35rem, 2vw, 1.85rem);
+      color: var(--accent);
+    }
+    ul {
+      margin: 0;
+      padding-left: 1.15em;
+    }
+    li {
+      font-size: clamp(1.4rem, 2.35vw, 2rem);
+      line-height: 1.28;
+      margin: 0.45em 0;
+      color: var(--text);
+    }
+    .small li { font-size: clamp(1.2rem, 1.9vw, 1.55rem); }
+    .em {
+      color: var(--accent);
+      font-weight: 800;
+    }
+    .good { color: var(--good); font-weight: 700; }
+    .warn { color: var(--warn); font-weight: 700; }
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+    .dots {
+      display: flex;
+      gap: 10px;
+    }
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.18);
+    }
+    .dot.active { background: var(--accent); }
+    .quote {
+      font-size: clamp(1.9rem, 3.2vw, 2.9rem);
+      line-height: 1.22;
+      font-weight: 800;
+      max-width: 1100px;
+    }
+    .split {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 28px;
+      align-items: center;
+    }
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .pill {
+      padding: 16px 20px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.10);
+      font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+      font-weight: 700;
+    }
+    .nav {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+    .nav button {
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: #08111f;
+      background: #e6f6ff;
+    }
+    .nav button:hover { transform: translateY(-1px); }
+    @media (max-width: 1000px) {
+      .grid-2, .split { grid-template-columns: 1fr; }
+      .slide { padding: 28px 24px; }
+      .nav { right: 10px; bottom: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck">
+    <section class="slide active">
+      <div class="topbar">
+        <span class="badge">Presentation</span>
+        <span>Firecrawl</span>
+      </div>
+      <div class="content">
+        <h1>Firecrawl</h1>
+        <div class="quote">A truth-based view of what it does — and what is just hype.</div>
+        <div class="subtitle">Large-font, concise presentation for speaking or screen sharing.</div>
+      </div>
+      <div class="footer">
+        <span>1 / 7</span>
+        <div class="dots"></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="topbar">
+        <span class="badge">What it is</span>
+        <span>Core Definition</span>
+      </div>
+      <div class="content">
+        <h2>What is Firecrawl?</h2>
+        <div class="big-point">Firecrawl is a <span class="em">web data platform and API</span> that helps developers collect website content and convert it into <span class="em">clean, machine-friendly output</span>.</div>
+        <ul>
+          <li>Useful for software apps and AI workflows</li>
+          <li>Turns messy web pages into structured data</li>
+          <li>Available as open source + hosted cloud</li>
+        </ul>
+      </div>
+      <div class="footer">
+        <span>2 / 7</span>
+        <div class="dots"></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="topbar">
+        <span class="badge">Capabilities</span>
+        <span>What it can do</span>
+      </div>
+      <div class="content">
+        <h2>Main capabilities</h2>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Data collection</h3>
+            <ul class="small">
+              <li><span class="em">Scrape</span> single pages</li>
+              <li><span class="em">Crawl</span> full websites</li>
+              <li><span class="em">Map</span> URLs and site structure</li>
+              <li><span class="em">Search</span> the web + fetch content</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Data handling</h3>
+            <ul class="small">
+              <li>Return Markdown, HTML, JSON, screenshots</li>
+              <li>Handle dynamic / JS-rendered pages</li>
+              <li>Support extraction workflows</li>
+              <li>Work with PDFs and images</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+        <span>3 / 7</span>
+        <div class="dots"></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="topbar">
+        <span class="badge">Agent actions</span>
+        <span>Beyond scraping</span>
+      </div>
+      <div class="content split">
+        <div>
+          <h2>It can also interact with websites</h2>
+          <ul>
+            <li>Click buttons</li>
+            <li>Fill forms</li>
+            <li>Authenticate in a browser sandbox</li>
+            <li>Extract data based on a prompt</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Simple summary</h3>
+          <div class="big-point" style="font-size: clamp(1.8rem,2.5vw,2.4rem);">Not just page scraping.<br>It supports <span class="em">multi-step web interaction</span> and <span class="em">structured extraction</span>.</div>
+        </div>
+      </div>
+      <div class="footer">
+        <span>4 / 7</span>
+        <div class="dots"></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="topbar">
+        <span class="badge">Truth vs hype</span>
+        <span>Important distinction</span>
+      </div>
+      <div class="content">
+        <h2>What is true?</h2>
+        <div class="grid-2">
+          <div class="card">
+            <h3 class="good">Truth</h3>
+            <ul class="small">
+              <li>It reduces web data engineering effort</li>
+              <li>It helps avoid building every scraper from scratch</li>
+              <li>It is useful when AI needs fresh web data</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3 class="warn">Hype</h3>
+            <ul class="small">
+              <li>“AWS moment for web data”</li>
+              <li>“Web data is the new oil”</li>
+              <li>“Guaranteed multi-million dollar business”</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+        <span>5 / 7</span>
+        <div class="dots"></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="topbar">
+        <span class="badge">Business angle</span>
+        <span>Practical use</span>
+      </div>
+      <div class="content">
+        <h2>Where it can help</h2>
+        <div class="pill-row">
+          <div class="pill">Price monitoring</div>
+          <div class="pill">SEO / audit reports</div>
+          <div class="pill">Job aggregation</div>
+          <div class="pill">Research workflows</div>
+          <div class="pill">Review tracking</div>
+          <div class="pill">Competitive intelligence</div>
+        </div>
+        <div class="big-point">But the value comes from <span class="em">solving a real problem</span>, packaging the output well, and finding customers — not from the scraping tool alone.</div>
+      </div>
+      <div class="footer">
+        <span>6 / 7</span>
+        <div class="dots"></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="topbar">
+        <span class="badge">Takeaway</span>
+        <span>Final slide</span>
+      </div>
+      <div class="content">
+        <h2>Final takeaway</h2>
+        <div class="quote">Firecrawl is best understood as a <span class="em">practical web data tool</span> for developers and AI systems.</div>
+        <ul>
+          <li><span class="good">Yes:</span> useful, powerful, time-saving</li>
+          <li><span class="warn">No:</span> not magic, not automatic business success</li>
+          <li><span class="em">Best summary:</span> it helps with the data layer — execution still matters</li>
+        </ul>
+      </div>
+      <div class="footer">
+        <span>7 / 7</span>
+        <div class="dots"></div>
+      </div>
+    </section>
+
+    <div class="nav">
+      <button onclick="prevSlide()">◀ Prev</button>
+      <button onclick="nextSlide()">Next ▶</button>
+    </div>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    let current = 0;
+
+    function renderDots() {
+      slides.forEach((slide, i) => {
+        const dotsWrap = slide.querySelector('.dots');
+        dotsWrap.innerHTML = '';
+        slides.forEach((_, idx) => {
+          const dot = document.createElement('span');
+          dot.className = 'dot' + (idx === current ? ' active' : '');
+          dotsWrap.appendChild(dot);
+        });
+      });
+    }
+
+    function showSlide(index) {
+      current = (index + slides.length) % slides.length;
+      slides.forEach((s, i) => s.classList.toggle('active', i === current));
+      renderDots();
+    }
+
+    function nextSlide() { showSlide(current + 1); }
+    function prevSlide() { showSlide(current - 1); }
+
+    document.addEventListener('keydown', (e) => {
+      if (["ArrowRight", "PageDown", " "].includes(e.key)) nextSlide();
+      if (["ArrowLeft", "PageUp"].includes(e.key)) prevSlide();
+      if (e.key === 'Home') showSlide(0);
+      if (e.key === 'End') showSlide(slides.length - 1);
+    });
+
+    showSlide(0);
+  </script>
+</body>
+</html>

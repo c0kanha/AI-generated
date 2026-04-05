@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>n8n Terminology — Educational Presentation</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --bg2:#101827;
+      --panel:#ffffff;
+      --text:#0f172a;
+      --muted:#475569;
+      --soft:#cbd5e1;
+      --accent:#38bdf8;
+      --accent2:#f59e0b;
+      --ok:#10b981;
+      --warn:#f97316;
+      --line:#dbe4ef;
+    }
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;padding:0;width:100%;height:100%;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg,var(--bg),var(--bg2));
+      overflow:hidden;
+    }
+    .deck{position:relative;width:100vw;height:100vh;color:#fff}
+    .slide{
+      position:absolute; inset:0;
+      display:none;
+      padding:48px 58px 42px 58px;
+      background: linear-gradient(135deg,var(--bg),var(--bg2));
+    }
+    .slide.active{display:flex; flex-direction:column}
+    .eyebrow{
+      font-size:18px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+      color:#fde68a; margin-bottom:12px;
+    }
+    h1{
+      font-size:56px; line-height:1.06; margin:0 0 14px 0; font-weight:800;
+      max-width:1200px;
+    }
+    h2{
+      font-size:38px; line-height:1.12; margin:0 0 18px 0; font-weight:800;
+      max-width:1200px;
+    }
+    .lead{
+      font-size:25px; line-height:1.36; color:#dbeafe; max-width:1180px;
+    }
+    .sublead{
+      font-size:22px; line-height:1.36; color:#d1d5db; max-width:1180px;
+    }
+    .two{
+      display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:20px;
+    }
+    .three{
+      display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px; margin-top:18px;
+    }
+    .card{
+      background:rgba(255,255,255,.98);
+      border-radius:22px;
+      padding:22px 24px;
+      color:var(--text);
+      box-shadow:0 18px 36px rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.55);
+    }
+    .card h3{
+      margin:0 0 10px 0; font-size:29px; line-height:1.15; color:#0f172a;
+    }
+    .card p{
+      margin:0; font-size:22px; line-height:1.35; color:#1f2937;
+    }
+    .card ul{
+      margin:0; padding-left:24px;
+    }
+    .card li{
+      font-size:21px; line-height:1.34; color:#1f2937; margin:6px 0;
+    }
+    .definition{
+      margin-top:18px;
+      background:#fff;
+      color:#0f172a;
+      padding:24px 28px;
+      border-radius:26px;
+      box-shadow:0 18px 36px rgba(0,0,0,.2);
+    }
+    .definition .term{
+      font-size:42px; font-weight:800; margin-bottom:10px;
+    }
+    .definition .meaning{
+      font-size:28px; line-height:1.3; color:#1e293b;
+    }
+    .bar{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      gap:18px;
+    }
+    .mini{
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:20px;
+      padding:18px 20px;
+    }
+    .mini .t{
+      font-size:20px; font-weight:800; color:#fde68a; text-transform:uppercase; letter-spacing:.05em;
+      margin-bottom:8px;
+    }
+    .mini .v{
+      font-size:22px; line-height:1.33; color:#fff;
+    }
+    .flow{
+      display:grid;
+      grid-template-columns:1fr 70px 1fr 70px 1fr;
+      align-items:center;
+      gap:8px;
+      margin-top:26px;
+    }
+    .flow .box{
+      background:#fff;
+      color:#0f172a;
+      border-radius:22px;
+      padding:24px;
+      min-height:170px;
+      box-shadow:0 18px 36px rgba(0,0,0,.18);
+    }
+    .flow .box .head{
+      font-size:28px; font-weight:800; margin-bottom:10px;
+    }
+    .flow .box .txt{
+      font-size:22px; line-height:1.34; color:#334155;
+    }
+    .arrow{
+      font-size:46px; text-align:center; color:#93c5fd; font-weight:800;
+    }
+    .callouts{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+    }
+    .call{
+      border-radius:18px;
+      padding:18px 20px;
+      font-size:21px; line-height:1.35;
+    }
+    .good{background:#ecfdf5;color:#064e3b}
+    .warn{background:#fff7ed;color:#9a3412}
+    .compare{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns:210px 1fr 1fr 1fr;
+      gap:10px;
+      align-items:stretch;
+    }
+    .compare .c{
+      border-radius:18px;
+      padding:18px 16px;
+      font-size:21px;
+      line-height:1.32;
+    }
+    .compare .head{
+      background:#0f172a; color:#fff; font-weight:800; font-size:22px;
+    }
+    .compare .rowhead{
+      background:#e2e8f0; color:#0f172a; font-weight:800;
+    }
+    .compare .cell{
+      background:#fff; color:#1f2937;
+    }
+    .biglist{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px 22px;
+    }
+    .item{
+      background:#fff;
+      border-radius:18px;
+      padding:18px 20px;
+      color:#0f172a;
+      box-shadow:0 14px 28px rgba(0,0,0,.14);
+    }
+    .item strong{
+      display:block;
+      font-size:27px;
+      margin-bottom:6px;
+    }
+    .item span{
+      font-size:21px; line-height:1.32; color:#334155;
+    }
+    .footer{
+      margin-top:auto;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      color:var(--soft);
+      font-size:16px;
+      padding-top:14px;
+    }
+    .progress{
+      position:absolute; left:0; bottom:0; height:8px;
+      background:linear-gradient(90deg,var(--accent),var(--accent2));
+      width:0%;
+      transition:width .25s ease;
+    }
+    .hint{color:#cbd5e1}
+    .source{
+      color:#cbd5e1; font-size:15px; margin-top:10px;
+    }
+    @media (max-width: 1150px){
+      .two,.three,.bar,.biglist,.compare,.callouts,.flow{grid-template-columns:1fr !important}
+      .arrow{display:none}
+      h1{font-size:44px}
+      h2{font-size:32px}
+      .lead{font-size:21px}
+      .definition .term{font-size:34px}
+      .definition .meaning{font-size:24px}
+    }
+  </style>
+</head>
+<body>
+  <div class="deck">
+
+    <section class="slide active">
+      <div class="eyebrow">Educational presentation</div>
+      <h1>n8n Terminology — Explained Clearly</h1>
+      <div class="lead">
+        This version focuses on understanding, not just naming terms.
+        Special attention is given to the three trigger types that usually confuse beginners:
+        <b>Webhook</b>, <b>Schedule</b>, and <b>App Event</b>.
+      </div>
+      <div class="definition" style="margin-top:24px">
+        <div class="term">Big idea</div>
+        <div class="meaning">
+          In n8n, a <b>workflow</b> runs when a <b>trigger</b> fires. The trigger is the start button.
+          Everything after that is a series of nodes that read data, change data, or send data somewhere else.
+        </div>
+      </div>
+      <div class="bar">
+        <div class="mini">
+          <div class="t">Workflow</div>
+          <div class="v">The full automation.</div>
+        </div>
+        <div class="mini">
+          <div class="t">Node</div>
+          <div class="v">One step inside the automation.</div>
+        </div>
+        <div class="mini">
+          <div class="t">Trigger</div>
+          <div class="v">The event or condition that starts the workflow.</div>
+        </div>
+      </div>
+      <div class="footer">
+        <div>n8n terminology deck</div>
+        <div class="hint">Use ← → or Space</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">Foundation</div>
+      <h2>First understand these 4 words</h2>
+      <div class="two">
+        <div class="card">
+          <h3>Workflow</h3>
+          <p>The complete automation you build. It connects multiple nodes to move from input to output.</p>
+        </div>
+        <div class="card">
+          <h3>Node</h3>
+          <p>A single step inside the workflow. One node may fetch data, one may transform it, and another may send it out.</p>
+        </div>
+        <div class="card">
+          <h3>Trigger node</h3>
+          <p>The special starting node. Without a trigger, the workflow does not know when to run automatically.</p>
+        </div>
+        <div class="card">
+          <h3>Execution</h3>
+          <p>One actual run of the workflow. If the workflow runs 50 times, that means 50 executions.</p>
+        </div>
+      </div>
+      <div class="source">Core definition structure used in the official n8n glossary and executions docs.</div>
+      <div class="footer">
+        <div>Slide 2</div>
+        <div class="hint">Think: workflow = process, execution = one run</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">Most important concept</div>
+      <h2>What does “Webhook” mean?</h2>
+      <div class="definition">
+        <div class="term">Webhook = “someone sends data to a URL, and that starts n8n”</div>
+        <div class="meaning">
+          A webhook is an HTTP endpoint created by n8n. Another app or service calls that URL when something happens,
+          and that call starts your workflow.
+        </div>
+      </div>
+
+      <div class="flow">
+        <div class="box">
+          <div class="head">External system</div>
+          <div class="txt">A form, payment app, CRM, website, or custom app sends an HTTP request.</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="box">
+          <div class="head">Webhook URL</div>
+          <div class="txt">n8n exposes a URL. When that URL receives the request, the trigger fires.</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="box">
+          <div class="head">Workflow execution</div>
+          <div class="txt">n8n reads the incoming data and runs the next nodes.</div>
+        </div>
+      </div>
+
+      <div class="callouts">
+        <div class="call good"><b>Use webhook when:</b> another system can send an HTTP request, but you do not want polling or there is no dedicated trigger node.</div>
+        <div class="call warn"><b>Example:</b> Stripe payment completed → call webhook → send invoice email → update database.</div>
+      </div>
+      <div class="footer">
+        <div>Slide 3</div>
+        <div class="hint">Webhook = event pushed into n8n from outside</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">Second trigger type</div>
+      <h2>What does “Schedule” mean?</h2>
+      <div class="definition">
+        <div class="term">Schedule = “run this workflow at fixed time intervals”</div>
+        <div class="meaning">
+          The Schedule Trigger runs the workflow based on time — every minute, every hour, every Monday,
+          or a custom cron pattern.
+        </div>
+      </div>
+      <div class="three">
+        <div class="card">
+          <h3>How it starts</h3>
+          <p>n8n itself starts the workflow because the time rule matches.</p>
+        </div>
+        <div class="card">
+          <h3>Typical use</h3>
+          <p>Daily reports, nightly syncs, hourly checks, weekly reminders, batch jobs.</p>
+        </div>
+        <div class="card">
+          <h3>Important detail</h3>
+          <p>Time zone matters. If time zone is wrong, the workflow runs at the wrong hour.</p>
+        </div>
+      </div>
+      <div class="callouts">
+        <div class="call good"><b>Example:</b> Every weekday at 8:00 AM → pull sales metrics → send summary to Slack.</div>
+        <div class="call warn"><b>Common misunderstanding:</b> schedule is not waiting for an app event. It runs because the clock says it is time.</div>
+      </div>
+      <div class="footer">
+        <div>Slide 4</div>
+        <div class="hint">Schedule = time-based automation</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">Third trigger type</div>
+      <h2>What does “App event” mean?</h2>
+      <div class="definition">
+        <div class="term">App event = “a specific app tells n8n that something happened inside that app”</div>
+        <div class="meaning">
+          This is usually an app-specific trigger node such as GitHub Trigger, Slack Trigger, Gmail Trigger,
+          Salesforce Trigger, and so on. The app has named events, and the trigger runs when one of those events happens.
+        </div>
+      </div>
+      <div class="two">
+        <div class="card">
+          <h3>Examples of app events</h3>
+          <ul>
+            <li>GitHub: push, pull request, release</li>
+            <li>Slack: new message or mention</li>
+            <li>Salesforce: record created or updated</li>
+            <li>Calendars: event created or changed</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>How it differs from webhook</h3>
+          <p>Webhook is generic: any system can call a URL. App event triggers are prebuilt for a specific app and expose named events from that app.</p>
+        </div>
+      </div>
+      <div class="footer">
+        <div>Slide 5</div>
+        <div class="hint">App event = event from a known app integration</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">Do not mix these up</div>
+      <h2>Webhook vs Schedule vs App Event</h2>
+      <div class="compare">
+        <div class="c head">Question</div>
+        <div class="c head">Webhook</div>
+        <div class="c head">Schedule</div>
+        <div class="c head">App Event</div>
+
+        <div class="c rowhead">Who starts it?</div>
+        <div class="c cell">Another system sends an HTTP request</div>
+        <div class="c cell">n8n starts it based on time</div>
+        <div class="c cell">The connected app fires its event</div>
+
+        <div class="c rowhead">What causes it?</div>
+        <div class="c cell">Incoming request to a URL</div>
+        <div class="c cell">Clock / interval / cron</div>
+        <div class="c cell">A named event inside an app</div>
+
+        <div class="c rowhead">Best for</div>
+        <div class="c cell">Generic integrations, custom systems, API endpoints</div>
+        <div class="c cell">Reports, sync jobs, periodic checks</div>
+        <div class="c cell">Product-specific automation like GitHub, Slack, Salesforce</div>
+
+        <div class="c rowhead">Simple example</div>
+        <div class="c cell">Website form submits to n8n</div>
+        <div class="c cell">Run every day at 9 AM</div>
+        <div class="c cell">GitHub push starts deployment flow</div>
+      </div>
+      <div class="footer">
+        <div>Slide 6</div>
+        <div class="hint">This is the most important comparison for beginners</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">Working with data</div>
+      <h2>Expressions, $json, Variables, and Code node</h2>
+      <div class="biglist">
+        <div class="item">
+          <strong>Expression</strong>
+          <span>Small inline logic written inside <b>{{ ... }}</b>. Use it when a field should be filled dynamically from previous data.</span>
+        </div>
+        <div class="item">
+          <strong>$json</strong>
+          <span>The current item’s JSON data. Example: read a name, email, city, or status from the current input item.</span>
+        </div>
+        <div class="item">
+          <strong>Variables</strong>
+          <span>Reusable read-only values stored in n8n. Good for constants like environment names, IDs, or shared configuration values.</span>
+        </div>
+        <div class="item">
+          <strong>Code node</strong>
+          <span>A full step where you write JavaScript or Python when simple expressions are not enough.</span>
+        </div>
+        <div class="item">
+          <strong>When to use expression</strong>
+          <span>Pull one value, do a light calculation, or keep logic close to one field.</span>
+        </div>
+        <div class="item">
+          <strong>When to use code node</strong>
+          <span>Complex transformation, loops, restructuring arrays, custom algorithms, or processing many items together.</span>
+        </div>
+      </div>
+      <div class="footer">
+        <div>Slide 7</div>
+        <div class="hint">Expression = small dynamic field logic | Code node = heavier custom logic</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">Access, security, and organization</div>
+      <h2>Credentials, Projects, Activation, and Executions</h2>
+      <div class="two">
+        <div class="card">
+          <h3>Credentials</h3>
+          <p>Saved authentication details used to connect nodes to external apps and APIs securely.</p>
+        </div>
+        <div class="card">
+          <h3>Projects</h3>
+          <p>A way to group workflows and credentials and manage user access by project.</p>
+        </div>
+        <div class="card">
+          <h3>Activation / Production mode</h3>
+          <p>When a workflow is active, its triggers can run automatically. Inactive workflows are mainly for development and testing.</p>
+        </div>
+        <div class="card">
+          <h3>Execution history</h3>
+          <p>Each run is stored as an execution. You inspect executions to debug failures, review outputs, and audit what happened.</p>
+        </div>
+      </div>
+      <div class="footer">
+        <div>Slide 8</div>
+        <div class="hint">Credentials connect | Projects organize | Executions help debug</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">Final summary</div>
+      <h2>n8n terminology in plain English</h2>
+      <div class="biglist">
+        <div class="item"><strong>Workflow</strong><span>The full automation.</span></div>
+        <div class="item"><strong>Node</strong><span>One step inside the automation.</span></div>
+        <div class="item"><strong>Trigger</strong><span>The thing that starts the automation.</span></div>
+        <div class="item"><strong>Webhook</strong><span>An outside system calls a URL to start the workflow.</span></div>
+        <div class="item"><strong>Schedule</strong><span>n8n runs the workflow based on time.</span></div>
+        <div class="item"><strong>App event</strong><span>A connected app sends a built-in event like GitHub push or Slack message.</span></div>
+        <div class="item"><strong>Expression</strong><span>Small inline dynamic logic inside a field.</span></div>
+        <div class="item"><strong>Code node</strong><span>A full custom coding step.</span></div>
+        <div class="item"><strong>Credentials</strong><span>Secure login/auth details for apps and APIs.</span></div>
+        <div class="item"><strong>Execution</strong><span>One run of the workflow.</span></div>
+      </div>
+      <div class="definition" style="margin-top:16px">
+        <div class="meaning">
+          If you want, the next step I can do is make a second deck called
+          <b>“n8n with real business examples”</b> so each term is shown with one practical workflow.
+        </div>
+      </div>
+      <div class="footer">
+        <div>Slide 9</div>
+        <div class="hint">End</div>
+      </div>
+    </section>
+
+    <div class="progress" id="progress"></div>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const progress = document.getElementById('progress');
+    let index = 0;
+
+    function render(){
+      slides.forEach((s,i)=>s.classList.toggle('active', i===index));
+      progress.style.width = ((index + 1) / slides.length) * 100 + '%';
+    }
+
+    function next(){ index = Math.min(index + 1, slides.length - 1); render(); }
+    function prev(){ index = Math.max(index - 1, 0); render(); }
+
+    document.addEventListener('keydown', (e) => {
+      if (['ArrowRight','PageDown',' '].includes(e.key)) { e.preventDefault(); next(); }
+      if (['ArrowLeft','PageUp'].includes(e.key)) { e.preventDefault(); prev(); }
+      if (e.key === 'Home') { index = 0; render(); }
+      if (e.key === 'End') { index = slides.length - 1; render(); }
+    });
+
+    document.addEventListener('click', () => next());
+    render();
+  </script>
+</body>
+</html>
