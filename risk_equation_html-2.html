@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The New Risk Equation</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: rgba(255, 255, 255, 0.08);
+      --panel-strong: rgba(255, 255, 255, 0.12);
+      --border: rgba(255, 255, 255, 0.14);
+      --text: #ecf2ff;
+      --muted: #b8c2e0;
+      --accent: #7dd3fc;
+      --accent-2: #a78bfa;
+      --accent-3: #34d399;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(125, 211, 252, 0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(167, 139, 250, 0.18), transparent 24%),
+        linear-gradient(180deg, #09101d 0%, #0b1020 55%, #0e1528 100%);
+    }
+
+    .deck {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: none;
+      grid-template-rows: auto 1fr auto;
+      gap: 2.2vh;
+      padding: 4.5vh 4.8vw 5.2vh;
+      background:
+        radial-gradient(circle at top left, rgba(125, 211, 252, 0.12), transparent 26%),
+        radial-gradient(circle at top right, rgba(167, 139, 250, 0.12), transparent 24%);
+    }
+
+    .slide.active {
+      display: grid;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      color: var(--muted);
+      font-size: 1rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--accent);
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .slide-card {
+      align-self: stretch;
+      border: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
+      backdrop-filter: blur(18px);
+      border-radius: 32px;
+      box-shadow: var(--shadow);
+      padding: 34px;
+      display: grid;
+      align-content: center;
+      gap: 20px;
+      min-height: 0;
+      overflow: auto;
+    }
+
+    .slide-card::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .slide-card::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.14);
+      border-radius: 999px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.7rem, 5vw, 4.8rem);
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+      max-width: 10ch;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: clamp(1.08rem, 2vw, 1.32rem);
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .hero-copy {
+      max-width: 900px;
+      font-size: clamp(1.04rem, 1.4vw, 1.18rem);
+    }
+
+    .hero-grid,
+    .grid-3,
+    .grid-2,
+    .timeline {
+      display: grid;
+      gap: 18px;
+    }
+
+    .hero-grid,
+    .grid-3,
+    .timeline {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .mini-stat,
+    .feature,
+    .compare-block,
+    .step,
+    .footer-note,
+    .quote-card {
+      border-radius: 22px;
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,0.10);
+      backdrop-filter: blur(12px);
+    }
+
+    .mini-stat,
+    .feature,
+    .compare-block,
+    .step,
+    .footer-note {
+      padding: 22px;
+    }
+
+    .mini-stat strong {
+      display: block;
+      font-size: 1.28rem;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .feature .label {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 5px 10px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      color: var(--accent);
+    }
+
+    .feature p,
+    .compare-block li,
+    .step p,
+    .footer-note {
+      font-size: 0.98rem;
+    }
+
+    .compare-block h3.traditional { color: #fca5a5; }
+    .compare-block h3.modern { color: #86efac; }
+
+    ul {
+      margin: 0;
+      padding-left: 1.2em;
+      color: var(--muted);
+    }
+
+    li + li {
+      margin-top: 10px;
+    }
+
+    .quote-card {
+      padding: 30px;
+      background: linear-gradient(135deg, rgba(125, 211, 252, 0.12), rgba(52, 211, 153, 0.09));
+      border: 1px solid rgba(125, 211, 252, 0.22);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quote-card::before {
+      content: "“";
+      position: absolute;
+      top: 10px;
+      left: 18px;
+      font-size: 4rem;
+      color: rgba(255,255,255,0.16);
+      line-height: 1;
+    }
+
+    .quote-card p {
+      position: relative;
+      padding-left: 18px;
+      color: var(--text);
+      font-size: clamp(1.18rem, 2vw, 1.5rem);
+      line-height: 1.5;
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #08111e;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .dots {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.16);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .dot.active {
+      background: var(--accent);
+      transform: scale(1.1);
+    }
+
+    .nav {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      display: flex;
+      gap: 10px;
+      z-index: 20;
+    }
+
+    .nav button {
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: #08111f;
+      background: #e6f6ff;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.24);
+      transition: transform 0.18s ease, opacity 0.18s ease;
+    }
+
+    .nav button:hover {
+      transform: translateY(-1px);
+    }
+
+    .nav button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .grid-3,
+      .grid-2,
+      .timeline {
+        grid-template-columns: 1fr;
+      }
+
+      .slide {
+        padding: 26px 20px 88px;
+      }
+
+      .slide-card {
+        padding: 24px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar {
+        font-size: 0.84rem;
+      }
+
+      .badge {
+        font-size: 0.76rem;
+      }
+
+      .slide-card {
+        border-radius: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck">
+    <section class="slide active">
+      <div class="topbar">
+        <span class="badge">AI Security • Modern SDLC</span>
+        <span>Intro</span>
+      </div>
+      <div class="slide-card">
+        <h1>The New Risk Equation</h1>
+        <p class="hero-copy">
+          AI-assisted development has transformed how software gets built. Teams now ship faster than ever,
+          but the same acceleration introduces a new class of risk: more code, less direct familiarity, and
+          review cycles that struggle to keep pace.
+        </p>
+        <div class="hero-grid">
+          <div class="mini-stat">
+            <strong>More Code</strong>
+            <p>Functions, configs, and infrastructure appear in seconds.</p>
+          </div>
+          <div class="mini-stat">
+            <strong>Less Familiarity</strong>
+            <p>Developers may not fully understand AI-generated logic at first glance.</p>
+          </div>
+          <div class="mini-stat">
+            <strong>Faster Iteration</strong>
+            <p>Code moves quicker than traditional security review models were built for.</p>
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+        <span>1 / 5</span>
+        <div class="dots"></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="topbar">
+        <span class="badge">How AI Changed the SDLC</span>
+        <span>Core shifts</span>
+      </div>
+      <div class="slide-card">
+        <h2>Three structural changes</h2>
+        <div class="grid-3">
+          <article class="feature">
+            <span class="label">1 • Increased Volume</span>
+            <h3>More is generated instantly</h3>
+            <p>
+              Teams can generate large amounts of code, configuration, and infrastructure definitions in moments,
+              dramatically increasing the number of decisions entering the system.
+            </p>
+          </article>
+
+          <article class="feature">
+            <span class="label">2 • Reduced Familiarity</span>
+            <h3>Less direct authorship</h3>
+            <p>
+              Because AI helps write the code, developers often have less immediate familiarity with the exact logic,
+              dependencies, or patterns being introduced.
+            </p>
+          </article>
+
+          <article class="feature">
+            <span class="label">3 • Accelerated Iteration</span>
+            <h3>Speed outpaces review</h3>
+            <p>
+              Development loops are now so fast that traditional review and security checkpoints can lag behind,
+              allowing risk to accumulate quietly.
+            </p>
+          </article>
+        </div>
+      </div>
+      <div class="footer">
+        <span>2 / 5</span>
+        <div class="dots"></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="topbar">
+        <span class="badge">Traditional vs. Modern</span>
+        <span>Security posture</span>
+      </div>
+      <div class="slide-card">
+        <h2>Reactive scans vs. code risk intelligence</h2>
+        <div class="grid-2">
+          <div class="compare-block">
+            <h3 class="traditional">Traditional Security</h3>
+            <ul>
+              <li>Scans for problems after code is already written or submitted.</li>
+              <li>Hidden risk builds up until pull requests fail, production breaks, or security escalates.</li>
+              <li>Friction shows up late, when fixes are more expensive and disruptive.</li>
+            </ul>
+          </div>
+
+          <div class="compare-block">
+            <h3 class="modern">Modern Code Risk Intelligence</h3>
+            <ul>
+              <li><strong>Embeds foresight:</strong> security is built into how code is written, reviewed, and released.</li>
+              <li><strong>Real-time guardrails:</strong> risks surface during typing, pasting, or importing.</li>
+              <li><strong>Contextual remediation:</strong> developers learn why a pattern is risky and how to choose a safer path.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+        <span>3 / 5</span>
+        <div class="dots"></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="topbar">
+        <span class="badge">True Shift Left</span>
+        <span>Meaning</span>
+      </div>
+      <div class="slide-card">
+        <h2>What “shift left” actually means</h2>
+        <div class="quote-card">
+          <p>
+            It is not about dumping security responsibility onto developers. It is about giving them continuous awareness
+            — a security mirror — so they can see the downstream impact of their decisions before risk hardens into technical debt.
+          </p>
+        </div>
+      </div>
+      <div class="footer">
+        <span>4 / 5</span>
+        <div class="dots"></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="topbar">
+        <span class="badge">Key Moments for Intelligence</span>
+        <span>Coverage</span>
+      </div>
+      <div class="slide-card">
+        <h2>Where intelligence must show up</h2>
+        <div class="timeline">
+          <article class="step">
+            <div class="step-number">1</div>
+            <h3>Creation</h3>
+            <p>Inside the IDE while developers are actively writing, generating, pasting, and modifying code.</p>
+          </article>
+
+          <article class="step">
+            <div class="step-number">2</div>
+            <h3>Review</h3>
+            <p>During pull requests, helping reviewers understand what changed, why it matters, and where closer attention is needed.</p>
+          </article>
+
+          <article class="step">
+            <div class="step-number">3</div>
+            <h3>Release</h3>
+            <p>Within the CI/CD pipeline, confirming that speed and automation are not introducing unseen vulnerabilities.</p>
+          </article>
+        </div>
+        <div class="footer-note">
+          <strong>Bottom line:</strong> this intelligence layer complements AI-powered productivity tools so speed does not come at the cost of security and resilience.
+        </div>
+      </div>
+      <div class="footer">
+        <span>5 / 5</span>
+        <div class="dots"></div>
+      </div>
+    </section>
+
+    <div class="nav">
+      <button id="prevBtn" onclick="prevSlide()">◀ Prev</button>
+      <button id="nextBtn" onclick="nextSlide()">Next ▶</button>
+    </div>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    let current = 0;
+
+    function renderDots() {
+      slides.forEach((slide, slideIndex) => {
+        const dotsWrap = slide.querySelector('.dots');
+        dotsWrap.innerHTML = '';
+        slides.forEach((_, idx) => {
+          const dot = document.createElement('span');
+          dot.className = 'dot' + (idx === current ? ' active' : '');
+          dot.setAttribute('aria-hidden', 'true');
+          dotsWrap.appendChild(dot);
+        });
+      });
+    }
+
+    function updateButtons() {
+      prevBtn.disabled = current === 0;
+      nextBtn.disabled = current === slides.length - 1;
+    }
+
+    function showSlide(index) {
+      current = Math.max(0, Math.min(index, slides.length - 1));
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === current);
+      });
+      renderDots();
+      updateButtons();
+    }
+
+    function nextSlide() {
+      showSlide(current + 1);
+    }
+
+    function prevSlide() {
+      showSlide(current - 1);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (["ArrowRight", "PageDown", " "].includes(e.key)) {
+        e.preventDefault();
+        nextSlide();
+      }
+      if (["ArrowLeft", "PageUp"].includes(e.key)) {
+        e.preventDefault();
+        prevSlide();
+      }
+      if (e.key === 'Home') showSlide(0);
+      if (e.key === 'End') showSlide(slides.length - 1);
+    });
+
+    showSlide(0);
+  </script>
+</body>
+</html>
