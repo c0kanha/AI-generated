@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Dev Abstractions</title>
+  <style>
+    :root {
+      --bg: #030406;
+      --panel: #06080c;
+      --line: rgba(255,255,255,0.68);
+      --text: #f5f7fb;
+      --muted: rgba(255,255,255,0.8);
+      --red: #e47a8b;
+      --green: #39a85b;
+      --closed: rgba(148, 52, 60, 0.78);
+      --restricted: rgba(31, 95, 156, 0.8);
+      --open: rgba(11, 106, 33, 0.84);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+      padding: 18px;
+    }
+
+    .frame {
+      position: relative;
+      width: min(1600px, 100%);
+      aspect-ratio: 16 / 9;
+      background: #000;
+      overflow: hidden;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+    }
+
+    .title {
+      position: absolute;
+      top: 18px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: clamp(30px, 2.5vw, 60px);
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      z-index: 3;
+    }
+
+    .layer {
+      position: absolute;
+      left: 2.8%;
+      width: 94.4%;
+      border: 3px solid var(--line);
+      border-radius: 24px;
+      z-index: 1;
+    }
+
+    .models-layer { top: 10.5%; height: 20%; }
+    .providers-layer { top: 32%; height: 18.5%; }
+    .harness-layer { top: 52.2%; height: 30%; }
+
+    .label {
+      position: absolute;
+      left: 4%;
+      font-size: clamp(34px, 3.4vw, 68px);
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      z-index: 3;
+    }
+
+    .label.models { top: 18.5%; }
+    .label.providers { top: 37.5%; }
+    .label.harnesses { top: 67%; }
+
+    .box {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 10px 16px;
+      border: 3px solid var(--line);
+      border-radius: 22px;
+      color: var(--text);
+      background: rgba(0,0,0,0.35);
+      z-index: 3;
+      line-height: 1.15;
+    }
+
+    .model-box {
+      top: 14.8%;
+      width: 9.5%;
+      height: 9.3%;
+      font-size: clamp(16px, 1.45vw, 34px);
+      font-weight: 600;
+    }
+
+    .provider-box {
+      top: 36.1%;
+      height: 8.4%;
+      font-size: clamp(15px, 1.35vw, 28px);
+      font-weight: 600;
+      padding: 8px 10px;
+    }
+
+    .harness-box {
+      top: 58.5%;
+      height: 16.5%;
+      font-size: clamp(16px, 1.45vw, 28px);
+      line-height: 1.25;
+      padding: 14px 16px;
+    }
+
+    .agent-box {
+      top: 63.6%;
+      right: 4.2%;
+      width: 12%;
+      height: 10.5%;
+      font-size: clamp(15px, 1.25vw, 24px);
+      line-height: 1.2;
+    }
+
+    .dev-box {
+      position: absolute;
+      bottom: 4.6%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 15.5%;
+      height: 10.2%;
+      font-size: clamp(22px, 1.8vw, 36px);
+      font-weight: 500;
+      display: grid;
+      place-items: center;
+      border: 3px solid var(--line);
+      border-radius: 20px;
+      z-index: 3;
+    }
+
+    .legend {
+      position: absolute;
+      left: 3.8%;
+      bottom: 10.5%;
+      z-index: 3;
+      font-size: clamp(14px, 1.35vw, 28px);
+      line-height: 1.65;
+      font-weight: 600;
+    }
+
+    .legend .red { color: var(--red); }
+    .legend .green { color: var(--green); }
+
+    .closed { background: var(--closed); }
+    .restricted { background: var(--restricted); }
+    .open { background: var(--open); }
+
+    .sm {
+      font-size: 0.92em;
+      opacity: 0.92;
+    }
+
+    svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .arrow-red,
+    .arrow-green,
+    .arrow-white {
+      fill: none;
+      stroke-width: 3.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: 0.95;
+    }
+
+    .arrow-red { stroke: var(--red); }
+    .arrow-green { stroke: var(--green); }
+    .arrow-white { stroke: rgba(255,255,255,0.85); }
+
+    @media (max-width: 1100px) {
+      .frame { aspect-ratio: 16 / 10; }
+      .title { top: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <div class="title">AI Dev Abstractions</div>
+
+    <div class="layer models-layer"></div>
+    <div class="layer providers-layer"></div>
+    <div class="layer harness-layer"></div>
+
+    <div class="label models">Models</div>
+    <div class="label providers">Providers</div>
+    <div class="label harnesses">Harnesses</div>
+
+    <div class="box model-box" style="left: 24.8%;">Gemini</div>
+    <div class="box model-box" style="left: 36.6%;">GPT</div>
+    <div class="box model-box" style="left: 48.5%;">Claude</div>
+    <div class="box model-box" style="left: 60.4%;">DeepSeek</div>
+    <div class="box model-box" style="left: 72.2%;">Qwen</div>
+
+    <div class="box provider-box" style="left: 22.8%; width: 12.3%;">Google AI<br>Subscription</div>
+    <div class="box provider-box" style="left: 37.1%; width: 12.5%;">OpenAI<br>Subscription</div>
+    <div class="box provider-box" style="left: 50.8%; width: 11.5%;">Claude<br>Subscription</div>
+    <div class="box provider-box" style="left: 63.7%; width: 10.4%;">Cursor<br>Subscription</div>
+    <div class="box provider-box" style="left: 76.8%; width: 14.6%;">GitHub Copilot<br>OpenRouter<br>Bedrock</div>
+
+    <div class="box harness-box closed" style="left: 25.8%; width: 18%;">
+      <div>Closed Harnesses<br>---<br><span class="sm">Claude Code<br>Claude Desktop<br>Codex<br>Antigravity</span></div>
+    </div>
+
+    <div class="box harness-box restricted" style="left: 44.8%; width: 18%;">
+      <div>Restricted Harnesses<br>---<br><span class="sm">Copilot<br>Cursor<br>Windsurf</span></div>
+    </div>
+
+    <div class="box harness-box open" style="left: 63.7%; width: 18%;">
+      <div>Open Harnesses<br>---<br><span class="sm">OpenCode<br>OpenClaw<br>VS Code</span></div>
+    </div>
+
+    <div class="box agent-box">Agents<br>---<br>Plan<br>Build</div>
+
+    <div class="dev-box">The Dev</div>
+
+    <div class="legend">
+      <div class="red">Red Arrow = Provider lock-in</div>
+      <div class="green">Green Arrow = Dev has provider and model choice</div>
+    </div>
+
+    <svg viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L8,3 L0,6" fill="var(--red)"></path>
+        </marker>
+        <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L8,3 L0,6" fill="var(--green)"></path>
+        </marker>
+        <marker id="arrowWhite" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L8,3 L0,6" fill="rgba(255,255,255,0.85)"></path>
+        </marker>
+      </defs>
+
+      <!-- closed harness to locked providers -->
+      <path class="arrow-red" marker-end="url(#arrowRed)" d="M 470 560 C 455 490, 448 430, 450 370" />
+      <path class="arrow-red" marker-end="url(#arrowRed)" d="M 510 555 C 545 500, 585 430, 620 370" />
+      <path class="arrow-red" marker-end="url(#arrowRed)" d="M 560 555 C 640 500, 750 430, 865 370" />
+
+      <!-- restricted harness to providers -->
+      <path class="arrow-red" marker-end="url(#arrowRed)" d="M 785 560 C 805 505, 835 440, 865 370" />
+      <path class="arrow-red" marker-end="url(#arrowRed)" d="M 845 560 C 910 505, 1020 430, 1115 370" />
+      <path class="arrow-red" marker-end="url(#arrowRed)" d="M 885 555 C 1010 500, 1170 420, 1290 365" />
+
+      <!-- providers to models lock-in -->
+      <path class="arrow-red" marker-end="url(#arrowRed)" d="M 450 350 C 450 305, 452 265, 455 225" />
+      <path class="arrow-red" marker-end="url(#arrowRed)" d="M 635 350 C 628 305, 620 265, 610 225" />
+      <path class="arrow-red" marker-end="url(#arrowRed)" d="M 875 350 C 855 305, 835 265, 815 225" />
+
+      <!-- open harness to open providers -->
+      <path class="arrow-green" marker-end="url(#arrowGreen)" d="M 1085 555 C 1115 510, 1165 450, 1295 368" />
+      <path class="arrow-green" marker-end="url(#arrowGreen)" d="M 1030 555 C 1000 500, 950 430, 885 370" />
+      <path class="arrow-green" marker-end="url(#arrowGreen)" d="M 980 555 C 860 480, 700 410, 470 370" />
+
+      <!-- flexible providers to many models -->
+      <path class="arrow-green" marker-end="url(#arrowGreen)" d="M 1295 350 C 1225 305, 1150 255, 1085 225" />
+      <path class="arrow-green" marker-end="url(#arrowGreen)" d="M 1290 348 C 1190 310, 1065 255, 960 225" />
+      <path class="arrow-green" marker-end="url(#arrowGreen)" d="M 1292 346 C 1160 305, 980 250, 815 225" />
+      <path class="arrow-green" marker-end="url(#arrowGreen)" d="M 1295 344 C 1125 300, 875 245, 610 225" />
+      <path class="arrow-green" marker-end="url(#arrowGreen)" d="M 1298 342 C 1090 295, 815 240, 455 225" />
+
+      <path class="arrow-green" marker-end="url(#arrowGreen)" d="M 1110 348 C 1085 300, 1068 260, 1060 225" />
+
+      <!-- open provider to multiple models -->
+      <path class="arrow-green" marker-end="url(#arrowGreen)" d="M 470 348 C 560 320, 730 270, 1290 225" opacity="0.55" />
+      <path class="arrow-green" marker-end="url(#arrowGreen)" d="M 640 348 C 770 310, 980 265, 1290 225" opacity="0.45" />
+
+      <!-- dev to harnesses -->
+      <path class="arrow-white" marker-end="url(#arrowWhite)" d="M 800 835 C 700 770, 615 710, 545 645" />
+      <path class="arrow-white" marker-end="url(#arrowWhite)" d="M 800 835 C 800 775, 800 720, 800 650" />
+      <path class="arrow-white" marker-end="url(#arrowWhite)" d="M 800 835 C 900 770, 990 710, 1075 648" />
+
+      <!-- open harness to agent -->
+      <path class="arrow-white" marker-end="url(#arrowWhite)" d="M 1145 610 C 1225 610, 1280 610, 1335 610" />
+    </svg>
+  </div>
+</body>
+</html>
