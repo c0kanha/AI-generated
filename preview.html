@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LLM Explained Simply — Complete HTML Guide</title>
+  <style>
+    :root{
+      --bg:#0a1020;
+      --bg2:#0d1730;
+      --panel:#111b35;
+      --panel-soft:rgba(255,255,255,.035);
+      --line:rgba(255,255,255,.08);
+      --text:#ecf2ff;
+      --muted:#a8b9e6;
+      --blue:#7dc8ff;
+      --green:#8df0c8;
+      --gold:#ffd27a;
+      --pink:#d6b2ff;
+      --red:#ffb1b1;
+      --shadow:0 22px 60px rgba(0,0,0,.35);
+      --radius:24px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(125,200,255,.10), transparent 28%),
+        radial-gradient(circle at top right, rgba(214,178,255,.08), transparent 25%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+      line-height:1.55;
+      padding:28px 16px 50px;
+    }
+    .wrap{max-width:1220px;margin:0 auto}
+    .hero,.card,.diagram,.toc{
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+    }
+    .hero{padding:30px;margin-bottom:22px}
+    .eyebrow{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(125,200,255,.28);
+      background:rgba(125,200,255,.09);
+      color:var(--blue);
+      text-transform:uppercase;
+      font-size:12px;
+      letter-spacing:.08em;
+      margin-bottom:12px;
+    }
+    h1{
+      margin:0 0 12px;
+      font-size:clamp(34px,5vw,58px);
+      line-height:1.02;
+    }
+    .lead{
+      margin:0;
+      max-width:980px;
+      color:var(--muted);
+      font-size:18px;
+    }
+    .toc{
+      padding:18px 20px;
+      margin-bottom:22px;
+    }
+    .toc h2{
+      margin:0 0 12px;
+      font-size:18px;
+      color:var(--blue);
+    }
+    .toc-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+    }
+    .toc a{
+      text-decoration:none;
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:14px;
+      background:var(--panel-soft);
+      border:1px solid var(--line);
+      font-size:14px;
+    }
+    .section{
+      margin-bottom:22px;
+    }
+    .card{
+      padding:22px;
+    }
+    .card h2{
+      margin:0 0 14px;
+      font-size:28px;
+    }
+    .card h3{
+      margin:0 0 10px;
+      font-size:20px;
+    }
+    .muted{color:var(--muted)}
+    .grid-2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+    }
+    .grid-3{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
+    }
+    .mini-card{
+      padding:16px;
+      border-radius:20px;
+      border:1px solid var(--line);
+      background:var(--panel-soft);
+    }
+    .tag{
+      display:inline-block;
+      margin-bottom:10px;
+      padding:5px 9px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+    }
+    .blue{background:rgba(125,200,255,.12); color:var(--blue)}
+    .green{background:rgba(141,240,200,.12); color:var(--green)}
+    .gold{background:rgba(255,210,122,.12); color:var(--gold)}
+    .pink{background:rgba(214,178,255,.12); color:var(--pink)}
+    .red{background:rgba(255,177,177,.12); color:var(--red)}
+    .big-note{
+      padding:18px;
+      border-radius:20px;
+      border-left:4px solid var(--blue);
+      background:rgba(255,255,255,.025);
+      color:var(--text);
+    }
+    .diagram{
+      padding:22px;
+      overflow:hidden;
+    }
+    .flow{
+      display:grid;
+      grid-template-columns:1fr 50px 1fr 50px 1fr 50px 1fr;
+      gap:10px;
+      align-items:stretch;
+      overflow:auto;
+      padding-bottom:6px;
+    }
+    .box{
+      min-height:190px;
+      border-radius:22px;
+      padding:16px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.02));
+    }
+    .box h4{
+      margin:0 0 8px;
+      font-size:18px;
+    }
+    .box p{
+      margin:0;
+      font-size:14px;
+      color:var(--muted);
+    }
+    .arrow{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      color:#84bbff;
+      font-size:28px;
+      font-weight:800;
+    }
+    .arrow small{
+      display:block;
+      margin-top:4px;
+      font-size:10px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:#90a6d7;
+      line-height:1.2;
+    }
+    .mini{
+      margin-top:12px;
+      padding:10px 11px;
+      border-radius:14px;
+      background:rgba(5,10,24,.45);
+      border:1px solid var(--line);
+      color:#dbe7ff;
+      font-size:13px;
+    }
+    code{
+      font-family:var(--mono);
+      color:#bfe6ff;
+    }
+    .token-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:12px;
+    }
+    .token{
+      padding:8px 10px;
+      border-radius:12px;
+      background:rgba(141,240,200,.12);
+      color:var(--green);
+      border:1px solid rgba(141,240,200,.18);
+      font-family:var(--mono);
+      font-size:13px;
+    }
+    .steps{
+      display:grid;
+      gap:12px;
+    }
+    .step{
+      padding:14px 15px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+    }
+    .step strong{display:block;margin-bottom:4px}
+    .step span{color:var(--muted)}
+    .compare{
+      display:grid;
+      gap:12px;
+    }
+    .cmp{
+      padding:14px 15px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+    }
+    .cmp.good{border-left:4px solid var(--green)}
+    .cmp.bad{border-left:4px solid var(--red)}
+    table{
+      width:100%;
+      border-collapse:collapse;
+      overflow:hidden;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+    }
+    th,td{
+      padding:14px 14px;
+      border-bottom:1px solid var(--line);
+      text-align:left;
+      vertical-align:top;
+    }
+    th{
+      color:var(--blue);
+      background:rgba(255,255,255,.03);
+      font-weight:700;
+    }
+    .faq{
+      display:grid;
+      gap:12px;
+    }
+    .faq-item{
+      padding:16px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+    }
+    .faq-item strong{
+      display:block;
+      margin-bottom:6px;
+      color:var(--text);
+    }
+    .footer{
+      text-align:center;
+      color:#92a8d5;
+      font-size:13px;
+      margin-top:18px;
+    }
+    @media (max-width: 1050px){
+      .toc-grid,.grid-2,.grid-3{grid-template-columns:1fr}
+      .flow{grid-template-columns:1fr}
+      .arrow{transform:rotate(90deg); min-height:34px;}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="eyebrow">Simple Full Presentation</div>
+      <h1>LLM Explained<br>From Start to Finish</h1>
+      <p class="lead">
+        This page explains only the LLM itself in the easiest possible way: what it is, how it works, what goes in, what comes out, how it was trained, how it answers, what tokens are, why it forgets, where mistakes come from, and what it can and cannot do.
+      </p>
+    </section>
+
+    <section class="toc">
+      <h2>Contents</h2>
+      <div class="toc-grid">
+        <a href="#what">What is an LLM?</a>
+        <a href="#input-output">Input and Output</a>
+        <a href="#core-idea">Core Idea</a>
+        <a href="#how-works">How It Works</a>
+        <a href="#tokens">Tokens</a>
+        <a href="#training">Training</a>
+        <a href="#inference">Inference</a>
+        <a href="#context">Context Window</a>
+        <a href="#memory">Memory</a>
+        <a href="#strengths">Strengths</a>
+        <a href="#limits">Limits</a>
+        <a href="#glossary">Glossary</a>
+      </div>
+    </section>
+
+    <section id="what" class="section">
+      <div class="card">
+        <h2>1. What is an LLM?</h2>
+        <div class="big-note">
+          <strong>LLM = Large Language Model.</strong><br>
+          It is a machine-learning model trained on a huge amount of text so it can predict the next token in a sequence and generate human-like language.
+        </div>
+        <div class="grid-3" style="margin-top:16px">
+          <div class="mini-card">
+            <div class="tag blue">Large</div>
+            <h3>Large</h3>
+            <div class="muted">It has a very large number of learned parameters and is trained on massive text data.</div>
+          </div>
+          <div class="mini-card">
+            <div class="tag green">Language</div>
+            <h3>Language</h3>
+            <div class="muted">It works with text-like sequences: words, code, symbols, sentences, and structured prompts.</div>
+          </div>
+          <div class="mini-card">
+            <div class="tag gold">Model</div>
+            <h3>Model</h3>
+            <div class="muted">It is not a database or a person. It is a mathematical system that maps input tokens to output tokens.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="input-output" class="section">
+      <div class="card">
+        <h2>2. Input and Output</h2>
+        <div class="grid-2">
+          <div class="mini-card">
+            <div class="tag blue">Input</div>
+            <h3>What goes in?</h3>
+            <div class="muted">
+              Usually text. That can include:
+              prompt, question, chat history, instructions, code, examples, or retrieved context.
+            </div>
+            <div class="mini" style="margin-top:12px">
+              <code>User: Explain photosynthesis simply.</code>
+            </div>
+          </div>
+          <div class="mini-card">
+            <div class="tag pink">Output</div>
+            <h3>What comes out?</h3>
+            <div class="muted">
+              More tokens. The model generates one token at a time until it finishes the reply.
+            </div>
+            <div class="mini" style="margin-top:12px">
+              <code>Photosynthesis is how plants turn sunlight, water, and carbon dioxide into energy.</code>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="core-idea" class="section">
+      <div class="card">
+        <h2>3. The Core Idea in One Line</h2>
+        <div class="big-note">
+          <strong>An LLM does not “think” the way humans do.</strong><br>
+          At its core, it keeps predicting the most likely next token based on the tokens already given.
+        </div>
+      </div>
+    </section>
+
+    <section id="how-works" class="section">
+      <div class="diagram">
+        <h2 style="margin:0 0 14px">4. How an LLM Works</h2>
+        <div class="flow">
+          <div class="box">
+            <div class="tag blue">Step 1</div>
+            <h4>Receive input</h4>
+            <p>The prompt enters the system as text.</p>
+            <div class="mini"><code>"What is gravity?"</code></div>
+          </div>
+
+          <div class="arrow">→<small>tokenize</small></div>
+
+          <div class="box">
+            <div class="tag green">Step 2</div>
+            <h4>Convert to tokens</h4>
+            <p>The text is split into smaller units called tokens that the model can process.</p>
+          </div>
+
+          <div class="arrow">→<small>process</small></div>
+
+          <div class="box">
+            <div class="tag gold">Step 3</div>
+            <h4>Run through the network</h4>
+            <p>The transformer layers analyze relationships between tokens and estimate the next-token probabilities.</p>
+          </div>
+
+          <div class="arrow">→<small>generate</small></div>
+
+          <div class="box">
+            <div class="tag pink">Step 4</div>
+            <h4>Output tokens</h4>
+            <p>The model emits one token, then another, then another, until the answer is complete.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tokens" class="section">
+      <div class="card">
+        <h2>5. Tokens</h2>
+        <p class="muted">
+          LLMs do not directly “see” whole sentences the same way humans do. They process tokens.
+          A token can be a word, part of a word, punctuation, or symbol.
+        </p>
+        <div class="mini-card" style="margin-top:14px">
+          <div class="tag green">Example</div>
+          <h3>Sentence broken into tokens</h3>
+          <div class="token-row">
+            <div class="token">The</div>
+            <div class="token">cat</div>
+            <div class="token">sat</div>
+            <div class="token">on</div>
+            <div class="token">the</div>
+            <div class="token">mat</div>
+            <div class="token">.</div>
+          </div>
+        </div>
+        <div class="grid-3" style="margin-top:16px">
+          <div class="mini-card">
+            <div class="tag blue">Why tokens matter</div>
+            <div class="muted">Cost, speed, and context limits are all measured in tokens.</div>
+          </div>
+          <div class="mini-card">
+            <div class="tag gold">Longer prompt</div>
+            <div class="muted">More input tokens means more processing and less space left for output.</div>
+          </div>
+          <div class="mini-card">
+            <div class="tag pink">Output too</div>
+            <div class="muted">The answer also consumes tokens, not just the prompt.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="training" class="section">
+      <div class="card">
+        <h2>6. Training: How the Model Learns Before You Use It</h2>
+        <div class="steps">
+          <div class="step">
+            <strong>1. Collect training text</strong>
+            <span>Large text datasets are used so the model sees many patterns of language, facts, styles, structures, and reasoning traces.</span>
+          </div>
+          <div class="step">
+            <strong>2. Prediction task</strong>
+            <span>The model is shown text and trained to predict what token should come next.</span>
+          </div>
+          <div class="step">
+            <strong>3. Compare guess vs actual token</strong>
+            <span>The system measures the difference between the model’s prediction and the true next token.</span>
+          </div>
+          <div class="step">
+            <strong>4. Update weights</strong>
+            <span>Its internal parameters are adjusted little by little so future predictions improve.</span>
+          </div>
+          <div class="step">
+            <strong>5. Repeat at huge scale</strong>
+            <span>Over many training steps, the model becomes much better at continuing text.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="inference" class="section">
+      <div class="card">
+        <h2>7. Inference: What Happens When You Ask a Question</h2>
+        <div class="big-note">
+          <strong>Training is when the model learns.</strong><br>
+          <strong>Inference is when the model answers.</strong>
+        </div>
+        <div class="grid-2" style="margin-top:16px">
+          <div class="mini-card">
+            <div class="tag blue">During training</div>
+            <div class="muted">Weights are updated.</div>
+          </div>
+          <div class="mini-card">
+            <div class="tag red">During inference</div>
+            <div class="muted">Weights usually do not change. The model only uses what it already learned plus the prompt you gave it.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="card">
+        <h2>8. Inside the LLM: Easy Mental Model</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Part</th>
+              <th>Simple meaning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Tokenizer</td>
+              <td>Turns text into tokens.</td>
+            </tr>
+            <tr>
+              <td>Embeddings</td>
+              <td>Turns tokens into vectors the network can work with.</td>
+            </tr>
+            <tr>
+              <td>Transformer layers</td>
+              <td>Main processing blocks that analyze token relationships.</td>
+            </tr>
+            <tr>
+              <td>Attention</td>
+              <td>Lets the model focus on relevant earlier tokens while generating the next token.</td>
+            </tr>
+            <tr>
+              <td>Weights</td>
+              <td>The learned parameters that store the model’s statistical knowledge.</td>
+            </tr>
+            <tr>
+              <td>Decoder output</td>
+              <td>Produces probabilities for possible next tokens.</td>
+            </tr>
+            <tr>
+              <td>Sampling</td>
+              <td>Selects the next token from those probabilities.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="context" class="section">
+      <div class="card">
+        <h2>9. Context Window</h2>
+        <div class="big-note">
+          The context window is the amount of text the model can consider at one time in a single request.
+        </div>
+        <div class="grid-3" style="margin-top:16px">
+          <div class="mini-card">
+            <div class="tag blue">What fits inside</div>
+            <div class="muted">System prompt, user prompt, previous messages, examples, retrieved documents, and current output.</div>
+          </div>
+          <div class="mini-card">
+            <div class="tag gold">If it gets too long</div>
+            <div class="muted">Some earlier text may be cut off or compressed.</div>
+          </div>
+          <div class="mini-card">
+            <div class="tag green">Why it matters</div>
+            <div class="muted">Good answers depend heavily on having the right context in the window.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="memory" class="section">
+      <div class="card">
+        <h2>10. Does an LLM Have Memory?</h2>
+        <div class="compare">
+          <div class="cmp good">
+            <strong>Within one request</strong>
+            <span>Yes, it can use the tokens present in the current context window.</span>
+          </div>
+          <div class="cmp bad">
+            <strong>Permanent native memory by default</strong>
+            <span>No. A base LLM does not usually store new permanent knowledge from one ordinary chat turn.</span>
+          </div>
+        </div>
+        <div class="mini-card" style="margin-top:16px">
+          <div class="tag pink">Simple truth</div>
+          <div class="muted">
+            Base LLMs are usually stateless at request time. They answer from current context plus learned weights, not from newly saved personal memories inside the model after each chat.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="card">
+        <h2>11. Why LLMs Sound Smart</h2>
+        <div class="grid-3">
+          <div class="mini-card">
+            <div class="tag blue">Pattern learning</div>
+            <div class="muted">They learn many language patterns from massive text corpora.</div>
+          </div>
+          <div class="mini-card">
+            <div class="tag green">Context use</div>
+            <div class="muted">They can use your prompt and nearby information very effectively.</div>
+          </div>
+          <div class="mini-card">
+            <div class="tag gold">Generalization</div>
+            <div class="muted">They can combine learned patterns in new ways to answer unseen prompts.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="strengths" class="section">
+      <div class="card">
+        <h2>12. What LLMs Are Good At</h2>
+        <div class="grid-2">
+          <div class="steps">
+            <div class="step"><strong>Writing</strong><span>Drafting, rewriting, summarizing, explaining, translating.</span></div>
+            <div class="step"><strong>Reasoning-like tasks</strong><span>Breaking problems into steps, comparing options, following instructions.</span></div>
+            <div class="step"><strong>Code help</strong><span>Explaining code, generating code, debugging patterns.</span></div>
+          </div>
+          <div class="steps">
+            <div class="step"><strong>Structure conversion</strong><span>Turning notes into bullets, JSON, tables, plans, emails.</span></div>
+            <div class="step"><strong>Style mimicry</strong><span>Casual, formal, concise, educational, persuasive.</span></div>
+            <div class="step"><strong>Knowledge use</strong><span>Answering many questions from training knowledge and provided context.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="limits" class="section">
+      <div class="card">
+        <h2>13. What LLMs Are Not Good At</h2>
+        <div class="grid-3">
+          <div class="mini-card">
+            <div class="tag red">Can hallucinate</div>
+            <div class="muted">They can produce wrong information that sounds confident.</div>
+          </div>
+          <div class="mini-card">
+            <div class="tag red">No guaranteed truth</div>
+            <div class="muted">Fluent output does not mean factual accuracy.</div>
+          </div>
+          <div class="mini-card">
+            <div class="tag red">Limited recency</div>
+            <div class="muted">Without fresh tools or live data, they may not know current events.</div>
+          </div>
+        </div>
+        <div class="grid-3" style="margin-top:16px">
+          <div class="mini-card">
+            <div class="tag red">Context limits</div>
+            <div class="muted">They cannot consider infinite text in one go.</div>
+          </div>
+          <div class="mini-card">
+            <div class="tag red">No human understanding</div>
+            <div class="muted">They model language patterns, not human consciousness.</div>
+          </div>
+          <div class="mini-card">
+            <div class="tag red">Sensitive to prompt quality</div>
+            <div class="muted">Bad inputs often produce bad outputs.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="card">
+        <h2>14. Common Misconceptions</h2>
+        <div class="faq">
+          <div class="faq-item">
+            <strong>“It knows everything.”</strong>
+            <div class="muted">No. It only knows what it learned during training plus what is in the current prompt or provided tools.</div>
+          </div>
+          <div class="faq-item">
+            <strong>“It is searching the internet by default.”</strong>
+            <div class="muted">No. Not unless the system specifically connects it to web tools or external retrieval.</div>
+          </div>
+          <div class="faq-item">
+            <strong>“It remembers every conversation forever.”</strong>
+            <div class="muted">No. A base LLM typically does not permanently learn from each ordinary request.</div>
+          </div>
+          <div class="faq-item">
+            <strong>“It understands exactly like a human.”</strong>
+            <div class="muted">No. It is extremely powerful with language patterns, but that is not the same as human understanding.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="card">
+        <h2>15. One Super Simple End-to-End Example</h2>
+        <div class="diagram" style="padding:18px; margin-top:8px">
+          <div class="flow">
+            <div class="box">
+              <div class="tag blue">Input</div>
+              <h4>User asks</h4>
+              <p>Explain black holes simply.</p>
+            </div>
+            <div class="arrow">→<small>tokenize</small></div>
+            <div class="box">
+              <div class="tag green">LLM</div>
+              <h4>Process context</h4>
+              <p>Reads the question, predicts useful next tokens, and keeps generating.</p>
+            </div>
+            <div class="arrow">→<small>output</small></div>
+            <div class="box">
+              <div class="tag pink">Answer</div>
+              <h4>Return reply</h4>
+              <p>A black hole is a place in space where gravity is so strong that even light cannot escape.</p>
+            </div>
+            <div class="arrow">→<small>done</small></div>
+            <div class="box">
+              <div class="tag gold">Important</div>
+              <h4>No magic</h4>
+              <p>Just input tokens, learned weights, attention, and next-token generation.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="glossary" class="section">
+      <div class="card">
+        <h2>16. Mini Glossary</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Word</th>
+              <th>Meaning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Prompt</td><td>The input text given to the model.</td></tr>
+            <tr><td>Token</td><td>A small text unit the model processes.</td></tr>
+            <tr><td>Parameter / Weight</td><td>A learned internal value in the model.</td></tr>
+            <tr><td>Training</td><td>The phase where the model learns from data.</td></tr>
+            <tr><td>Inference</td><td>The phase where the model answers.</td></tr>
+            <tr><td>Attention</td><td>The mechanism for relating tokens to other tokens.</td></tr>
+            <tr><td>Context window</td><td>The amount of text the model can use in one request.</td></tr>
+            <tr><td>Hallucination</td><td>A confident but incorrect output.</td></tr>
+            <tr><td>Sampling</td><td>The process of choosing the next token from probabilities.</td></tr>
+            <tr><td>Transformer</td><td>The main neural architecture behind modern LLMs.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="card">
+        <h2>17. Final Summary</h2>
+        <div class="big-note">
+          <strong>LLM in the simplest possible form:</strong><br>
+          It takes text input, turns it into tokens, processes those tokens with a transformer network, predicts the next token again and again, and produces text output. It is trained before deployment, usually does not update itself during ordinary chat, and works best when given good context and clear prompts.
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      Single-file HTML presentation focused only on the LLM itself.
+    </div>
+  </div>
+</body>
+</html>
