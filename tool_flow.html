@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ఎండ్-టు-ఎండ్ టూల్ కాల్ ఫ్లో</title>
+  <style>
+    :root {
+      --user-color: #f87171;
+      --app-color: #60a5fa;
+      --llm-color: #a78bfa;
+      --tool-color: #fbbf24;
+      --bg-dark: #0f172a;
+      --border-color: #334155;
+      --text-color: #e2e8f0;
+      --muted-color: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-color);
+      padding: 30px 18px;
+      line-height: 1.6;
+    }
+
+    .flow-container {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 10px;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--muted-color);
+      max-width: 760px;
+      margin: 0 auto 34px;
+      font-size: 1rem;
+    }
+
+    .node {
+      border: 2px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+      margin: 14px 0;
+      background: rgba(30, 41, 59, 0.75);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+    }
+
+    .user { border-color: var(--user-color); }
+    .app { border-color: var(--app-color); }
+    .llm { border-color: var(--llm-color); }
+    .tool { border-color: var(--tool-color); }
+
+    .label {
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      margin-bottom: 8px;
+      display: block;
+      letter-spacing: 0.04em;
+    }
+
+    .user .label { color: var(--user-color); }
+    .app .label { color: var(--app-color); }
+    .llm .label { color: var(--llm-color); }
+    .tool .label { color: var(--tool-color); }
+
+    .arrow {
+      text-align: center;
+      font-size: 24px;
+      color: #64748b;
+      margin: -2px 0;
+    }
+
+    .code-block {
+      background: #020617;
+      color: #38bdf8;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.92rem;
+      margin-top: 12px;
+      overflow-x: auto;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+
+    code {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.92em;
+    }
+
+    .note {
+      margin-top: 26px;
+      padding: 18px;
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      color: var(--muted-color);
+    }
+
+    .note strong {
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="flow-container">
+    <h1>ఎండ్-టు-ఎండ్ టూల్ కాల్ ఫ్లో</h1>
+    <p class="subtitle">
+      ఒక యూజర్ ప్రశ్న అడిగినప్పుడు, LLM ఎలా ఆలోచిస్తుంది, టూల్ అవసరమని ఎలా గుర్తిస్తుంది,
+      హోస్ట్ యాప్ లేదా సిస్టమ్ ఎలా టూల్‌ను execute చేస్తుంది, చివరికి సమాధానం ఎలా వస్తుంది అనేది ఇది.
+    </p>
+
+    <div class="node user">
+      <span class="label">Step 1: User Input</span>
+      <strong>మీరు:</strong> “విశాఖపట్నం వాతావరణం ఏంటి?” అని టైప్ చేస్తారు.
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <div class="node app">
+      <span class="label">Step 2: Host App / Client Application</span>
+      <strong>యాప్ లేదా సిస్టమ్:</strong> మీ ప్రశ్నను తీసుకుని LLM కి పంపిస్తుంది.
+      అలాగే, LLM వాడగలిగే available tools లేదా functions గురించి కూడా context ఇస్తుంది.
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <div class="node llm">
+      <span class="label">Step 3: LLM Reasoning</span>
+      <strong>LLM:</strong> ప్రశ్నను విశ్లేషిస్తుంది. “ఇది live weather data కి సంబంధించిన ప్రశ్న.
+      నా దగ్గర direct real-time data లేదు. కానీ ఒక tool ఉపయోగించాలి” అని గుర్తిస్తుంది.
+      <br /><br />
+      ఇక్కడ ముఖ్యమైన విషయం ఏమిటంటే:
+      <strong>LLM టూల్‌ను direct గా run చేయదు.</strong>
+      అది కేవలం <strong>tool request</strong> సృష్టించి, host app కి పంపిస్తుంది.
+      <div class="code-block">
+{
+  "tool": "weather_api",
+  "arguments": {
+    "location": "Visakhapatnam"
+  }
+}
+      </div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <div class="node tool">
+      <span class="label">Step 4: Tool Execution by Host System</span>
+      <strong>హోస్ట్ యాప్ / సిస్టమ్:</strong> LLM పంపిన tool request ను చూసి,
+      నిజంగా weather API లేదా external service ని call చేస్తుంది.
+      అంటే <strong>tool call ను execute చేసేది యాప్ లేదా సిస్టమ్</strong>,
+      LLM కాదు.
+      <div class="code-block">
+{
+  "temperature": "29°C",
+  "condition": "Partly Cloudy"
+}
+      </div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <div class="node llm">
+      <span class="label">Step 5: LLM Uses Tool Result</span>
+      <strong>LLM:</strong> ఇప్పుడు tool నుంచి వచ్చిన result ను తీసుకుని,
+      దానిని యూజర్‌కి అర్థమయ్యే సహజమైన భాషలో సమాధానంగా మారుస్తుంది.
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <div class="node user">
+      <span class="label">Step 6: Final User Response</span>
+      <strong>మీరు చూసేది:</strong> “విశాఖపట్నంలో ప్రస్తుతం ఉష్ణోగ్రత 29°C ఉంది.
+      వాతావరణం partly cloudyగా ఉంది.”
+    </div>
+
+    <div class="note">
+      <strong>Key Idea:</strong> LLM tool అవసరమని నిర్ణయిస్తుంది, కానీ
+      <strong>tool call ను నిజంగా execute చేసేది host app లేదా surrounding system</strong>.
+      అందుకే raw LLM ఒక్కటే autonomous system కాదు.
+    </div>
+  </div>
+</body>
+</html>
