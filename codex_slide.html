@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How LLMs Work</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0a0a0f;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    color: #e0e0e0;
+    overflow: hidden;
+  }
+
+  .slide {
+    width: 90vw;
+    max-width: 1100px;
+    padding: 3rem 4rem;
+  }
+
+  h1 {
+    font-size: 3.2rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 0.3rem;
+    background: linear-gradient(135deg, #44aaff, #00ccaa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .subtitle {
+    font-size: 1.35rem;
+    color: #888;
+    margin-bottom: 2.8rem;
+    font-style: italic;
+  }
+
+  .columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+  }
+
+  .card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 1.8rem 2rem;
+  }
+
+  .card h2 {
+    font-size: 1.15rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+    color: #44aaff;
+  }
+
+  .card ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .card li {
+    position: relative;
+    padding-left: 1.4rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.05rem;
+    line-height: 1.55;
+    color: #ccc;
+  }
+
+  .card li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.55rem;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #44aaff;
+  }
+
+  .quote-box {
+    margin-top: 2.5rem;
+    border-left: 4px solid #44aaff;
+    padding: 1.2rem 1.8rem;
+    background: rgba(68, 170, 255, 0.06);
+    border-radius: 0 10px 10px 0;
+  }
+
+  .quote-box p {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: #ddd;
+  }
+
+  .quote-box .highlight {
+    color: #00ccaa;
+    font-weight: 700;
+  }
+
+  .footer {
+    margin-top: 2rem;
+    text-align: right;
+    font-size: 0.85rem;
+    color: #555;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <h1>How LLMs Work</h1>
+  <p class="subtitle">Pattern prediction at scale, with useful reasoning-like behavior.</p>
+
+  <div class="columns">
+    <div class="card">
+      <h2>What Is True</h2>
+      <ul>
+        <li>LLMs are trained to predict the next token from massive text and code datasets</li>
+        <li>That objective can produce strong capabilities in writing, coding, summarization, translation, and many multi-step tasks</li>
+        <li>They can often simulate planning and reasoning well enough to be practically useful</li>
+        <li>They work best when combined with tools, retrieval, and human review</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>What Is Not Guaranteed</h2>
+      <ul>
+        <li>Fluent output is not the same as truth, understanding, or reliability</li>
+        <li>Models can hallucinate facts, citations, calculations, or explanations</li>
+        <li>Performance on benchmarks does not guarantee expert-level performance in real-world settings</li>
+        <li>Uncertainty and refusal behavior depend heavily on training, prompting, and system design</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="quote-box">
+    <p>LLMs are fundamentally prediction systems, yet
+    <span class="highlight">their scale makes them surprisingly capable</span>.
+    They can be powerful reasoning aids, but they should not be treated
+    as automatically correct or self-verifying.</p>
+  </div>
+
+  <p class="footer">Useful, impressive, and fallible.</p>
+
+</div>
+</body>
+</html>
