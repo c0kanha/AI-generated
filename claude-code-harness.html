@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Claude Code Harness — What It Is and How It Works</title>
+
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            max-width: 860px;
+            margin: 40px auto;
+            padding: 0 24px;
+            line-height: 1.75;
+            color: #2d2d2d;
+            background: linear-gradient(180deg, #eef8ee 0%, #ffffff 300px);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, #2e7d32, #4caf50);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            color: #2e7d32;
+            border-bottom: 2px solid #c8e6c9;
+            padding-bottom: 6px;
+            margin-top: 52px;
+        }
+
+        h3 { color: #388e3c; }
+
+        .subtitle {
+            color: #777;
+            margin-top: 0;
+            font-size: 1.05rem;
+        }
+
+        strong { color: #2e7d32; }
+
+        code {
+            padding: 2px 7px;
+            background: #e8f5e9;
+            border-radius: 5px;
+            color: #2e7d32;
+            font-size: 0.9em;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+
+        pre {
+            padding: 16px 18px;
+            overflow-x: auto;
+            background: #1b2e1b;
+            color: #c8e6c9;
+            border-radius: 10px;
+            border-left: 4px solid #4caf50;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.85em;
+            line-height: 1.6;
+        }
+
+        pre code { background: none; color: inherit; padding: 0; }
+
+        ol li, ul li { margin: 8px 0; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(46, 125, 50, 0.1);
+        }
+
+        thead th {
+            background: linear-gradient(135deg, #2e7d32, #4caf50);
+            color: #fff;
+            text-align: left;
+            padding: 10px 14px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        tbody td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #e0f0e0;
+            font-size: 0.92rem;
+            vertical-align: top;
+        }
+
+        tbody tr:nth-child(even) { background: #f5fbf5; }
+        tbody tr:hover { background: #e8f5e9; }
+
+        .box {
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin: 24px 0;
+            border-left: 4px solid;
+        }
+
+        .box.green {
+            background: linear-gradient(135deg, #eef8ee, #e0f5e0);
+            border-color: #4caf50;
+        }
+
+        .box.green h4 { color: #2e7d32; margin: 0 0 8px; }
+
+        .box.orange {
+            background: linear-gradient(135deg, #fff6ec, #ffeed9);
+            border-color: #f0943e;
+        }
+
+        .box.orange h4 { color: #e65100; margin: 0 0 8px; }
+
+        .box.purple {
+            background: linear-gradient(135deg, #f3f0ff, #eee8ff);
+            border-color: #7c6ef0;
+        }
+
+        .box.purple h4 { color: #3b3196; margin: 0 0 8px; }
+
+        .box.blue {
+            background: linear-gradient(135deg, #e8f0fe, #d4e4fc);
+            border-color: #4285f4;
+        }
+
+        .box.blue h4 { color: #1a56d6; margin: 0 0 8px; }
+
+        /* Diagram */
+        .diagram {
+            text-align: center;
+            margin: 28px 0;
+            padding: 24px;
+            background: #fff;
+            border: 2px solid #c8e6c9;
+            border-radius: 14px;
+        }
+
+        .d-box {
+            display: inline-block;
+            border-radius: 10px;
+            padding: 12px 20px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            border: 2px solid;
+            margin: 4px;
+        }
+
+        .d-arrow {
+            display: block;
+            font-size: 1.2rem;
+            color: #999;
+            margin: 6px 0;
+        }
+
+        .d-label {
+            font-size: 0.78rem;
+            color: #888;
+            font-weight: 400;
+        }
+
+        .d-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin: 6px 0;
+        }
+
+        .analogy {
+            background: #fff;
+            border: 2px dashed #4caf50;
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin: 24px 0;
+        }
+
+        .analogy h4 {
+            color: #2e7d32;
+            margin: 0 0 8px;
+        }
+
+        .footer {
+            text-align: center;
+            color: #999;
+            font-size: 0.85rem;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid #c8e6c9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Claude Code Harness</h1>
+    <p class="subtitle">The local program on your machine that connects you to the AI and executes actions on your behalf.</p>
+
+    <!-- ============================== -->
+    <h2>What Is It?</h2>
+
+    <p>The Claude Code Harness is a <strong>program that runs on your computer</strong>. When you type
+        <code>claude</code> in your terminal, you're launching the harness. It is not the AI itself &mdash;
+        it is the <strong>messenger and executor</strong> that sits between you and the AI.</p>
+
+    <div class="analogy">
+        <h4>Analogy: A personal assistant</h4>
+        <p>Imagine you hire an assistant. You tell them what you need. They walk to the expert (the LLM),
+            relay your request, bring back the expert's advice, and then physically do the work
+            (open files, run commands, etc.). The expert never leaves their office &mdash; your assistant
+            does all the legwork. The harness is that assistant.</p>
+    </div>
+
+    <!-- ============================== -->
+    <h2>Where Does It Run?</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Detail</th>
+                <th>Answer</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Location</td>
+                <td>Your local machine (Mac, Windows, or Linux)</td>
+            </tr>
+            <tr>
+                <td>How to start</td>
+                <td>Type <code>claude</code> in terminal, or open Claude Code desktop app, or use VS Code / JetBrains extension</td>
+            </tr>
+            <tr>
+                <td>Written in</td>
+                <td>TypeScript / Node.js</td>
+            </tr>
+            <tr>
+                <td>Runs as</td>
+                <td>A local process on your machine, with access to your file system and shell</td>
+            </tr>
+            <tr>
+                <td>Needs internet?</td>
+                <td>Yes &mdash; to communicate with the Anthropic API. But all tool execution is local.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- ============================== -->
+    <h2>What Does It Do?</h2>
+
+    <p>The harness has <strong>7 main jobs</strong>:</p>
+
+    <h3>1. Receives your input</h3>
+    <p>When you type a prompt, the harness captures your text from the terminal. It also detects
+        slash commands (like <code>/help</code>), file references, and image paths.</p>
+
+    <h3>2. Packages the API request</h3>
+    <p>Your prompt alone isn't enough. The harness builds a <strong>complete API payload</strong> containing:</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>What</th>
+                <th>Where it comes from</th>
+                <th>Why the LLM needs it</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>System prompt</td>
+                <td>Built into the harness + CLAUDE.md files</td>
+                <td>Tells the LLM how to behave, what rules to follow, what tools are available</td>
+            </tr>
+            <tr>
+                <td>Tool definitions</td>
+                <td>Built into the harness (JSON schemas)</td>
+                <td>The LLM needs to know what tools exist, what parameters they take, and what they do</td>
+            </tr>
+            <tr>
+                <td>Conversation history</td>
+                <td>Stored in harness memory (this session)</td>
+                <td>The LLM has no memory between calls &mdash; the harness replays the full conversation each time</td>
+            </tr>
+            <tr>
+                <td>Your new message</td>
+                <td>What you just typed</td>
+                <td>The actual request to respond to</td>
+            </tr>
+            <tr>
+                <td>Previous tool results</td>
+                <td>Captured by the harness from local execution</td>
+                <td>The LLM needs to see what happened when tools were run</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>3. Sends the request to Anthropic API</h3>
+    <p>The harness sends the full payload as an <strong>HTTPS POST request</strong> to
+        <code>api.anthropic.com</code>. This is an internet call &mdash; your data leaves your
+        machine and travels to Anthropic's servers.</p>
+
+    <h3>4. Receives the LLM's response</h3>
+    <p>The API sends back a JSON response. The harness parses it and determines:
+        is this <strong>plain text</strong> (display to user) or <strong>tool calls</strong> (execute locally)?</p>
+
+    <h3>5. Executes tool calls locally</h3>
+    <p>This is the harness's most important job. When the LLM says "run this bash command" or
+        "read this file," the harness <strong>actually does it on your machine</strong>.</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Tool</th>
+                <th>What the harness does locally</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>Read</code></td>
+                <td>Opens a file on your disk, reads its contents (or renders PDF/image), returns the content to the LLM</td>
+            </tr>
+            <tr>
+                <td><code>Write</code></td>
+                <td>Creates or overwrites a file on your disk with content the LLM generated</td>
+            </tr>
+            <tr>
+                <td><code>Edit</code></td>
+                <td>Finds a specific string in a file on disk and replaces it with new text</td>
+            </tr>
+            <tr>
+                <td><code>Bash</code></td>
+                <td>Spawns a child process on your machine, runs a shell command, captures stdout/stderr</td>
+            </tr>
+            <tr>
+                <td><code>Glob</code></td>
+                <td>Searches your file system for files matching a pattern (like <code>**/*.pdf</code>)</td>
+            </tr>
+            <tr>
+                <td><code>Grep</code></td>
+                <td>Searches file contents on your disk using regular expressions</td>
+            </tr>
+            <tr>
+                <td><code>Agent</code></td>
+                <td>Spawns a sub-conversation with the LLM (a separate API call chain) for parallel work</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="box green">
+        <h4>The tools run on YOUR machine, not on Anthropic's servers</h4>
+        <p>When the LLM says <code>Bash("brew install poppler")</code>, it's your Mac that runs
+            <code>brew install poppler</code>. Anthropic's servers never touch your file system.
+            The harness is the bridge that makes this possible.</p>
+    </div>
+
+    <h3>6. Enforces permissions</h3>
+    <p>Before executing a tool call, the harness checks your <strong>permission settings</strong>:</p>
+
+    <ul>
+        <li><strong>Auto-allowed:</strong> Some tools (like Read, Glob, Grep) may be pre-approved &mdash; the harness runs them immediately</li>
+        <li><strong>Requires approval:</strong> Dangerous tools (like Bash, Write) show a prompt: "Claude wants to run [command]. Allow?" &mdash; you press Y or N</li>
+        <li><strong>Denied:</strong> If you press N, the harness tells the LLM "the user denied this tool call" and the LLM must find another approach</li>
+    </ul>
+
+    <div class="box orange">
+        <h4>You are always in control</h4>
+        <p>The harness never runs dangerous commands without your approval. Even if the LLM
+            generates a <code>rm -rf /</code> command, the harness would show it to you first
+            and wait for your explicit approval. You are the gatekeeper.</p>
+    </div>
+
+    <h3>7. Displays output to you</h3>
+    <p>When the LLM sends back plain text (not tool calls), the harness renders it in your terminal
+        with Markdown formatting &mdash; bold, code blocks, headers, lists, etc.</p>
+
+    <!-- ============================== -->
+    <h2>What It Does NOT Do</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>It does NOT...</th>
+                <th>Why not</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Think, reason, or make decisions</td>
+                <td>It has no intelligence. It just follows instructions from the LLM.</td>
+            </tr>
+            <tr>
+                <td>Generate text, code, or creative content</td>
+                <td>All generated content comes from the LLM. The harness just passes it through.</td>
+            </tr>
+            <tr>
+                <td>Understand your intent</td>
+                <td>It doesn't interpret your prompt. It forwards it to the LLM for interpretation.</td>
+            </tr>
+            <tr>
+                <td>Store long-term memory</td>
+                <td>Conversation memory only lasts for the current session. The harness doesn't remember previous sessions (except through memory files on disk).</td>
+            </tr>
+            <tr>
+                <td>Run on Anthropic's servers</td>
+                <td>It runs entirely on your machine. It's a local Node.js process.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- ============================== -->
+    <h2>The Harness in the Data Flow</h2>
+
+    <div class="diagram">
+        <div class="d-box" style="background:#fffaf5; border-color:#f0943e; color:#c07020;">You (Terminal)</div>
+        <div class="d-arrow">&darr; your typed prompt &nbsp;&nbsp; &uarr; formatted output</div>
+        <div class="d-box" style="background:#e8f5e9; border-color:#4caf50; color:#2e7d32; padding:16px 32px; font-size:1rem;">
+            Claude Code Harness (THIS)
+        </div>
+        <div class="d-row">
+            <div>
+                <div class="d-arrow">&darr; API request &nbsp; &uarr; API response</div>
+                <div class="d-box" style="background:#f5f9ff; border-color:#4285f4; color:#1a56d6;">Anthropic API &rarr; LLM</div>
+            </div>
+            <div style="padding: 0 20px; color:#999;">and</div>
+            <div>
+                <div class="d-arrow">&darr; tool calls &nbsp; &uarr; tool results</div>
+                <div class="d-box" style="background:#fafafa; border-color:#ccc; color:#666;">Your Mac (files, bash, disk)</div>
+            </div>
+        </div>
+    </div>
+
+    <p>The harness sits in the middle and talks to <strong>three parties</strong>:</p>
+    <ol>
+        <li><strong>You</strong> &mdash; receives your input, shows you output, asks for permission</li>
+        <li><strong>Anthropic API</strong> &mdash; sends prompts, receives LLM responses (over HTTPS)</li>
+        <li><strong>Your Mac</strong> &mdash; executes tools, reads/writes files, runs commands (local)</li>
+    </ol>
+
+    <!-- ============================== -->
+    <h2>What Happens Inside the Harness (Step by Step)</h2>
+
+    <p>Here's the internal process on every turn:</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Step</th>
+                <th>What happens inside the harness</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Capture your input from stdin (terminal keyboard)</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Append your message to the conversation history array</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Build the API payload: system prompt + tool schemas + full conversation history</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Send HTTPS POST to <code>api.anthropic.com/v1/messages</code> with your API key</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Receive streaming response (tokens arrive one by one)</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Parse response: is it text content or tool-use content?</td>
+            </tr>
+            <tr>
+                <td>7a</td>
+                <td><strong>If text:</strong> render Markdown and display in terminal. Done for this turn.</td>
+            </tr>
+            <tr>
+                <td>7b</td>
+                <td><strong>If tool call:</strong> check permission settings</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>If permission needed: display prompt to user, wait for Y/N</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>If approved: execute the tool locally (read file, run bash, etc.)</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>Capture the tool's output (file content, stdout, error messages, images)</td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td>Append both the LLM's tool call and the tool result to conversation history</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td>Go back to step 3 (send updated conversation to API for the next LLM turn)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="box green">
+        <h4>The loop continues until the LLM stops calling tools</h4>
+        <p>Steps 3&ndash;12 repeat for every tool call. When the LLM finally responds with plain text
+            (no tool calls), the loop ends and the text is displayed to you. A single prompt from you
+            might trigger 1 loop iteration or 20 &mdash; depending on how complex the task is.</p>
+    </div>
+
+    <!-- ============================== -->
+    <h2>Session Memory vs Persistent Memory</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>How it works</th>
+                <th>Lifespan</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Session memory</strong></td>
+                <td>The harness keeps the full conversation history in RAM and replays it on every API call</td>
+                <td>Dies when you close the terminal / exit Claude Code</td>
+            </tr>
+            <tr>
+                <td><strong>Persistent memory</strong></td>
+                <td>The LLM can ask the harness to write memory files to <code>~/.claude/projects/.../memory/</code></td>
+                <td>Survives across sessions (files on disk)</td>
+            </tr>
+            <tr>
+                <td><strong>CLAUDE.md</strong></td>
+                <td>Project-level instructions the harness includes in the system prompt automatically</td>
+                <td>Permanent (part of the project)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="box purple">
+        <h4>The LLM has no memory of its own</h4>
+        <p>Every API call, the LLM starts completely fresh. It doesn't remember the last call.
+            The harness creates the <em>illusion</em> of memory by resending the full conversation
+            every time. This is why long conversations get slower &mdash; the payload keeps growing.</p>
+    </div>
+
+    <!-- ============================== -->
+    <h2>Key Takeaways</h2>
+
+    <ul>
+        <li>The harness is a <strong>local program</strong> on your machine, not a cloud service</li>
+        <li>It is the <strong>only actor</strong> that can touch your files, run commands, and access your system</li>
+        <li>It has <strong>no intelligence</strong> &mdash; it just relays messages and executes instructions</li>
+        <li>It <strong>enforces permissions</strong> &mdash; you approve or deny every risky action</li>
+        <li>It <strong>manages conversation state</strong> &mdash; the LLM is stateless, the harness provides continuity</li>
+        <li>Without the harness, the LLM would be a brain in a jar with no way to interact with the real world</li>
+    </ul>
+
+    <div class="footer">
+        Claude Code Harness &mdash; The local executor that bridges you, the LLM, and your machine &middot; April 2026
+    </div>
+
+</body>
+</html>

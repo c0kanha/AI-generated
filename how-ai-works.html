@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>How AI Converted a Scanned PDF to HTML — The Full Data Flow</title>
+
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 24px;
+            line-height: 1.75;
+            color: #2d2d2d;
+            background: linear-gradient(180deg, #f8f6ff 0%, #ffffff 300px);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, #5b4ed4, #e0559a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            color: #3b3196;
+            border-bottom: 2px solid #e8e4f8;
+            padding-bottom: 6px;
+            margin-top: 52px;
+        }
+
+        h3 { color: #5a4fb0; }
+
+        .subtitle {
+            color: #777;
+            margin-top: 0;
+            font-size: 1.05rem;
+        }
+
+        a { color: #5b4ed4; }
+
+        code {
+            padding: 2px 7px;
+            background: #f0edf9;
+            border-radius: 5px;
+            color: #5b4ed4;
+            font-size: 0.9em;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+
+        pre {
+            padding: 16px 18px;
+            overflow-x: auto;
+            background: #1e1e2e;
+            color: #cdd6f4;
+            border-radius: 10px;
+            border-left: 4px solid #7c6ef0;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.85em;
+            line-height: 1.6;
+        }
+
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+
+        strong { color: #3b3196; }
+        ol li, ul li { margin: 8px 0; }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(91, 78, 212, 0.08);
+        }
+
+        thead th {
+            background: linear-gradient(135deg, #5b4ed4, #7c6ef0);
+            color: #fff;
+            text-align: left;
+            padding: 10px 14px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        tbody td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #ece8f8;
+            font-size: 0.92rem;
+            vertical-align: top;
+        }
+
+        tbody tr:nth-child(even) { background: #faf8ff; }
+        tbody tr:hover { background: #f0edf9; }
+
+        /* Actor cards */
+        .actors {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin: 24px 0;
+        }
+
+        .actor-card {
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            border: 2px solid;
+        }
+
+        .actor-card h4 {
+            margin: 0 0 6px;
+            font-size: 0.95rem;
+        }
+
+        .actor-card p {
+            margin: 0;
+            font-size: 0.82rem;
+            line-height: 1.4;
+        }
+
+        .actor-card.you {
+            background: linear-gradient(135deg, #fff6ec, #ffeed9);
+            border-color: #f0943e;
+        }
+        .actor-card.you h4 { color: #c07020; }
+
+        .actor-card.harness {
+            background: linear-gradient(135deg, #eef8ee, #e0f5e0);
+            border-color: #4caf50;
+        }
+        .actor-card.harness h4 { color: #2e7d32; }
+
+        .actor-card.api {
+            background: linear-gradient(135deg, #e8f0fe, #d4e4fc);
+            border-color: #4285f4;
+        }
+        .actor-card.api h4 { color: #1a56d6; }
+
+        .actor-card.llm {
+            background: linear-gradient(135deg, #f3f0ff, #eee8ff);
+            border-color: #7c6ef0;
+        }
+        .actor-card.llm h4 { color: #3b3196; }
+
+        /* Message flow */
+        .msg-flow {
+            margin: 28px 0;
+        }
+
+        .msg {
+            display: grid;
+            grid-template-columns: 100px 40px 1fr;
+            gap: 0;
+            align-items: start;
+            margin: 0;
+            padding: 14px 0;
+            border-bottom: 1px solid #f0edf9;
+        }
+
+        .msg:last-child { border-bottom: none; }
+
+        .msg-from {
+            font-weight: 700;
+            font-size: 0.82rem;
+            text-align: right;
+            padding-right: 8px;
+            padding-top: 2px;
+        }
+
+        .msg-arrow {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #999;
+            padding-top: 1px;
+        }
+
+        .msg-body {
+            background: #fff;
+            border: 1px solid #e8e4f8;
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 0.88rem;
+        }
+
+        .msg-to {
+            font-weight: 700;
+            font-size: 0.78rem;
+            color: #999;
+            margin-bottom: 4px;
+        }
+
+        .msg-content {
+            color: #444;
+        }
+
+        .msg-content em {
+            color: #999;
+            font-size: 0.85em;
+        }
+
+        /* Color-code by sender */
+        .msg-from.you { color: #c07020; }
+        .msg-from.harness { color: #2e7d32; }
+        .msg-from.api { color: #1a56d6; }
+        .msg-from.llm { color: #5b4ed4; }
+        .msg-from.tool { color: #2e7d32; }
+        .msg-from.os { color: #888; }
+
+        .msg-body.you-msg { border-color: #ffd5a0; background: #fffaf5; }
+        .msg-body.harness-msg { border-color: #b8e0b8; background: #f8fdf8; }
+        .msg-body.api-msg { border-color: #b3d1fc; background: #f5f9ff; }
+        .msg-body.llm-msg { border-color: #d0c8f0; background: #faf8ff; }
+        .msg-body.tool-msg { border-color: #b8e0b8; background: #f8fdf8; }
+        .msg-body.os-msg { border-color: #ddd; background: #fafafa; }
+
+        /* Concept & warning boxes */
+        .concept {
+            background: linear-gradient(135deg, #eef8ee, #e0f5e0);
+            border-left: 4px solid #4caf50;
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin: 24px 0;
+        }
+        .concept h4 { color: #2e7d32; margin: 0 0 8px; }
+
+        .warning {
+            background: linear-gradient(135deg, #fff6ec, #ffeed9);
+            border-left: 4px solid #f0943e;
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin: 24px 0;
+        }
+        .warning h4 { color: #e65100; margin: 0 0 8px; }
+
+        .info {
+            background: linear-gradient(135deg, #f3f0ff, #eee8ff);
+            border-left: 4px solid #7c6ef0;
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin: 24px 0;
+        }
+        .info h4 { color: #3b3196; margin: 0 0 8px; }
+
+        /* Round counter */
+        .round-header {
+            background: linear-gradient(135deg, #5b4ed4, #7c6ef0);
+            color: #fff;
+            border-radius: 10px;
+            padding: 12px 20px;
+            margin: 32px 0 4px;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .round-header span {
+            font-weight: 400;
+            font-size: 0.85rem;
+            opacity: 0.85;
+        }
+
+        .round-summary {
+            background: #faf8ff;
+            border: 1px solid #e8e4f8;
+            border-radius: 0 0 10px 10px;
+            padding: 12px 20px;
+            margin: 0 0 20px;
+            font-size: 0.88rem;
+            color: #666;
+        }
+
+        /* Diagram */
+        .arch-diagram {
+            text-align: center;
+            margin: 28px 0;
+            padding: 24px;
+            background: #fff;
+            border: 2px solid #e8e4f8;
+            border-radius: 14px;
+        }
+
+        .arch-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin: 8px 0;
+        }
+
+        .arch-box {
+            border-radius: 10px;
+            padding: 12px 20px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            border: 2px solid;
+            min-width: 140px;
+        }
+
+        .arch-arrow-down {
+            font-size: 1.2rem;
+            color: #999;
+            margin: 4px 0;
+        }
+
+        .arch-arrow-right {
+            font-size: 1.2rem;
+            color: #999;
+        }
+
+        .arch-label {
+            font-size: 0.75rem;
+            color: #888;
+            font-weight: 400;
+        }
+
+        .footer {
+            text-align: center;
+            color: #999;
+            font-size: 0.85rem;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid #e8e4f8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>How AI Converted a Scanned PDF to HTML</h1>
+    <p class="subtitle">Every message, every actor, every direction &mdash; the complete data flow from your keyboard to the final file.</p>
+
+    <!-- ============================== -->
+    <h2>The 4 Actors</h2>
+
+    <p>There is no single "AI." There are <strong>4 separate actors</strong> involved, each with a different role and location:</p>
+
+    <div class="actors">
+        <div class="actor-card you">
+            <h4>You (Human)</h4>
+            <p>Types prompts. Approves or denies tool calls. Sees final output.</p>
+            <p style="margin-top:8px;"><strong>Location:</strong> Your keyboard &amp; screen</p>
+        </div>
+        <div class="actor-card harness">
+            <h4>Claude Code Harness</h4>
+            <p>The CLI program running on your Mac. Manages conversation, executes tools, enforces permissions.</p>
+            <p style="margin-top:8px;"><strong>Location:</strong> Your Mac (local process)</p>
+        </div>
+        <div class="actor-card api">
+            <h4>Anthropic API</h4>
+            <p>Cloud service that receives requests and runs the LLM. Handles authentication, rate limits, billing.</p>
+            <p style="margin-top:8px;"><strong>Location:</strong> Anthropic's servers (internet)</p>
+        </div>
+        <div class="actor-card llm">
+            <h4>Claude LLM</h4>
+            <p>The language model. Reads text &amp; images, reasons, generates text, decides which tools to call. Has no access to your machine.</p>
+            <p style="margin-top:8px;"><strong>Location:</strong> Anthropic's GPU cluster</p>
+        </div>
+    </div>
+
+    <div class="warning">
+        <h4>The LLM is trapped in a box</h4>
+        <p>The Claude LLM <strong>cannot see your screen</strong>, <strong>cannot access your files</strong>,
+            <strong>cannot run commands</strong>, and <strong>cannot reach the internet</strong>.
+            It can only receive text/images and produce text. Everything else is done <em>for</em> it by the harness
+            running on your machine. The LLM writes "please run this bash command" and the harness
+            decides whether to actually run it (after your approval).</p>
+    </div>
+
+    <!-- ============================== -->
+    <h2>The Architecture</h2>
+
+    <div class="arch-diagram">
+        <div class="arch-row">
+            <div class="arch-box" style="background:#fffaf5; border-color:#f0943e; color:#c07020;">
+                You (Terminal)
+            </div>
+        </div>
+        <div class="arch-arrow-down">&darr; <span class="arch-label">you type prompt</span> &uarr; <span class="arch-label">you see output</span></div>
+        <div class="arch-row">
+            <div class="arch-box" style="background:#f8fdf8; border-color:#4caf50; color:#2e7d32;">
+                Claude Code Harness
+            </div>
+            <div class="arch-arrow-right">&larr;&rarr;</div>
+            <div class="arch-box" style="background:#fafafa; border-color:#ccc; color:#666;">
+                Your Mac's File System, Bash, Tools
+            </div>
+        </div>
+        <div class="arch-arrow-down">&darr; <span class="arch-label">HTTPS API call</span> &uarr; <span class="arch-label">JSON response</span></div>
+        <div class="arch-row">
+            <div class="arch-box" style="background:#f5f9ff; border-color:#4285f4; color:#1a56d6;">
+                Anthropic API
+            </div>
+        </div>
+        <div class="arch-arrow-down">&darr; <span class="arch-label">runs model</span> &uarr; <span class="arch-label">returns tokens</span></div>
+        <div class="arch-row">
+            <div class="arch-box" style="background:#faf8ff; border-color:#7c6ef0; color:#3b3196;">
+                Claude LLM (on GPUs)
+            </div>
+        </div>
+    </div>
+
+    <div class="info">
+        <h4>The harness is the hub</h4>
+        <p>Notice: the LLM never talks to you directly. The LLM never touches your files directly.
+            <strong>Everything goes through the harness.</strong> The harness is the middleman that:</p>
+        <ul>
+            <li>Sends your prompt to the API</li>
+            <li>Receives the LLM's response from the API</li>
+            <li>Executes tool calls on your Mac (with your permission)</li>
+            <li>Sends tool results back to the API for the LLM to read</li>
+            <li>Displays the LLM's final text to you</li>
+        </ul>
+    </div>
+
+    <!-- ============================== -->
+    <h2>The Conversation Loop</h2>
+
+    <p>Every interaction follows the same cycle. Here it is with all actors labeled:</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Step</th>
+                <th>From</th>
+                <th>To</th>
+                <th>What is sent</th>
+                <th>How</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>You</td>
+                <td>Harness</td>
+                <td>Your typed prompt (text)</td>
+                <td>Keyboard &rarr; terminal stdin</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Harness</td>
+                <td>Anthropic API</td>
+                <td>Full JSON payload: system instructions + conversation history + your new message + list of available tools</td>
+                <td>HTTPS POST to <code>api.anthropic.com</code></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Anthropic API</td>
+                <td>Claude LLM</td>
+                <td>The full prompt (all messages + tool definitions)</td>
+                <td>Internal: loaded onto GPUs</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Claude LLM</td>
+                <td>Anthropic API</td>
+                <td>Generated response: either text to display, OR one or more tool calls (name + arguments)</td>
+                <td>Internal: model output tokens</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Anthropic API</td>
+                <td>Harness</td>
+                <td>JSON response containing the LLM's output</td>
+                <td>HTTPS response</td>
+            </tr>
+            <tr>
+                <td>6a</td>
+                <td>Harness</td>
+                <td>You</td>
+                <td><strong>If tool call:</strong> "The AI wants to run [tool]. Allow?" (permission prompt)</td>
+                <td>Terminal output</td>
+            </tr>
+            <tr>
+                <td>6b</td>
+                <td>You</td>
+                <td>Harness</td>
+                <td>You press Y (approve) or N (deny)</td>
+                <td>Keyboard</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Harness</td>
+                <td>Your Mac</td>
+                <td><strong>Executes the tool</strong> locally (reads a file, runs bash, writes a file, etc.)</td>
+                <td>Local system calls, child processes</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>Your Mac</td>
+                <td>Harness</td>
+                <td>Tool result (file contents, command output, error messages, image data)</td>
+                <td>stdout, file I/O</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>Harness</td>
+                <td>Anthropic API</td>
+                <td>Tool result appended to conversation &rarr; sent as new API call</td>
+                <td>HTTPS POST (another round trip)</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>LLM</td>
+                <td>(via API &rarr; Harness)</td>
+                <td>Reads the tool result, decides: call another tool, or respond with final text</td>
+                <td>Repeat from step 3</td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td>Harness</td>
+                <td>You</td>
+                <td><strong>If final text:</strong> displays the LLM's message in your terminal</td>
+                <td>Terminal output</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="concept">
+        <h4>Every tool call = a full round trip to Anthropic's servers</h4>
+        <p>When the LLM calls a tool, the result doesn't magically appear in its memory.
+            The harness has to send the result back to the API, and the LLM processes the
+            <strong>entire conversation again from the top</strong> (with caching optimizations).
+            This is why 24 tool calls means roughly 24 round trips over the internet.</p>
+    </div>
+
+    <!-- ============================== -->
+    <h2>The Actual Conversation &mdash; Every Round Trip</h2>
+
+    <p>Below is <strong>every single exchange</strong> that happened when you typed
+        <code>can convert scan.pdf to html</code>. Each "round" is one full loop:
+        harness &rarr; API &rarr; LLM &rarr; API &rarr; harness &rarr; tool &rarr; harness &rarr; API &rarr; ...</p>
+
+    <!-- ROUND 1 -->
+    <div class="round-header">Round 1 <span>&mdash; Your prompt arrives</span></div>
+    <div class="msg-flow">
+        <div class="msg">
+            <div class="msg-from you">You</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body you-msg">
+                <div class="msg-to">To: Harness</div>
+                <div class="msg-content">
+                    <code>can convert scan.pdf to html</code><br>
+                    <em>6 words typed into the terminal</em>
+                </div>
+            </div>
+        </div>
+        <div class="msg">
+            <div class="msg-from harness">Harness</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body api-msg">
+                <div class="msg-to">To: Anthropic API</div>
+                <div class="msg-content">
+                    HTTPS POST containing:<br>
+                    &bull; <strong>System prompt</strong> (~4,000 words of instructions: who you are, what tools exist, how to behave, safety rules, formatting rules)<br>
+                    &bull; <strong>Tool definitions</strong> (JSON schemas for ~15 tools: Read, Write, Edit, Bash, Glob, Grep, Agent, etc. &mdash; each with parameter types and descriptions)<br>
+                    &bull; <strong>Conversation history</strong> (all prior messages in this session, including the earlier myMacMini.html work)<br>
+                    &bull; <strong>Your new message</strong>: "can convert scan.pdf to html"
+                </div>
+            </div>
+        </div>
+        <div class="msg">
+            <div class="msg-from llm">LLM</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body llm-msg">
+                <div class="msg-to">To: API &rarr; Harness</div>
+                <div class="msg-content">
+                    <strong>LLM's thinking:</strong> "The user wants to convert scan.pdf to HTML. I need to first check if this file exists."<br><br>
+                    <strong>LLM's output:</strong> Text: "Let me check if the file exists first." + Tool call: <code>Glob(pattern="**/scan.pdf")</code>
+                </div>
+            </div>
+        </div>
+        <div class="msg">
+            <div class="msg-from harness">Harness</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body tool-msg">
+                <div class="msg-to">Executes locally on your Mac</div>
+                <div class="msg-content">
+                    Runs file pattern search on disk. Finds: <code>scan.pdf</code> in <code>/Users/kanduha/Desktop/new/</code>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="round-summary">Result sent back to API &rarr; LLM sees: "file found at scan.pdf"</div>
+
+    <!-- ROUND 2 -->
+    <div class="round-header">Round 2 <span>&mdash; Try to read the PDF</span></div>
+    <div class="msg-flow">
+        <div class="msg">
+            <div class="msg-from llm">LLM</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body llm-msg">
+                <div class="msg-to">To: API &rarr; Harness</div>
+                <div class="msg-content">
+                    <strong>Decision:</strong> "File exists. I'll use the Read tool which can render PDF pages as images."<br><br>
+                    Tool call: <code>Read(file_path="scan.pdf", pages="1-5")</code>
+                </div>
+            </div>
+        </div>
+        <div class="msg">
+            <div class="msg-from harness">Harness</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body os-msg">
+                <div class="msg-to">Executes locally</div>
+                <div class="msg-content">
+                    Tries to call <code>pdftoppm</code> to render PDF pages as images.<br>
+                    <strong>FAILS:</strong> <code>pdftoppm is not installed. Install poppler-utils.</code>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="round-summary">Error sent back to API &rarr; LLM sees: "pdftoppm is not installed"</div>
+
+    <!-- ROUND 3 -->
+    <div class="round-header">Round 3 <span>&mdash; Install poppler</span></div>
+    <div class="msg-flow">
+        <div class="msg">
+            <div class="msg-from llm">LLM</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body llm-msg">
+                <div class="msg-to">To: API &rarr; Harness</div>
+                <div class="msg-content">
+                    <strong>Decision:</strong> "The error says I need poppler. The system is macOS (I know this from the system prompt which says 'Platform: darwin'). I'll use Homebrew."<br><br>
+                    Text: "I need to install poppler to read the PDF." + Tool call: <code>Bash(command="brew install poppler")</code>
+                </div>
+            </div>
+        </div>
+        <div class="msg">
+            <div class="msg-from harness">Harness</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body you-msg">
+                <div class="msg-to">To: You (permission prompt)</div>
+                <div class="msg-content">
+                    "Claude wants to run: <code>brew install poppler</code> &mdash; Allow?"
+                </div>
+            </div>
+        </div>
+        <div class="msg">
+            <div class="msg-from you">You</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body you-msg">
+                <div class="msg-to">To: Harness</div>
+                <div class="msg-content">
+                    Presses <strong>Y</strong> (approve)
+                </div>
+            </div>
+        </div>
+        <div class="msg">
+            <div class="msg-from harness">Harness</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body os-msg">
+                <div class="msg-to">Executes: spawns child process</div>
+                <div class="msg-content">
+                    Runs <code>brew install poppler</code> on your Mac.<br>
+                    macOS downloads and installs poppler + 40 dependencies (~30 seconds).<br>
+                    stdout captured: "Installed poppler 26.04.0"
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="round-summary">Install output sent back to API &rarr; LLM sees: "poppler installed successfully"</div>
+
+    <!-- ROUND 4 -->
+    <div class="round-header">Round 4 <span>&mdash; Retry reading PDF (fails again)</span></div>
+    <div class="msg-flow">
+        <div class="msg">
+            <div class="msg-from llm">LLM</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body llm-msg">
+                <div class="msg-to">To: API &rarr; Harness</div>
+                <div class="msg-content">
+                    Tool call: <code>Read(file_path="scan.pdf", pages="1-10")</code>
+                </div>
+            </div>
+        </div>
+        <div class="msg">
+            <div class="msg-from harness">Harness</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body os-msg">
+                <div class="msg-to">Executes locally</div>
+                <div class="msg-content">
+                    <strong>FAILS AGAIN:</strong> "pdftoppm is not installed"<br>
+                    <em>The Read tool runs in a sandboxed environment that didn't pick up the newly installed binary.</em>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="round-summary">Same error sent back &rarr; LLM must find another approach</div>
+
+    <!-- ROUND 5 -->
+    <div class="round-header">Round 5 <span>&mdash; Verify install + get PDF info (2 parallel tool calls)</span></div>
+    <div class="msg-flow">
+        <div class="msg">
+            <div class="msg-from llm">LLM</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body llm-msg">
+                <div class="msg-to">To: API &rarr; Harness</div>
+                <div class="msg-content">
+                    <strong>Decision:</strong> "Read tool's sandbox can't find pdftoppm. Let me verify it's actually installed and get PDF info using Bash directly."<br><br>
+                    Two tool calls in parallel:<br>
+                    &bull; <code>Bash(command="which pdftoppm && pdftoppm -v")</code><br>
+                    &bull; <code>Bash(command="pdfinfo scan.pdf")</code>
+                </div>
+            </div>
+        </div>
+        <div class="msg">
+            <div class="msg-from harness">Harness</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body os-msg">
+                <div class="msg-to">Executes both commands on your Mac simultaneously</div>
+                <div class="msg-content">
+                    Result 1: <code>/opt/homebrew/bin/pdftoppm</code> &mdash; version 26.04.0 (it IS installed)<br>
+                    Result 2: Pages: 14, letter size, not encrypted, PDF v1.4
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="round-summary">Both results sent back &rarr; LLM now knows: 14 pages, pdftoppm works in Bash but not in Read tool</div>
+
+    <!-- ROUND 6 -->
+    <div class="round-header">Round 6 <span>&mdash; Try text extraction</span></div>
+    <div class="msg-flow">
+        <div class="msg">
+            <div class="msg-from llm">LLM</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body llm-msg">
+                <div class="msg-to">To: API &rarr; Harness</div>
+                <div class="msg-content">
+                    <strong>Decision:</strong> "Maybe I can extract text directly without rendering images."<br><br>
+                    Tool call: <code>Bash(command="pdftotext scan.pdf - | head -200")</code>
+                </div>
+            </div>
+        </div>
+        <div class="msg">
+            <div class="msg-from harness">Harness</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body os-msg">
+                <div class="msg-to">Executes on your Mac</div>
+                <div class="msg-content">
+                    <strong>Result: (empty)</strong> &mdash; no text output at all.<br>
+                    <em>This means the PDF contains scanned images, not real text.</em>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="round-summary">Empty result sent back &rarr; LLM realizes: "This is a scanned image PDF. I must convert pages to images and read them visually."</div>
+
+    <!-- ROUND 7 -->
+    <div class="round-header">Round 7 <span>&mdash; Convert PDF pages to PNG images</span></div>
+    <div class="msg-flow">
+        <div class="msg">
+            <div class="msg-from llm">LLM</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body llm-msg">
+                <div class="msg-to">To: API &rarr; Harness</div>
+                <div class="msg-content">
+                    <strong>Decision:</strong> "I'll convert all pages to PNG at 200 DPI, then use the Read tool to see them as images."<br><br>
+                    Tool call: <code>Bash(command="mkdir -p scan_pages && pdftoppm -png -r 200 scan.pdf scan_pages/page")</code>
+                </div>
+            </div>
+        </div>
+        <div class="msg">
+            <div class="msg-from harness">Harness</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body os-msg">
+                <div class="msg-to">Executes on your Mac</div>
+                <div class="msg-content">
+                    Creates directory <code>scan_pages/</code>. Runs pdftoppm. Generates 14 PNG files.<br>
+                    <em>Your Mac's CPU does the actual image rendering.</em>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="round-summary">Success sent back &rarr; LLM knows images were created</div>
+
+    <!-- ROUND 8 -->
+    <div class="round-header">Round 8 <span>&mdash; Verify the images exist</span></div>
+    <div class="msg-flow">
+        <div class="msg">
+            <div class="msg-from llm">LLM</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body llm-msg">
+                <div class="msg-to">To: API &rarr; Harness</div>
+                <div class="msg-content">
+                    Tool call: <code>Bash(command="ls scan_pages/")</code>
+                </div>
+            </div>
+        </div>
+        <div class="msg">
+            <div class="msg-from harness">Harness</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body os-msg">
+                <div class="msg-to">Executes on your Mac</div>
+                <div class="msg-content">
+                    Result: <code>page-01.png page-02.png ... page-14.png</code> (14 files listed)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="round-summary">File list sent back &rarr; LLM sees 14 image files ready to read</div>
+
+    <!-- ROUND 9 -->
+    <div class="round-header">Round 9 <span>&mdash; Visually read pages 1&ndash;7 (7 parallel tool calls)</span></div>
+    <div class="msg-flow">
+        <div class="msg">
+            <div class="msg-from llm">LLM</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body llm-msg">
+                <div class="msg-to">To: API &rarr; Harness</div>
+                <div class="msg-content">
+                    <strong>Decision:</strong> "These 7 reads are independent. I'll call them all in parallel."<br><br>
+                    7 tool calls simultaneously:<br>
+                    &bull; <code>Read(file_path="scan_pages/page-01.png")</code><br>
+                    &bull; <code>Read(file_path="scan_pages/page-02.png")</code><br>
+                    &bull; <code>Read(file_path="scan_pages/page-03.png")</code><br>
+                    &bull; <code>Read(file_path="scan_pages/page-04.png")</code><br>
+                    &bull; <code>Read(file_path="scan_pages/page-05.png")</code><br>
+                    &bull; <code>Read(file_path="scan_pages/page-06.png")</code><br>
+                    &bull; <code>Read(file_path="scan_pages/page-07.png")</code>
+                </div>
+            </div>
+        </div>
+        <div class="msg">
+            <div class="msg-from harness">Harness</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body os-msg">
+                <div class="msg-to">Reads 7 files from disk</div>
+                <div class="msg-content">
+                    Loads each PNG file from disk. Encodes them as <strong>base64 image data</strong>.
+                    Each image is ~200&ndash;400 KB of raw pixel data.
+                </div>
+            </div>
+        </div>
+        <div class="msg">
+            <div class="msg-from harness">Harness</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body api-msg">
+                <div class="msg-to">To: Anthropic API</div>
+                <div class="msg-content">
+                    Sends all 7 images as part of the conversation. Each image is included as a
+                    base64-encoded <code>image_content</code> block in the API request.
+                    <strong>This is a large API call</strong> &mdash; several MB of image data.
+                </div>
+            </div>
+        </div>
+        <div class="msg">
+            <div class="msg-from llm">LLM</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body llm-msg">
+                <div class="msg-to">LLM processes internally</div>
+                <div class="msg-content">
+                    The LLM's vision system processes the 7 images. It <strong>sees</strong>:<br>
+                    &bull; Page 1: Title, table of contents, "What is MCP?" section with bullet points<br>
+                    &bull; Page 2: Architecture diagram with boxes, arrows, and labels<br>
+                    &bull; Page 3: Prerequisites table with 5 rows<br>
+                    &bull; Page 4: Setup instructions with a file path and bullet list<br>
+                    &bull; Page 5: JSON code block (mcp.json configuration)<br>
+                    &bull; Page 6: Another table, more setup steps<br>
+                    &bull; Page 7: File tree diagram, another table<br><br>
+                    <em>The LLM holds all of this in its working memory (context window) for later use.</em>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="round-summary">LLM has read 7 of 14 pages. Decides to read the remaining 7.</div>
+
+    <!-- ROUND 10 -->
+    <div class="round-header">Round 10 <span>&mdash; Visually read pages 8&ndash;14 (7 parallel tool calls)</span></div>
+    <div class="msg-flow">
+        <div class="msg">
+            <div class="msg-from llm">LLM</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body llm-msg">
+                <div class="msg-to">To: API &rarr; Harness</div>
+                <div class="msg-content">
+                    7 more parallel tool calls:<br>
+                    &bull; <code>Read(page-08.png)</code> through <code>Read(page-14.png)</code>
+                </div>
+            </div>
+        </div>
+        <div class="msg">
+            <div class="msg-from harness">Harness</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body api-msg">
+                <div class="msg-to">To: Anthropic API</div>
+                <div class="msg-content">
+                    Another large API call with 7 base64-encoded images.
+                </div>
+            </div>
+        </div>
+        <div class="msg">
+            <div class="msg-from llm">LLM</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body llm-msg">
+                <div class="msg-to">LLM processes internally</div>
+                <div class="msg-content">
+                    Sees remaining pages: tools list, DB2 tools, regions/environments tables,
+                    dataset naming conventions, prompt examples in chat bubbles,
+                    troubleshooting table, security table, quick reference card.<br><br>
+                    <strong>LLM now has the complete document in memory.</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="round-summary">All 14 pages read. LLM is ready to generate the HTML.</div>
+
+    <!-- ROUND 11 -->
+    <div class="round-header">Round 11 <span>&mdash; Generate and write the HTML file</span></div>
+    <div class="msg-flow">
+        <div class="msg">
+            <div class="msg-from llm">LLM</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body llm-msg">
+                <div class="msg-to">To: API &rarr; Harness</div>
+                <div class="msg-content">
+                    <strong>The LLM generates 476 lines of HTML + CSS</strong>, all at once, token by token.<br><br>
+                    It decides:<br>
+                    &bull; Use the same purple/lavender color scheme from earlier (it remembers the myMacMini.html conversation)<br>
+                    &bull; Rebuild the architecture diagram as CSS flexbox (can't paste an image into HTML)<br>
+                    &bull; Convert every table, code block, and list from visual memory to semantic HTML<br>
+                    &bull; Add dark-themed code blocks, colored badges, prompt bubbles<br><br>
+                    Tool call: <code>Write(file_path="scan.html", content="&lt;!DOCTYPE html&gt;...476 lines...")</code><br><br>
+                    <em>The LLM generates every character of the HTML. It doesn't copy from anywhere &mdash;
+                    it produces the code from its understanding of the images + its training on HTML/CSS.</em>
+                </div>
+            </div>
+        </div>
+        <div class="msg">
+            <div class="msg-from harness">Harness</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body os-msg">
+                <div class="msg-to">Writes to your Mac's disk</div>
+                <div class="msg-content">
+                    Creates file: <code>/Users/kanduha/Desktop/new/scan.html</code><br>
+                    Writes all 476 lines to disk. File saved successfully.
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="round-summary">File written &rarr; result sent back to LLM &rarr; LLM generates final summary message for you.</div>
+
+    <!-- ROUND 12 -->
+    <div class="round-header">Round 12 <span>&mdash; Final response to you</span></div>
+    <div class="msg-flow">
+        <div class="msg">
+            <div class="msg-from llm">LLM</div>
+            <div class="msg-arrow">&rarr;</div>
+            <div class="msg-body llm-msg">
+                <div class="msg-to">To: API &rarr; Harness &rarr; You</div>
+                <div class="msg-content">
+                    <strong>No tool calls this time &mdash; just text.</strong><br>
+                    The LLM writes a summary of what it did: "Done. Created scan.html with all 14 pages..."<br><br>
+                    The harness displays this text in your terminal. Task complete.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================== -->
+    <h2>Summary: Who Did What</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Actor</th>
+                <th>What they did</th>
+                <th>What they CANNOT do</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>You</strong></td>
+                <td>Typed prompt. Approved tool calls. Reviewed output.</td>
+                <td>&mdash;</td>
+            </tr>
+            <tr>
+                <td><strong>Harness</strong> (on your Mac)</td>
+                <td>Packaged prompts for API. Executed tools locally. Sent results back. Displayed output. Enforced permissions.</td>
+                <td>Cannot decide what to do. Cannot reason. Cannot generate text. Just follows instructions from LLM.</td>
+            </tr>
+            <tr>
+                <td><strong>Anthropic API</strong> (cloud)</td>
+                <td>Received HTTPS requests. Ran the LLM. Returned responses. Handled auth &amp; billing.</td>
+                <td>Cannot access your files. Cannot run code on your machine. Just a bridge to the LLM.</td>
+            </tr>
+            <tr>
+                <td><strong>Claude LLM</strong> (on GPUs)</td>
+                <td>Read your prompt. Read images visually. Planned the approach. Adapted to errors. Generated 476 lines of HTML/CSS. Decided which tools to call and in what order.</td>
+                <td>Cannot touch your files. Cannot run commands. Cannot access the internet. Can only output text (which may contain tool-call instructions).</td>
+            </tr>
+            <tr>
+                <td><strong>Your Mac</strong> (OS)</td>
+                <td>Installed poppler. Ran pdftoppm. Rendered PDF pages to PNG. Read/wrote files to disk.</td>
+                <td>Cannot decide what to do. Just executes commands issued by the harness.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- ============================== -->
+    <h2>What the LLM Actually Received</h2>
+
+    <p>On every round, the LLM received the <strong>full conversation</strong> (with caching). Here's what was in it:</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Content</th>
+                <th>Size (approx)</th>
+                <th>Who put it there</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>System prompt (instructions, rules, tool definitions)</td>
+                <td>~4,000 words</td>
+                <td>Harness (built-in)</td>
+            </tr>
+            <tr>
+                <td>Prior conversation (myMacMini.html work)</td>
+                <td>~3,000 words</td>
+                <td>Harness (from session memory)</td>
+            </tr>
+            <tr>
+                <td>Your message: "can convert scan.pdf to html"</td>
+                <td>6 words</td>
+                <td>You</td>
+            </tr>
+            <tr>
+                <td>Tool results (file lists, errors, command output)</td>
+                <td>~500 words total</td>
+                <td>Harness (from tool execution)</td>
+            </tr>
+            <tr>
+                <td>14 page images (base64 encoded)</td>
+                <td>~4&ndash;6 MB total</td>
+                <td>Harness (from disk read)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="info">
+        <h4>Your 6-word prompt became a massive payload</h4>
+        <p>By the time the LLM generated the final HTML, the full conversation sent to the API was
+            roughly <strong>7,000+ words of text plus 14 images</strong>. Your 6 words were a tiny
+            fraction of what the LLM actually processed. Most of the input came from the system prompt,
+            conversation history, and tool results.</p>
+    </div>
+
+    <!-- ============================== -->
+    <h2>What the LLM Sent Back</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Round</th>
+                <th>LLM output type</th>
+                <th>Content</th>
+                <th>Received by</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Text + Tool call</td>
+                <td>"Let me check..." + <code>Glob("**/scan.pdf")</code></td>
+                <td>Harness (displays text, executes Glob)</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Tool call</td>
+                <td><code>Read("scan.pdf", pages="1-5")</code></td>
+                <td>Harness (executes Read, gets error)</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Text + Tool call</td>
+                <td>"I need to install poppler" + <code>Bash("brew install poppler")</code></td>
+                <td>Harness (displays text, asks your permission, runs command)</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Tool call</td>
+                <td><code>Read("scan.pdf", pages="1-10")</code></td>
+                <td>Harness (executes Read, gets error again)</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>2 Tool calls (parallel)</td>
+                <td><code>Bash("which pdftoppm")</code> + <code>Bash("pdfinfo scan.pdf")</code></td>
+                <td>Harness (runs both simultaneously)</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Tool call</td>
+                <td><code>Bash("pdftotext scan.pdf -")</code></td>
+                <td>Harness (runs, gets empty result)</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Tool call</td>
+                <td><code>Bash("pdftoppm -png -r 200 scan.pdf scan_pages/page")</code></td>
+                <td>Harness (runs, creates 14 PNGs)</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>Tool call</td>
+                <td><code>Bash("ls scan_pages/")</code></td>
+                <td>Harness (runs, returns file list)</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>7 Tool calls (parallel)</td>
+                <td><code>Read(page-01.png)</code> through <code>Read(page-07.png)</code></td>
+                <td>Harness (reads 7 files, sends images to API)</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>7 Tool calls (parallel)</td>
+                <td><code>Read(page-08.png)</code> through <code>Read(page-14.png)</code></td>
+                <td>Harness (reads 7 files, sends images to API)</td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td>Tool call</td>
+                <td><code>Write("scan.html", content=476 lines)</code></td>
+                <td>Harness (writes file to disk)</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td>Text only (final)</td>
+                <td>"Done. Created scan.html with all 14 pages..."</td>
+                <td>Harness (displays to you in terminal)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- ============================== -->
+    <h2>The Key Insight</h2>
+
+    <div class="concept">
+        <h4>The LLM is a brain in a jar</h4>
+        <p>The LLM has no eyes, no hands, no internet connection. It sits on Anthropic's servers and
+            receives text and images. It outputs text. That's <em>all</em> it can do.</p>
+        <p>But its text output can contain <strong>structured tool-call instructions</strong> like
+            <code>{"tool": "Bash", "command": "brew install poppler"}</code>. The harness on your
+            Mac parses these instructions and <strong>actually executes them</strong>.</p>
+        <p>So the magic isn't just the LLM. It's the <strong>loop</strong>:</p>
+        <ol>
+            <li>LLM <strong>thinks</strong> and outputs a tool call (text)</li>
+            <li>Harness <strong>executes</strong> the tool call (action on your machine)</li>
+            <li>Harness sends the <strong>result</strong> back to the LLM (text/images)</li>
+            <li>LLM <strong>thinks</strong> again with new information</li>
+            <li>Repeat until the LLM outputs plain text (no more tool calls) = done</li>
+        </ol>
+        <p>This loop turned your 6-word prompt into a 476-line HTML file. Neither the LLM
+            nor the harness could have done it alone.</p>
+    </div>
+
+    <div class="footer">
+        How AI Works: The Full Data Flow &mdash; Every actor, every message, every direction &middot; April 2026
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anthropic API — What It Is and How It Works</title>
+
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            max-width: 860px;
+            margin: 40px auto;
+            padding: 0 24px;
+            line-height: 1.75;
+            color: #2d2d2d;
+            background: linear-gradient(180deg, #e8f0fe 0%, #ffffff 300px);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, #1a56d6, #4285f4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            color: #1a56d6;
+            border-bottom: 2px solid #d4e4fc;
+            padding-bottom: 6px;
+            margin-top: 52px;
+        }
+
+        h3 { color: #2962c7; }
+
+        .subtitle {
+            color: #777;
+            margin-top: 0;
+            font-size: 1.05rem;
+        }
+
+        strong { color: #1a56d6; }
+
+        code {
+            padding: 2px 7px;
+            background: #e8f0fe;
+            border-radius: 5px;
+            color: #1a56d6;
+            font-size: 0.9em;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+
+        pre {
+            padding: 16px 18px;
+            overflow-x: auto;
+            background: #1a1a2e;
+            color: #b3d1fc;
+            border-radius: 10px;
+            border-left: 4px solid #4285f4;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.83em;
+            line-height: 1.6;
+        }
+
+        pre code { background: none; color: inherit; padding: 0; }
+        pre .key { color: #89b4fa; }
+        pre .str { color: #a6e3a1; }
+        pre .comment { color: #6c7086; }
+
+        ol li, ul li { margin: 8px 0; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(26, 86, 214, 0.1);
+        }
+
+        thead th {
+            background: linear-gradient(135deg, #1a56d6, #4285f4);
+            color: #fff;
+            text-align: left;
+            padding: 10px 14px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        tbody td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #e0ecfc;
+            font-size: 0.92rem;
+            vertical-align: top;
+        }
+
+        tbody tr:nth-child(even) { background: #f5f9ff; }
+        tbody tr:hover { background: #e8f0fe; }
+
+        .box {
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin: 24px 0;
+            border-left: 4px solid;
+        }
+
+        .box.blue {
+            background: linear-gradient(135deg, #e8f0fe, #d4e4fc);
+            border-color: #4285f4;
+        }
+
+        .box.blue h4 { color: #1a56d6; margin: 0 0 8px; }
+
+        .box.green {
+            background: linear-gradient(135deg, #eef8ee, #e0f5e0);
+            border-color: #4caf50;
+        }
+
+        .box.green h4 { color: #2e7d32; margin: 0 0 8px; }
+
+        .box.orange {
+            background: linear-gradient(135deg, #fff6ec, #ffeed9);
+            border-color: #f0943e;
+        }
+
+        .box.orange h4 { color: #e65100; margin: 0 0 8px; }
+
+        .box.purple {
+            background: linear-gradient(135deg, #f3f0ff, #eee8ff);
+            border-color: #7c6ef0;
+        }
+
+        .box.purple h4 { color: #3b3196; margin: 0 0 8px; }
+
+        .analogy {
+            background: #fff;
+            border: 2px dashed #4285f4;
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin: 24px 0;
+        }
+
+        .analogy h4 { color: #1a56d6; margin: 0 0 8px; }
+
+        .diagram {
+            text-align: center;
+            margin: 28px 0;
+            padding: 24px;
+            background: #fff;
+            border: 2px solid #d4e4fc;
+            border-radius: 14px;
+        }
+
+        .d-box {
+            display: inline-block;
+            border-radius: 10px;
+            padding: 12px 20px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            border: 2px solid;
+            margin: 4px;
+        }
+
+        .d-arrow {
+            display: block;
+            font-size: 1.1rem;
+            color: #999;
+            margin: 6px 0;
+        }
+
+        .d-label {
+            font-size: 0.78rem;
+            color: #888;
+            font-weight: 400;
+        }
+
+        .d-internal {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            align-items: center;
+            margin: 16px 0;
+            padding: 16px;
+            background: #f5f9ff;
+            border: 1px dashed #b3d1fc;
+            border-radius: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            color: #999;
+            font-size: 0.85rem;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid #d4e4fc;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Anthropic API</h1>
+    <p class="subtitle">The cloud service that sits between the harness on your machine and the Claude LLM on Anthropic's GPUs.</p>
+
+    <!-- ============================== -->
+    <h2>What Is It?</h2>
+
+    <p>The Anthropic API is a <strong>web service</strong> (a cloud endpoint) that accepts HTTP requests
+        and returns AI-generated responses. It is the <strong>front door</strong> to Anthropic's AI models.</p>
+
+    <p>It is NOT the AI itself. It is a <strong>server application</strong> that:</p>
+    <ul>
+        <li>Receives your request over the internet</li>
+        <li>Validates your API key and checks your billing</li>
+        <li>Passes your prompt to the Claude LLM running on GPUs</li>
+        <li>Streams the LLM's output back to you</li>
+    </ul>
+
+    <div class="analogy">
+        <h4>Analogy: A restaurant host</h4>
+        <p>You (the harness) walk into a restaurant (Anthropic). The host (API) checks your
+            reservation (API key), takes your order (prompt), passes it to the chef (LLM), and brings
+            back the dish (response). The host doesn't cook &mdash; they just manage the interaction.
+            The chef never meets you directly.</p>
+    </div>
+
+    <!-- ============================== -->
+    <h2>Where Does It Run?</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Detail</th>
+                <th>Answer</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Location</td>
+                <td>Anthropic's cloud servers (data centers, likely US-based)</td>
+            </tr>
+            <tr>
+                <td>Endpoint</td>
+                <td><code>https://api.anthropic.com/v1/messages</code></td>
+            </tr>
+            <tr>
+                <td>Protocol</td>
+                <td>HTTPS (encrypted) &mdash; REST API with JSON payloads</td>
+            </tr>
+            <tr>
+                <td>Authentication</td>
+                <td>API key sent in the <code>x-api-key</code> header</td>
+            </tr>
+            <tr>
+                <td>Access</td>
+                <td>Public internet &mdash; anyone with a valid API key can call it</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- ============================== -->
+    <h2>What Goes In (The Request)</h2>
+
+    <p>The harness sends a JSON request that looks like this:</p>
+
+    <pre><code><span class="comment">// Simplified — actual request has more fields</span>
+{
+  <span class="key">"model"</span>: <span class="str">"claude-opus-4-6"</span>,
+  <span class="key">"max_tokens"</span>: 16000,
+  <span class="key">"system"</span>: <span class="str">"You are Claude Code, Anthropic's CLI... [~4000 words of instructions]"</span>,
+  <span class="key">"tools"</span>: [
+    {
+      <span class="key">"name"</span>: <span class="str">"Read"</span>,
+      <span class="key">"description"</span>: <span class="str">"Reads a file from the local filesystem..."</span>,
+      <span class="key">"input_schema"</span>: { <span class="key">"type"</span>: <span class="str">"object"</span>, <span class="key">"properties"</span>: { <span class="key">"file_path"</span>: {...} } }
+    },
+    {
+      <span class="key">"name"</span>: <span class="str">"Bash"</span>,
+      <span class="key">"description"</span>: <span class="str">"Executes a bash command..."</span>,
+      <span class="key">"input_schema"</span>: { ... }
+    }
+    <span class="comment">// ... 13 more tools</span>
+  ],
+  <span class="key">"messages"</span>: [
+    { <span class="key">"role"</span>: <span class="str">"user"</span>, <span class="key">"content"</span>: <span class="str">"can convert scan.pdf to html"</span> },
+    { <span class="key">"role"</span>: <span class="str">"assistant"</span>, <span class="key">"content"</span>: [{ <span class="key">"type"</span>: <span class="str">"tool_use"</span>, <span class="key">"name"</span>: <span class="str">"Glob"</span>, ... }] },
+    { <span class="key">"role"</span>: <span class="str">"user"</span>, <span class="key">"content"</span>: [{ <span class="key">"type"</span>: <span class="str">"tool_result"</span>, ... }] }
+    <span class="comment">// ... full conversation history</span>
+  ]
+}</code></pre>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Field</th>
+                <th>What it contains</th>
+                <th>Who created it</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>model</code></td>
+                <td>Which Claude model to use (e.g., <code>claude-opus-4-6</code>)</td>
+                <td>Harness (from your settings)</td>
+            </tr>
+            <tr>
+                <td><code>system</code></td>
+                <td>System prompt: rules, behavior instructions, environment info</td>
+                <td>Harness (built-in + CLAUDE.md)</td>
+            </tr>
+            <tr>
+                <td><code>tools</code></td>
+                <td>JSON schemas defining every tool the LLM can call</td>
+                <td>Harness (built-in)</td>
+            </tr>
+            <tr>
+                <td><code>messages</code></td>
+                <td>Full conversation: your messages, LLM responses, tool calls, tool results, images</td>
+                <td>Harness (accumulated over the session)</td>
+            </tr>
+            <tr>
+                <td><code>max_tokens</code></td>
+                <td>Maximum length of the LLM's response</td>
+                <td>Harness</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="box blue">
+        <h4>The full conversation is sent every time</h4>
+        <p>The API is <strong>stateless</strong> &mdash; it doesn't remember previous calls. Every request
+            must include the entire conversation from the beginning. If you've had 20 back-and-forths,
+            all 20 are sent again. This is why the harness manages conversation history &mdash; the API just
+            processes whatever it receives, with no memory of what came before.</p>
+    </div>
+
+    <!-- ============================== -->
+    <h2>What Comes Out (The Response)</h2>
+
+    <p>The API returns a JSON response. There are two possible shapes:</p>
+
+    <h3>Shape 1: Text response (task is done)</h3>
+
+    <pre><code>{
+  <span class="key">"role"</span>: <span class="str">"assistant"</span>,
+  <span class="key">"stop_reason"</span>: <span class="str">"end_turn"</span>,
+  <span class="key">"content"</span>: [
+    {
+      <span class="key">"type"</span>: <span class="str">"text"</span>,
+      <span class="key">"text"</span>: <span class="str">"Done. Created scan.html with all 14 pages..."</span>
+    }
+  ]
+}</code></pre>
+
+    <p>When the harness sees <code>stop_reason: "end_turn"</code> and text content, it displays the
+        text to you. The conversation turn is complete.</p>
+
+    <h3>Shape 2: Tool call response (LLM wants to do something)</h3>
+
+    <pre><code>{
+  <span class="key">"role"</span>: <span class="str">"assistant"</span>,
+  <span class="key">"stop_reason"</span>: <span class="str">"tool_use"</span>,
+  <span class="key">"content"</span>: [
+    {
+      <span class="key">"type"</span>: <span class="str">"text"</span>,
+      <span class="key">"text"</span>: <span class="str">"I need to install poppler to read the PDF."</span>
+    },
+    {
+      <span class="key">"type"</span>: <span class="str">"tool_use"</span>,
+      <span class="key">"id"</span>: <span class="str">"toolu_01ABC123"</span>,
+      <span class="key">"name"</span>: <span class="str">"Bash"</span>,
+      <span class="key">"input"</span>: {
+        <span class="key">"command"</span>: <span class="str">"brew install poppler"</span>,
+        <span class="key">"description"</span>: <span class="str">"Install poppler for PDF rendering"</span>
+      }
+    }
+  ]
+}</code></pre>
+
+    <p>When the harness sees <code>stop_reason: "tool_use"</code>, it knows the LLM wants to execute
+        a tool. The harness extracts the tool name and parameters, executes the tool locally, and sends
+        the result back as a new API request.</p>
+
+    <!-- ============================== -->
+    <h2>What the API Does Internally</h2>
+
+    <p>When a request arrives, the API performs these steps:</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Step</th>
+                <th>What happens</th>
+                <th>Purpose</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Validate the API key in the <code>x-api-key</code> header</td>
+                <td>Authentication: is this a real, active account?</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Check rate limits and usage quotas</td>
+                <td>Prevent abuse and manage capacity</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Validate the request format (correct JSON structure, valid model name)</td>
+                <td>Reject malformed requests early</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Tokenize the input (convert text to token IDs the model understands)</td>
+                <td>The LLM processes tokens, not raw text</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Check the prompt cache &mdash; has this exact prefix been seen recently?</td>
+                <td>Prompt caching: reuse prior computation to save time and cost</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Route the request to available GPU workers running the Claude model</td>
+                <td>Load balancing across GPU clusters</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>The LLM generates output tokens one by one</td>
+                <td>This is the actual "thinking" step</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>Stream tokens back to the caller as they're generated</td>
+                <td>You see text appear progressively, not all at once</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>Log usage (input tokens, output tokens) for billing</td>
+                <td>You pay per token processed</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- ============================== -->
+    <h2>Prompt Caching</h2>
+
+    <p>Because the full conversation is sent every time, the API uses <strong>prompt caching</strong>
+        to avoid redundant computation:</p>
+
+    <div class="box blue">
+        <h4>How caching works</h4>
+        <p>On your first API call, the system prompt + tool definitions are processed from scratch.
+            The result is cached for <strong>5 minutes</strong>. On the next call (which includes the
+            same system prompt), the API says "I've already processed this prefix" and skips straight
+            to the new content. This makes subsequent calls much faster and cheaper.</p>
+        <p>If more than 5 minutes pass between calls, the cache expires and the full prompt is
+            reprocessed. This is why long pauses between actions cost more.</p>
+    </div>
+
+    <!-- ============================== -->
+    <h2>What the API Does NOT Do</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>It does NOT...</th>
+                <th>Why not</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Think or reason</td>
+                <td>The API is just a web server. The LLM (running on GPUs behind the API) does the thinking.</td>
+            </tr>
+            <tr>
+                <td>Access your files or machine</td>
+                <td>The API only receives what the harness sends it. It has no connection to your computer.</td>
+            </tr>
+            <tr>
+                <td>Execute tool calls</td>
+                <td>The LLM generates tool call instructions. The API passes them to the harness. The harness executes them on your Mac.</td>
+            </tr>
+            <tr>
+                <td>Remember previous requests</td>
+                <td>Every request is independent. Conversation continuity is the harness's job.</td>
+            </tr>
+            <tr>
+                <td>Store your data long-term</td>
+                <td>Your prompts and responses are processed and discarded. They are not used for training (per Anthropic's API policy).</td>
+            </tr>
+            <tr>
+                <td>Run on your machine</td>
+                <td>It runs on Anthropic's cloud servers. Your data travels over the internet to reach it.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- ============================== -->
+    <h2>Billing: How You Pay</h2>
+
+    <p>The API charges based on <strong>tokens</strong> (pieces of words):</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>What</th>
+                <th>Description</th>
+                <th>You pay for</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Input tokens</strong></td>
+                <td>Everything sent TO the API: system prompt, conversation history, tool definitions, images</td>
+                <td>Every token, every call (reduced if cached)</td>
+            </tr>
+            <tr>
+                <td><strong>Output tokens</strong></td>
+                <td>Everything the LLM generates: text responses, tool call instructions, HTML code</td>
+                <td>Every token generated</td>
+            </tr>
+            <tr>
+                <td><strong>Cached input</strong></td>
+                <td>Portions of the input that match the prompt cache</td>
+                <td>Reduced rate (much cheaper than uncached)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="box orange">
+        <h4>Why long conversations get expensive</h4>
+        <p>Remember: the <strong>full conversation</strong> is sent on every API call. A 50-message
+            conversation means each new call includes all 50 previous messages as input tokens.
+            The input cost grows with every turn. Prompt caching helps, but only for the unchanging prefix.</p>
+    </div>
+
+    <!-- ============================== -->
+    <h2>The API in the Data Flow</h2>
+
+    <div class="diagram">
+        <div class="d-box" style="background:#e8f5e9; border-color:#4caf50; color:#2e7d32;">
+            Harness (your Mac)
+        </div>
+        <div class="d-arrow">&darr; <span class="d-label">HTTPS POST with JSON (your prompt + history + tools)</span></div>
+        <div style="padding:16px; background: #f5f9ff; border: 2px solid #4285f4; border-radius: 14px; margin: 8px 0;">
+            <div class="d-box" style="background:#e8f0fe; border-color:#4285f4; color:#1a56d6; font-size:1rem; padding:14px 28px;">
+                Anthropic API (THIS)
+            </div>
+            <div class="d-internal">
+                <span class="d-label">auth &rarr;</span>
+                <span class="d-label">validate &rarr;</span>
+                <span class="d-label">tokenize &rarr;</span>
+                <span class="d-label">check cache &rarr;</span>
+                <span class="d-label">route to GPU &rarr;</span>
+                <span class="d-label">stream output &rarr;</span>
+                <span class="d-label">log billing</span>
+            </div>
+            <div class="d-arrow">&darr; <span class="d-label">passes tokens to model</span> &nbsp; &uarr; <span class="d-label">receives generated tokens</span></div>
+            <div class="d-box" style="background:#faf8ff; border-color:#7c6ef0; color:#3b3196;">
+                Claude LLM (on GPUs)
+            </div>
+        </div>
+        <div class="d-arrow">&uarr; <span class="d-label">HTTPS response with JSON (LLM's text or tool calls)</span></div>
+        <div class="d-box" style="background:#e8f5e9; border-color:#4caf50; color:#2e7d32;">
+            Harness (your Mac)
+        </div>
+    </div>
+
+    <!-- ============================== -->
+    <h2>Key Takeaways</h2>
+
+    <ul>
+        <li>The API is a <strong>web service</strong> &mdash; a server that accepts HTTP requests and returns JSON responses</li>
+        <li>It runs on <strong>Anthropic's cloud</strong>, not your machine</li>
+        <li>It is <strong>stateless</strong> &mdash; no memory between calls. The harness resends everything each time.</li>
+        <li>It <strong>does not think</strong> &mdash; it routes requests to the LLM which does the thinking</li>
+        <li>It <strong>does not execute tools</strong> &mdash; it passes tool call instructions back to the harness</li>
+        <li>It handles <strong>auth, billing, caching, and load balancing</strong></li>
+        <li>You pay per <strong>token</strong> (input and output), and costs grow as conversations get longer</li>
+    </ul>
+
+    <div class="footer">
+        Anthropic API &mdash; The cloud gateway between your harness and the Claude LLM &middot; April 2026
+    </div>
+
+</body>
+</html>

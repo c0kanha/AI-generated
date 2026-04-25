@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Claude LLM — What It Is and How It Works</title>
+
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            max-width: 860px;
+            margin: 40px auto;
+            padding: 0 24px;
+            line-height: 1.75;
+            color: #2d2d2d;
+            background: linear-gradient(180deg, #f3f0ff 0%, #ffffff 300px);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, #5b4ed4, #e0559a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            color: #3b3196;
+            border-bottom: 2px solid #e8e4f8;
+            padding-bottom: 6px;
+            margin-top: 52px;
+        }
+
+        h3 { color: #5a4fb0; }
+
+        .subtitle {
+            color: #777;
+            margin-top: 0;
+            font-size: 1.05rem;
+        }
+
+        strong { color: #3b3196; }
+
+        code {
+            padding: 2px 7px;
+            background: #f0edf9;
+            border-radius: 5px;
+            color: #5b4ed4;
+            font-size: 0.9em;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+
+        pre {
+            padding: 16px 18px;
+            overflow-x: auto;
+            background: #1e1e2e;
+            color: #cdd6f4;
+            border-radius: 10px;
+            border-left: 4px solid #7c6ef0;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.85em;
+            line-height: 1.6;
+        }
+
+        pre code { background: none; color: inherit; padding: 0; }
+
+        ol li, ul li { margin: 8px 0; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(91, 78, 212, 0.08);
+        }
+
+        thead th {
+            background: linear-gradient(135deg, #5b4ed4, #7c6ef0);
+            color: #fff;
+            text-align: left;
+            padding: 10px 14px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        tbody td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #ece8f8;
+            font-size: 0.92rem;
+            vertical-align: top;
+        }
+
+        tbody tr:nth-child(even) { background: #faf8ff; }
+        tbody tr:hover { background: #f0edf9; }
+
+        .box {
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin: 24px 0;
+            border-left: 4px solid;
+        }
+
+        .box.purple {
+            background: linear-gradient(135deg, #f3f0ff, #eee8ff);
+            border-color: #7c6ef0;
+        }
+        .box.purple h4 { color: #3b3196; margin: 0 0 8px; }
+
+        .box.green {
+            background: linear-gradient(135deg, #eef8ee, #e0f5e0);
+            border-color: #4caf50;
+        }
+        .box.green h4 { color: #2e7d32; margin: 0 0 8px; }
+
+        .box.orange {
+            background: linear-gradient(135deg, #fff6ec, #ffeed9);
+            border-color: #f0943e;
+        }
+        .box.orange h4 { color: #e65100; margin: 0 0 8px; }
+
+        .box.blue {
+            background: linear-gradient(135deg, #e8f0fe, #d4e4fc);
+            border-color: #4285f4;
+        }
+        .box.blue h4 { color: #1a56d6; margin: 0 0 8px; }
+
+        .box.red {
+            background: linear-gradient(135deg, #fde8e8, #fcd4d4);
+            border-color: #e53935;
+        }
+        .box.red h4 { color: #c62828; margin: 0 0 8px; }
+
+        .analogy {
+            background: #fff;
+            border: 2px dashed #7c6ef0;
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin: 24px 0;
+        }
+        .analogy h4 { color: #5b4ed4; margin: 0 0 8px; }
+
+        .diagram {
+            text-align: center;
+            margin: 28px 0;
+            padding: 24px;
+            background: #fff;
+            border: 2px solid #e8e4f8;
+            border-radius: 14px;
+        }
+
+        .d-box {
+            display: inline-block;
+            border-radius: 10px;
+            padding: 12px 20px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            border: 2px solid;
+            margin: 4px;
+        }
+
+        .d-arrow {
+            display: block;
+            font-size: 1.1rem;
+            color: #999;
+            margin: 6px 0;
+        }
+
+        .d-label {
+            font-size: 0.78rem;
+            color: #888;
+            font-weight: 400;
+        }
+
+        .d-internal-row {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 8px 0;
+        }
+
+        .d-internal-box {
+            background: #faf8ff;
+            border: 1px solid #e8e4f8;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 0.82rem;
+            color: #5a4fb0;
+        }
+
+        .d-internal-arrow {
+            color: #bbb;
+            font-size: 1rem;
+        }
+
+        /* Comparison grid */
+        .compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .compare-card {
+            border-radius: 12px;
+            padding: 18px 20px;
+            border: 1px solid;
+        }
+
+        .compare-card h4 { margin: 0 0 8px; }
+
+        .compare-card.can {
+            background: linear-gradient(135deg, #eef8ee, #e0f5e0);
+            border-color: #b8e0b8;
+        }
+        .compare-card.can h4 { color: #2e7d32; }
+
+        .compare-card.cannot {
+            background: linear-gradient(135deg, #fde8e8, #fcd4d4);
+            border-color: #f0b8b8;
+        }
+        .compare-card.cannot h4 { color: #c62828; }
+
+        .footer {
+            text-align: center;
+            color: #999;
+            font-size: 0.85rem;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid #e8e4f8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Claude LLM</h1>
+    <p class="subtitle">The language model that does the thinking &mdash; what it is, what it can do, what it cannot do, and how it actually works inside.</p>
+
+    <!-- ============================== -->
+    <h2>What Is It?</h2>
+
+    <p><strong>LLM</strong> stands for <strong>Large Language Model</strong>. Claude is Anthropic's LLM.
+        It is a massive mathematical function &mdash; a neural network with billions of parameters &mdash;
+        that takes text (and images) as input and generates text as output.</p>
+
+    <p>That's it. That's all it does. <strong>Text in, text out.</strong></p>
+
+    <div class="analogy">
+        <h4>Analogy: A brilliant expert locked in a room</h4>
+        <p>Imagine the world's most knowledgeable expert locked in a sealed room with no windows,
+            no phone, and no internet. You can only communicate by sliding notes under the door.
+            You write a question, slide it in. They write an answer, slide it back. They can't
+            see your screen, can't touch your files, can't browse the web. They can only read
+            what you give them and write back.</p>
+        <p>But their answers are extraordinarily good &mdash; because they've read billions
+            of documents during their training and can reason about almost anything.</p>
+    </div>
+
+    <!-- ============================== -->
+    <h2>Where Does It Run?</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Detail</th>
+                <th>Answer</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Location</td>
+                <td>Anthropic's data centers, on clusters of GPUs (Graphics Processing Units)</td>
+            </tr>
+            <tr>
+                <td>Hardware</td>
+                <td>Thousands of high-end GPUs (likely NVIDIA H100 or similar)</td>
+            </tr>
+            <tr>
+                <td>Size</td>
+                <td>Billions of parameters (exact number not public). The model weights alone are hundreds of gigabytes.</td>
+            </tr>
+            <tr>
+                <td>Runs on your machine?</td>
+                <td><strong>No.</strong> It is far too large to run on a laptop or desktop. It requires specialized hardware.</td>
+            </tr>
+            <tr>
+                <td>Who triggers it</td>
+                <td>The Anthropic API loads your prompt onto the GPUs and runs the model</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- ============================== -->
+    <h2>What It Can and Cannot Do</h2>
+
+    <div class="compare">
+        <div class="compare-card can">
+            <h4>CAN do (its own abilities)</h4>
+            <ul>
+                <li>Read and understand text in any language</li>
+                <li>Read and understand images (photos, screenshots, diagrams, charts)</li>
+                <li>Generate text: prose, code, JSON, HTML, SQL, any text format</li>
+                <li>Reason: plan multi-step solutions, weigh options, diagnose errors</li>
+                <li>Follow instructions: obey system prompts, respect constraints</li>
+                <li>Decide which tool to call and with what arguments</li>
+                <li>Hold context: work with ~200K tokens of conversation at once</li>
+            </ul>
+        </div>
+        <div class="compare-card cannot">
+            <h4>CANNOT do (needs the harness)</h4>
+            <ul>
+                <li>Read files from your computer</li>
+                <li>Write or create files</li>
+                <li>Run commands or install software</li>
+                <li>Access the internet or browse websites</li>
+                <li>See your screen</li>
+                <li>Remember previous conversations</li>
+                <li>Execute any action in the real world</li>
+                <li>Learn from this conversation (its weights are frozen)</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="box red">
+        <h4>The "cannot" list is fundamental, not a limitation to be fixed</h4>
+        <p>The LLM literally has no mechanism to access your file system. It's not a security
+            restriction &mdash; it's architecture. The model is a function:
+            <code>f(tokens) &rarr; tokens</code>. There is no file-system driver, no network socket,
+            no process spawner in its architecture. The harness provides all of these externally.</p>
+    </div>
+
+    <!-- ============================== -->
+    <h2>How It Works Inside</h2>
+
+    <p>When the LLM receives your prompt, here's what happens at a technical level:</p>
+
+    <h3>Step 1: Tokenization</h3>
+
+    <p>Your text is broken into <strong>tokens</strong> &mdash; small pieces of words. For example:</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Your text</th>
+                <th>Tokens (approximate)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>can convert scan.pdf to html</code></td>
+                <td><code>["can", " convert", " scan", ".", "pdf", " to", " html"]</code> &mdash; 7 tokens</td>
+            </tr>
+            <tr>
+                <td><code>brew install poppler</code></td>
+                <td><code>["bre", "w", " install", " pop", "pler"]</code> &mdash; 5 tokens</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>Each token is converted to a number (token ID). The model only works with numbers, not letters.</p>
+
+    <h3>Step 2: Processing through the neural network</h3>
+
+    <p>The token IDs pass through the neural network &mdash; layer by layer, through billions of
+        mathematical operations. Each layer transforms the data, gradually building up an understanding of:</p>
+
+    <ul>
+        <li>What the words mean individually</li>
+        <li>How they relate to each other</li>
+        <li>What the user is asking for</li>
+        <li>What an appropriate response would be</li>
+        <li>What tools would be helpful to call</li>
+    </ul>
+
+    <div class="box purple">
+        <h4>The "attention" mechanism</h4>
+        <p>The core innovation in LLMs is called <strong>attention</strong>. It allows every token
+            in the input to look at every other token and determine how relevant they are to each other.
+            When the model reads "convert scan.pdf to html," the word "convert" attends to "pdf" and
+            "html" to understand the transformation being requested. This happens across all layers
+            simultaneously, building increasingly abstract representations of meaning.</p>
+    </div>
+
+    <h3>Step 3: Generate output one token at a time</h3>
+
+    <p>The model doesn't generate its entire response at once. It produces <strong>one token at a time</strong>:</p>
+
+    <ol>
+        <li>Process all input tokens through the network</li>
+        <li>The network outputs a probability distribution over all possible next tokens (~100,000 options)</li>
+        <li>Select the most likely token (with some randomness controlled by "temperature")</li>
+        <li>Append that token to the output</li>
+        <li>Feed the entire sequence (input + output so far) back through the network</li>
+        <li>Generate the next token</li>
+        <li>Repeat until the model produces a stop token or hits the max length</li>
+    </ol>
+
+    <div class="diagram">
+        <p style="color: #5a4fb0; font-weight: 600; margin-top: 0;">Token-by-token generation</p>
+        <div class="d-internal-row">
+            <div class="d-internal-box">Input: "can convert scan.pdf to html"</div>
+            <div class="d-internal-arrow">&rarr;</div>
+            <div class="d-internal-box">Network processes</div>
+            <div class="d-internal-arrow">&rarr;</div>
+            <div class="d-internal-box">Output token 1: "Let"</div>
+        </div>
+        <div class="d-internal-row">
+            <div class="d-internal-box">Input + "Let"</div>
+            <div class="d-internal-arrow">&rarr;</div>
+            <div class="d-internal-box">Network processes</div>
+            <div class="d-internal-arrow">&rarr;</div>
+            <div class="d-internal-box">Output token 2: " me"</div>
+        </div>
+        <div class="d-internal-row">
+            <div class="d-internal-box">Input + "Let me"</div>
+            <div class="d-internal-arrow">&rarr;</div>
+            <div class="d-internal-box">Network processes</div>
+            <div class="d-internal-arrow">&rarr;</div>
+            <div class="d-internal-box">Output token 3: " check"</div>
+        </div>
+        <div class="d-internal-row">
+            <div class="d-internal-box" style="color: #999;">... continues until response is complete ...</div>
+        </div>
+    </div>
+
+    <div class="box orange">
+        <h4>This is why AI responses stream in gradually</h4>
+        <p>When you see text appearing word by word in your terminal, that's not an animation &mdash;
+            the model is literally generating one token at a time and streaming each one as it's produced.
+            The first word is generated before the model knows what the last word will be.</p>
+    </div>
+
+    <!-- ============================== -->
+    <h2>How It Decides to Call a Tool</h2>
+
+    <p>The LLM wasn't born knowing about tools. During training, it was taught a specific format
+        for tool calls. When it decides a tool would be helpful, it generates structured JSON instead
+        of plain text:</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>What the LLM sees in its input</th>
+                <th>What the LLM generates</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Tool definitions (JSON schemas) listing available tools, their parameters, and descriptions</td>
+                <td>A <code>tool_use</code> content block with the tool name and arguments as JSON</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>The LLM doesn't "call" the tool. It <strong>generates text that describes a tool call</strong>.
+        The harness parses this text and does the actual calling.</p>
+
+    <pre><code>// The LLM generates this as its output tokens:
+{
+  "type": "tool_use",
+  "name": "Bash",
+  "input": {
+    "command": "brew install poppler"
+  }
+}
+
+// The LLM has NO IDEA if this command will actually run.
+// It doesn't have a terminal. It just produces text that
+// DESCRIBES what it wants to happen.</code></pre>
+
+    <div class="box purple">
+        <h4>Tool use is just structured text generation</h4>
+        <p>When the LLM "calls" <code>Bash("brew install poppler")</code>, it is not executing anything.
+            It is generating the text <code>{"name": "Bash", "input": {"command": "brew install poppler"}}</code>.
+            The harness reads this text, recognizes the structured format, and executes the command on your Mac.
+            If the harness didn't exist, the tool call text would just sit there, doing nothing.</p>
+    </div>
+
+    <!-- ============================== -->
+    <h2>How It "Sees" Images (Vision)</h2>
+
+    <p>Claude is a <strong>multimodal</strong> model &mdash; it can process images alongside text.</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Step</th>
+                <th>What happens</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>The harness reads a PNG file from your disk and encodes it as base64 data</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>The base64 image is included in the API request as an <code>image</code> content block</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>The API passes the image to the LLM</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>The LLM's <strong>vision encoder</strong> converts the image pixels into the same kind of token representations the text encoder produces</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>These visual tokens are processed alongside text tokens through the same neural network</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>The model can now "see" the image and reference its contents when generating a response</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>This is how the LLM read the 14 scanned PDF pages &mdash; it received 14 images and visually
+        interpreted the text, tables, diagrams, and layout in each one.</p>
+
+    <!-- ============================== -->
+    <h2>What Are "Parameters" and "Weights"?</h2>
+
+    <p>When people say the model has "billions of parameters," they mean:</p>
+
+    <div class="box green">
+        <h4>Parameters = the model's learned knowledge</h4>
+        <p><strong>Parameters</strong> (also called <strong>weights</strong>) are numbers stored in
+            the neural network. Each parameter is a single decimal number (like <code>0.0342</code>
+            or <code>-1.2847</code>). There are billions of them.</p>
+        <p>During training, these numbers were adjusted to encode patterns from the training data.
+            The parameters collectively encode the model's "knowledge" &mdash; not as facts in a database,
+            but as statistical patterns of language. The model doesn't store "brew install poppler" as a
+            fact; instead, it has learned that when someone encounters a "not installed" error on macOS,
+            the pattern <code>brew install [package]</code> is statistically the most helpful next step.</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Concept</th>
+                <th>What it means</th>
+                <th>Analogy</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Parameters</strong></td>
+                <td>Billions of numbers that define the model's behavior</td>
+                <td>Like the synaptic connections in a brain &mdash; each one is tiny, but together they create intelligence</td>
+            </tr>
+            <tr>
+                <td><strong>Training</strong></td>
+                <td>The process of adjusting parameters using training data (done once, before deployment)</td>
+                <td>Like going to school for years &mdash; learning happens during training, not during conversations</td>
+            </tr>
+            <tr>
+                <td><strong>Inference</strong></td>
+                <td>Using the trained model to generate responses (what happens when you chat)</td>
+                <td>Like taking a test &mdash; using what you learned, but not learning new things</td>
+            </tr>
+            <tr>
+                <td><strong>Context window</strong></td>
+                <td>The maximum number of tokens the model can process at once (~200K for Claude)</td>
+                <td>Like short-term memory &mdash; how much you can hold in your head at one time</td>
+            </tr>
+            <tr>
+                <td><strong>Tokens</strong></td>
+                <td>Pieces of words (~4 characters each on average)</td>
+                <td>Like syllables &mdash; the smallest units the model reads and writes</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- ============================== -->
+    <h2>Training vs. Using (Inference)</h2>
+
+    <div class="compare">
+        <div class="compare-card can" style="border-color: #d8d0f0; background: linear-gradient(135deg, #f3f0ff, #eee8ff);">
+            <h4 style="color: #3b3196;">Training (already done)</h4>
+            <ul>
+                <li>Happened before you ever used Claude</li>
+                <li>Took weeks/months on thousands of GPUs</li>
+                <li>Processed billions of documents (web pages, books, code, etc.)</li>
+                <li>Adjusted billions of parameters</li>
+                <li>Cost millions of dollars</li>
+                <li>The model <strong>learned</strong> during this phase</li>
+            </ul>
+        </div>
+        <div class="compare-card can" style="border-color: #ffd5a0; background: linear-gradient(135deg, #fff6ec, #ffeed9);">
+            <h4 style="color: #e65100;">Inference (what happens now)</h4>
+            <ul>
+                <li>Happens every time you send a message</li>
+                <li>Takes seconds on a few GPUs</li>
+                <li>Processes only your conversation (not new training data)</li>
+                <li>Parameters are <strong>frozen</strong> &mdash; they don't change</li>
+                <li>Costs cents to dollars per conversation</li>
+                <li>The model <strong>uses</strong> what it learned, but does <strong>not learn</strong> new things</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="box orange">
+        <h4>Your conversations do not train the model</h4>
+        <p>When you chat with Claude through the API, your messages are processed and discarded.
+            The model's parameters are not updated. It doesn't "learn" from your conversation.
+            If you teach it something in one session, it won't remember it in the next.
+            The harness creates the illusion of memory by replaying the conversation history,
+            but the model itself is the same before and after your interaction.</p>
+    </div>
+
+    <!-- ============================== -->
+    <h2>The Model Family</h2>
+
+    <p>Claude comes in different sizes, each trading off capability for speed and cost:</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Model</th>
+                <th>Strengths</th>
+                <th>When to use</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Claude Opus 4.6</strong></td>
+                <td>Most capable. Best reasoning, coding, and analysis. Handles complex multi-step tasks.</td>
+                <td>Complex tasks, code generation, deep analysis (this is what generated scan.html)</td>
+            </tr>
+            <tr>
+                <td><strong>Claude Sonnet 4.6</strong></td>
+                <td>Very capable. Good balance of quality and speed. Faster and cheaper than Opus.</td>
+                <td>Most everyday tasks, when speed matters more than maximum quality</td>
+            </tr>
+            <tr>
+                <td><strong>Claude Haiku 4.5</strong></td>
+                <td>Fastest and cheapest. Good for simple tasks.</td>
+                <td>Quick lookups, simple questions, high-volume tasks</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>All three share the same architecture but differ in the number of parameters. More parameters
+        = more capability = slower = more expensive.</p>
+
+    <!-- ============================== -->
+    <h2>What Happened Inside Claude During the PDF Task</h2>
+
+    <p>Here's what the LLM actually did (internally) for the scan.pdf conversion:</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Round</th>
+                <th>Input the LLM received</th>
+                <th>What the LLM's neural network computed</th>
+                <th>Output the LLM produced</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>System prompt + your message "can convert scan.pdf to html"</td>
+                <td>Understood intent: convert a file. Decided to check if it exists first. Selected the Glob tool from its available tools.</td>
+                <td>Text + <code>Glob("**/scan.pdf")</code></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Previous + Glob result: "scan.pdf found"</td>
+                <td>File exists. It's a PDF. The Read tool can handle PDFs. Try reading pages 1-5.</td>
+                <td><code>Read("scan.pdf", pages="1-5")</code></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Previous + error: "pdftoppm not installed"</td>
+                <td>Error mentions poppler-utils. System is macOS (from system prompt: "Platform: darwin"). Homebrew is the standard package manager on macOS. Correct command: brew install poppler.</td>
+                <td>Text + <code>Bash("brew install poppler")</code></td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Previous + pdftotext result: (empty)</td>
+                <td>No text extracted = scanned image PDF. Strategy: convert pages to images with pdftoppm (which works in Bash), then use Read to see the images. Chose 200 DPI as balance of quality/speed.</td>
+                <td><code>Bash("pdftoppm -png -r 200 ...")</code></td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>Previous + 7 page images (raw pixels)</td>
+                <td>Vision encoder processed each image. Recognized: titles, paragraphs, tables, code blocks, a JSON config, a file tree diagram, bullet lists. Held all content in context.</td>
+                <td>Request to read 7 more pages</td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td>Previous + all 14 page images</td>
+                <td>Full document understood. Planned HTML structure: 10 sections, matching CSS from prior conversation (purple theme). Generated 476 lines of HTML/CSS token by token.</td>
+                <td><code>Write("scan.html", content=...)</code></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- ============================== -->
+    <h2>Common Misconceptions</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Misconception</th>
+                <th>Reality</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>"The AI accessed my file system"</td>
+                <td>The LLM never accessed your files. The harness read files and sent the contents to the LLM as text/images.</td>
+            </tr>
+            <tr>
+                <td>"The AI ran a bash command"</td>
+                <td>The LLM generated text describing a command. The harness ran the command on your Mac.</td>
+            </tr>
+            <tr>
+                <td>"The AI learned from my conversation"</td>
+                <td>The model's weights are frozen during inference. It doesn't learn. It processes each request from scratch.</td>
+            </tr>
+            <tr>
+                <td>"The AI remembers our last conversation"</td>
+                <td>The LLM has zero memory between sessions. The harness resends the full conversation history, creating an illusion of memory.</td>
+            </tr>
+            <tr>
+                <td>"The AI is running on my computer"</td>
+                <td>The LLM runs on Anthropic's GPUs in the cloud. Only the harness runs on your machine.</td>
+            </tr>
+            <tr>
+                <td>"The AI thinks like a human"</td>
+                <td>The LLM predicts the most likely next token based on statistical patterns. It doesn't have consciousness, beliefs, or experiences. It produces remarkably human-like output, but the mechanism is fundamentally different.</td>
+            </tr>
+            <tr>
+                <td>"The AI copies from its training data"</td>
+                <td>The LLM doesn't store or retrieve documents. It generates new text based on learned patterns. The 476-line HTML was genuinely novel &mdash; no identical file existed in its training data.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- ============================== -->
+    <h2>Key Takeaways</h2>
+
+    <ul>
+        <li>The LLM is a <strong>mathematical function</strong>: text/images in, text out. Nothing more.</li>
+        <li>It runs on <strong>Anthropic's GPUs</strong>, not your machine</li>
+        <li>It generates output <strong>one token at a time</strong>, predicting the most likely next word</li>
+        <li>It has <strong>no access</strong> to your files, your network, or the internet</li>
+        <li>It <strong>does not learn</strong> from your conversations &mdash; its parameters are frozen</li>
+        <li>Tool calls are just <strong>structured text</strong> that the harness parses and executes</li>
+        <li>Vision works by converting images into the same kind of internal representations as text</li>
+        <li>Its "knowledge" comes from training on billions of documents, encoded as billions of numerical parameters</li>
+        <li>It is extraordinarily capable at language tasks, but it is <strong>not sentient, not conscious, and not a database</strong></li>
+    </ul>
+
+    <div class="footer">
+        Claude LLM &mdash; The language model that thinks in tokens &middot; April 2026
+    </div>
+
+</body>
+</html>
