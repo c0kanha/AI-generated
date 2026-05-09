@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Digital Payments — A Study Guide</title>
+<style>
+  :root {
+    --bg: #0b1020;
+    --panel: #121933;
+    --panel-2: #1a2348;
+    --text: #e6ecff;
+    --muted: #9aa6c7;
+    --accent: #6ef0ff;
+    --accent-2: #c084fc;
+    --good: #34d399;
+    --bad: #f87171;
+    --border: #2a3563;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .container { max-width: 980px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  header.hero {
+    text-align: center;
+    padding: 56px 24px 32px;
+    border-bottom: 1px solid var(--border);
+    background: radial-gradient(circle at 50% 0%, rgba(110,240,255,0.08), transparent 60%);
+  }
+  header.hero h1 {
+    font-size: 2.6rem;
+    margin: 0 0 12px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .subtitle { color: var(--muted); font-size: 1.15rem; max-width: 720px; margin: 0 auto; }
+
+  .analogy-card {
+    background: linear-gradient(135deg, var(--panel), var(--panel-2));
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin: 32px 0;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+  }
+  .analogy-card h3 {
+    margin: 0 0 10px;
+    color: var(--accent);
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .timeline {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 40px 0 50px;
+    padding: 20px 0;
+    border-top: 1px dashed var(--border);
+    border-bottom: 1px dashed var(--border);
+    gap: 8px;
+  }
+  .timeline .step { flex: 1; text-align: center; padding: 8px; }
+  .timeline .num {
+    display: inline-block;
+    width: 36px; height: 36px; line-height: 36px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--bg);
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  .timeline .label { color: var(--muted); font-size: 0.9rem; }
+
+  section.chapter {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+    margin-bottom: 28px;
+  }
+  section.chapter h2 {
+    margin-top: 0;
+    font-size: 1.55rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .chip {
+    background: var(--accent);
+    color: var(--bg);
+    font-size: 0.85rem;
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+
+  .analogy-box {
+    background: rgba(192,132,252,0.08);
+    border-left: 3px solid var(--accent-2);
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin: 20px 0;
+    font-style: italic;
+    color: #e0d7ff;
+  }
+  .analogy-box strong { color: var(--accent-2); font-style: normal; }
+
+  .diagram {
+    background: var(--panel-2);
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    margin: 20px 0;
+  }
+  .diagram img { max-width: 220px; opacity: 0.4; margin-bottom: 10px; }
+  .diagram .caption {
+    color: var(--muted);
+    font-size: 0.95rem;
+    text-align: left;
+    line-height: 1.5;
+  }
+  .diagram .caption strong { color: var(--accent); }
+
+  table.compare {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    font-size: 0.95rem;
+  }
+  table.compare th, table.compare td {
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    text-align: left;
+    vertical-align: top;
+  }
+  table.compare th {
+    background: rgba(110,240,255,0.1);
+    color: var(--accent);
+  }
+
+  .pros-cons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 22px;
+  }
+  .pros, .cons {
+    border-radius: 8px;
+    padding: 18px;
+    border: 1px solid var(--border);
+  }
+  .pros {
+    background: rgba(52,211,153,0.08);
+    border-left: 4px solid var(--good);
+  }
+  .cons {
+    background: rgba(248,113,113,0.08);
+    border-left: 4px solid var(--bad);
+  }
+  .pros h4 { color: var(--good); margin: 0 0 8px; }
+  .cons h4 { color: var(--bad); margin: 0 0 8px; }
+  .pros ul, .cons ul { margin: 0; padding-left: 18px; }
+  .pros li, .cons li { margin-bottom: 6px; }
+
+  @media print {
+    body { background: #ffffff; color: #111; }
+    header.hero { background: none; border-bottom: 2px solid #333; }
+    header.hero h1 {
+      -webkit-text-fill-color: #111;
+      background: none;
+      color: #111;
+    }
+    .subtitle { color: #444; }
+    .analogy-card,
+    section.chapter,
+    .analogy-box,
+    .diagram,
+    .pros,
+    .cons {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .analogy-card {
+      background: #ffffff;
+      color: #111;
+      border: 1px solid #333;
+      border-left: 4px solid #333;
+      box-shadow: none;
+    }
+    .analogy-card h3 { color: #111; }
+    section.chapter {
+      background: #ffffff;
+      border: 1px solid #333;
+      color: #111;
+    }
+    .chip { background: #333; color: #fff; }
+    .timeline { border-color: #333; }
+    .timeline .num { background: #333; color: #fff; }
+    .timeline .label { color: #444; }
+    .analogy-box {
+      background: #f5f0ff;
+      border-left: 3px solid #555;
+      color: #222;
+    }
+    .analogy-box strong { color: #000; }
+    .diagram { background: #fafafa; border: 1px dashed #555; }
+    .diagram .caption { color: #222; }
+    .diagram .caption strong { color: #000; }
+    table.compare th { background: #eef7fa; color: #111; border: 1px solid #555; }
+    table.compare td { color: #111; border: 1px solid #555; }
+    .pros {
+      background: #eafaf1;
+      border: 1px solid #2a8c5a;
+      border-left: 4px solid #2a8c5a;
+    }
+    .cons {
+      background: #fdecec;
+      border: 1px solid #b53b3b;
+      border-left: 4px solid #b53b3b;
+    }
+    .pros h4 { color: #1a6b40; }
+    .cons h4 { color: #8a1f1f; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <h1>How a Card Payment Actually Works</h1>
+  <p class="subtitle">The seven specialists, the two-second authorization round-trip, the slow-moving money behind it, and the security layers that keep the whole thing from being looted.</p>
+</header>
+
+<div class="container">
+
+  <div class="analogy-card">
+    <h3>The Master Analogy: A Two-Lane Highway</h3>
+    <p>The single most useful idea in payments is this: <strong>a "transaction" is actually two separate events disguised as one.</strong></p>
+    <ul>
+      <li><strong>Lane 1 — the fast lane (authorization).</strong> A two-second round-trip conversation. A question — <em>"Can this card spend this much?"</em> — flies through a chain of intermediaries, reaches the cardholder's bank, and an answer comes back. <strong>No money moves.</strong> Just a hold, and a green check on the merchant's screen.</li>
+      <li><strong>Lane 2 — the slow lane (settlement).</strong> Hours or days later, an armored money truck travels the same chain, and the actual funds shift from the cardholder's bank into the merchant's bank, minus fees taken by every party along the way.</li>
+    </ul>
+    <p>Once you see the two lanes, every other piece of payments — gateways, processors, networks, tokenization, chargebacks, interchange fees — slots into one or the other. This guide walks you through the cast, both lanes, the security around them, and what changes when you step beyond cards.</p>
+  </div>
+
+  <div class="timeline">
+    <div class="step"><div class="num">1</div><div class="label">The Cast<br>(7 actors)</div></div>
+    <div class="step"><div class="num">2</div><div class="label">Authorization<br>(fast lane)</div></div>
+    <div class="step"><div class="num">3</div><div class="label">Settlement<br>(slow lane)</div></div>
+    <div class="step"><div class="num">4</div><div class="label">Security<br>Layers</div></div>
+    <div class="step"><div class="num">5</div><div class="label">Beyond<br>Cards</div></div>
+  </div>
+
+  <!-- ============ CHAPTER 1 ============ -->
+  <section class="chapter">
+    <h2><span class="chip">01</span> The Cast — Seven Specialists, Not Three</h2>
+    <p>Most explanations of card payments collapse the whole pipeline into "the bank" and "the website." There are actually <strong>seven distinct roles</strong>, and a lot of confusion disappears once you can name them.</p>
+
+    <table class="compare">
+      <thead>
+        <tr><th>Role</th><th>What they do</th><th>Example</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Cardholder</strong></td><td>The person paying.</td><td>You.</td></tr>
+        <tr><td><strong>Merchant</strong></td><td>The business being paid.</td><td>An online store.</td></tr>
+        <tr><td><strong>Payment gateway</strong></td><td>Software that captures card data on the merchant's site and forwards it securely.</td><td>Stripe Elements, Braintree.js, Authorize.Net.</td></tr>
+        <tr><td><strong>Payment processor</strong></td><td>Talks to the card network on behalf of the merchant; ferries auth and settlement messages.</td><td>Worldpay, Fiserv, Adyen.</td></tr>
+        <tr><td><strong>Acquiring bank (acquirer)</strong></td><td>Holds the merchant's account; receives funds during settlement.</td><td>Chase Merchant Services, Wells Fargo Merchant.</td></tr>
+        <tr><td><strong>Card network (scheme)</strong></td><td>Routes messages between acquirer and issuer; sets the rulebook and fees.</td><td>Visa, Mastercard, Amex, Discover, JCB, UnionPay.</td></tr>
+        <tr><td><strong>Issuing bank (issuer)</strong></td><td>Issued the card to the cardholder; ultimately approves or declines each charge.</td><td>Chase, Citi, Bank of America, Capital One.</td></tr>
+      </tbody>
+    </table>
+
+    <p>Two reasons this matters. First, every fee, every dispute, and every fraud rule is owned by a specific actor in this list — knowing who owns what tells you who to call. Second, in modern integrated services these roles are bundled: <strong>Stripe</strong> is gateway + processor + acquirer-of-record; <strong>American Express</strong> is network + issuer. The bundles are the exception, the seven roles are the rule.</p>
+
+    <div class="analogy-box">
+      <strong>Highway view:</strong> These are the seven cities the highway passes through. Both the fast-lane question and the slow-lane money truck stop in every city, in order. Skip a city and the trip doesn't complete.
+    </div>
+
+    <div class="diagram">
+      <img src="placeholder.png" alt="Diagram">
+      <div class="caption"><strong>Draw in Excalidraw:</strong> Seven labeled boxes in a horizontal row: <em>Cardholder → Merchant → Gateway → Processor → Acquiring Bank → Card Network → Issuing Bank</em>. Below the row, two horizontal arrows running the length of the chain: a thin blue arrow labeled <em>"Authorization (~2 seconds, both directions)"</em> and a thicker green arrow labeled <em>"Settlement (~1–3 days, money flows)"</em>. Off to the side, a callout: <em>"Stripe = Gateway + Processor + Acquirer rolled into one. Amex = Network + Issuer rolled into one."</em></div>
+    </div>
+
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>✓ Why know all seven</h4>
+        <ul>
+          <li>Every fee on a merchant statement maps to one of these roles</li>
+          <li>Disputes (chargebacks) hop role-by-role through the chain</li>
+          <li>You can decode any payments diagram once you've named the actors</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>✗ Where it gets messy</h4>
+        <ul>
+          <li>Bundled providers (Stripe, PayPal, Adyen) hide the seams — convenient, but the roles still exist behind the API</li>
+          <li>Closed-loop networks (Amex, Discover) collapse the network and issuer roles into one company</li>
+          <li>"Processor" and "acquirer" are often the same legal entity in practice</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHAPTER 2 ============ -->
+  <section class="chapter">
+    <h2><span class="chip">02</span> Authorization — The Fast Lane</h2>
+    <p>When you click "Buy," what happens in the next ~2 seconds is a question-and-answer round-trip. Card data leaves your browser and flies through the chain to your bank, which makes the actual yes/no decision. Every other actor is a relay or a checker — none of them can approve or decline a charge themselves.</p>
+
+    <p><strong>Step by step:</strong></p>
+    <ol>
+      <li>Your browser sends card data over TLS to the merchant's site, which immediately hands it to the <strong>gateway</strong>.</li>
+      <li>The gateway validates format (Luhn check on the card number, expiration date, CVV present), then sends an authorization request to the <strong>processor</strong>.</li>
+      <li>The processor routes the request through the <strong>card network</strong> to the <strong>issuing bank</strong>.</li>
+      <li>The <strong>issuer</strong> evaluates: is the card real and active? Are there sufficient funds or credit? Does the AVS billing-address data match? Does the CVV match? Does the transaction look fraudulent?</li>
+      <li>The issuer returns an <strong>auth code</strong> (approve) or a <strong>decline code</strong> (e.g., "51 — insufficient funds," "05 — do not honor"). The funds are placed on hold but not yet moved.</li>
+      <li>The response travels back the same path: issuer → network → processor → gateway → merchant. The merchant's screen shows green.</li>
+    </ol>
+
+    <div class="analogy-box">
+      <strong>Highway view:</strong> A motorbike courier with a sealed envelope leaves city #3 (Gateway), races through cities 4–6, hands the envelope to the issuer in city #7, waits for them to stamp it APPROVED or DECLINED, then races back. The envelope never carried any money — only a question and an answer.
+    </div>
+
+    <div class="diagram">
+      <img src="placeholder.png" alt="Diagram">
+      <div class="caption"><strong>Draw in Excalidraw:</strong> The same seven-city chain from Chapter 1. Overlay a curving arrow that starts at "Cardholder" (left), arcs over the top of the chain to "Issuing Bank" (right) labeled <em>"Auth request — ~1 sec"</em>, and a return arrow arcing back labeled <em>"Auth response (approve/decline) — ~1 sec"</em>. At the issuing bank, draw four little checklist items: <em>card valid, funds OK, AVS match, fraud score OK</em>. Bottom note: <em>"Funds placed on HOLD. No money has actually moved."</em></div>
+    </div>
+
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>✓ What this gets right</h4>
+        <ul>
+          <li>Single round-trip with a single point of approval — fast and simple to reason about</li>
+          <li>The issuer is the source of truth for every funds and fraud decision</li>
+          <li>Industry-standard ISO 8583 (and increasingly ISO 20022) message formats keep everyone speaking the same language</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>✗ What can go wrong</h4>
+        <ul>
+          <li>An "approved" auth doesn't guarantee funds — issuers can later reverse on suspected fraud</li>
+          <li>The hold expires (typically 7–30 days) if the merchant doesn't capture the funds</li>
+          <li>"Soft declines" (insufficient funds, do not honor) and "hard declines" (lost/stolen card) require very different retry strategies</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHAPTER 3 ============ -->
+  <section class="chapter">
+    <h2><span class="chip">03</span> Settlement — The Slow Lane Where Money Actually Moves</h2>
+    <p>The auth code is just a promise. The actual transfer of funds happens later through a separate process called <strong>clearing and settlement</strong>. This is the lane most explanations skip — but it's where the money lives.</p>
+
+    <p>The merchant's POS or e-commerce system collects all the day's authorized transactions and submits a <strong>capture</strong> file (often at end-of-day) to the processor. The processor then aggregates these into a settlement batch sent through the network. The network performs <strong>clearing</strong> (matching auth records to capture records, exchanging the official transaction data between issuer and acquirer), then <strong>settlement</strong> happens: the issuer's bank wires funds to the acquiring bank, which credits the merchant's account — typically <strong>1–3 business days</strong> after the original authorization.</p>
+
+    <p>Along the way, fees are deducted from the merchant's gross amount:</p>
+    <ul>
+      <li><strong>Interchange</strong> — paid by the acquirer to the issuer. The largest component, typically 1.5%–3.0% of the transaction. Set by the network but kept by the issuer.</li>
+      <li><strong>Scheme/network fees</strong> — paid to Visa/Mastercard for using their rails. Small per-transaction fees.</li>
+      <li><strong>Processor/acquirer markup</strong> — what the processor and acquiring bank charge for their services on top of interchange.</li>
+    </ul>
+
+    <p>This is why the merchant nets <em>less</em> than the customer paid. A $100 card sale might land $97.10 in the merchant's account, three days later.</p>
+
+    <div class="analogy-box">
+      <strong>Highway view:</strong> Days after the motorbike's round-trip, an armored truck rolls through the same seven cities. At each stop, a small percentage of the cash is unloaded — interchange paid to the issuer's city, scheme fees paid to the network, processor markup paid in the processor's city — until the remainder reaches the merchant's vault.
+    </div>
+
+    <div class="diagram">
+      <img src="placeholder.png" alt="Diagram">
+      <div class="caption"><strong>Draw in Excalidraw:</strong> A horizontal flow showing money movement across the same seven cities, but right-to-left this time (issuer → merchant). At each city, draw a small bucket icon labeled with the fee taken: <em>Issuer — Interchange (~1.8%)</em>; <em>Network — Scheme fee (~$0.05)</em>; <em>Processor — Markup (~0.3%)</em>. Above the flow, a calendar showing "T+0: Auth" → "T+1 to T+3: Settlement." Bottom note: <em>"$100 paid, $97.10 received — the gap is the cost of the rails."</em></div>
+    </div>
+
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>✓ Why batched settlement exists</h4>
+        <ul>
+          <li>Batching is dramatically cheaper than settling each transaction in real time</li>
+          <li>Gives merchants a window to issue refunds or void transactions before money moves</li>
+          <li>Allows clean daily reconciliation — one deposit per batch, easy to match in accounting</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>✗ Where it hurts</h4>
+        <ul>
+          <li>1–3 day settlement creates real cash-flow strain for small merchants</li>
+          <li>Chargebacks can claw funds back weeks or months after settlement</li>
+          <li>Interchange is opaque and varies by card type — premium rewards cards cost merchants the most</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHAPTER 4 ============ -->
+  <section class="chapter">
+    <h2><span class="chip">04</span> Security Layers — Defense in Depth</h2>
+    <p>Card data is a lucrative target, so the industry layers several defenses on top of each other. The right mental model isn't "encryption <em>or</em> tokenization" — it's <strong>all of these, simultaneously, mandated by PCI DSS.</strong></p>
+
+    <table class="compare">
+      <thead>
+        <tr><th>Layer</th><th>What it does</th><th>What it doesn't do</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>TLS</strong></td>
+          <td>Encrypts data on the wire between browser, merchant, and gateway. Reversible at each endpoint.</td>
+          <td>Doesn't protect data once it's sitting in a database.</td>
+        </tr>
+        <tr>
+          <td><strong>Encryption at rest</strong></td>
+          <td>Stored card data (if any) is encrypted with AES-256. Key management is the hard part.</td>
+          <td>Useless if the keys are stolen alongside the data.</td>
+        </tr>
+        <tr>
+          <td><strong>Tokenization</strong></td>
+          <td>Replaces the real PAN (card number) with a random surrogate ("token"). The real PAN lives in a hardened vault.</td>
+          <td>The vault becomes the new high-value target — security shifts to the vault provider.</td>
+        </tr>
+        <tr>
+          <td><strong>Network tokens</strong></td>
+          <td>Tokens issued by Visa/Mastercard themselves. Auto-update when the underlying card is reissued.</td>
+          <td>Network-specific — different scheme = different token.</td>
+        </tr>
+        <tr>
+          <td><strong>3-D Secure (3DS)</strong></td>
+          <td>An extra cardholder authentication step (e.g., one-time code) during checkout. Shifts fraud liability from merchant to issuer.</td>
+          <td>Adds checkout friction and can hurt conversion.</td>
+        </tr>
+        <tr>
+          <td><strong>PCI DSS</strong></td>
+          <td>The industry standard everyone touching card data must follow — covers networks, storage, access, monitoring.</td>
+          <td>Compliance is not the same as security; it's a floor, not a ceiling.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Two ideas worth holding onto. <strong>Encryption</strong> protects data <em>at every stage</em> — in transit and at rest — by making it unreadable without a key. <strong>Tokenization</strong> takes a stronger stance: it removes the sensitive data from the merchant's environment <em>entirely</em>. The merchant stores a token; the token is worthless to a thief without access to the vault. Most modern stacks use both, plus 3DS for risky transactions.</p>
+
+    <div class="analogy-box">
+      <strong>Highway view:</strong> Picture each of the seven cities as a fortress. TLS is the sealed armored car between fortresses. Encryption-at-rest is the locked safe inside each fortress. Tokenization is a "claim ticket" system — the actual valuables stay in one super-fortress (the vault), and every other fortress holds only redemption tickets. 3DS is the bouncer at the customer's door who asks "are you really you?" before letting the trip start.
+    </div>
+
+    <div class="diagram">
+      <img src="placeholder.png" alt="Diagram">
+      <div class="caption"><strong>Draw in Excalidraw:</strong> A castle-and-moat scene. Center: a heavily fortified central tower labeled <em>"Token Vault (the only place real PANs live)"</em>. Surrounding it, six smaller towers labeled <em>Browser, Merchant, Gateway, Processor, Acquirer, Network</em>. Between every tower, draw an arrow labeled <em>"TLS"</em>. Inside each tower, a small safe labeled <em>"AES-256 at rest"</em>. A dotted line from the merchant tower into the vault labeled <em>"Token → Real PAN (only on demand)"</em>. A guard at the browser tower labeled <em>"3DS check."</em></div>
+    </div>
+
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>✓ Why defense in depth wins</h4>
+        <ul>
+          <li>An attacker has to defeat multiple, independent controls to extract anything useful</li>
+          <li>Tokenization shrinks PCI scope — fewer systems "touch" real card data, fewer audits</li>
+          <li>3DS+EMV+tokenization together push fraud rates near zero on properly configured stacks</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>✗ Where defenses break</h4>
+        <ul>
+          <li>Compromised endpoint (malware on the merchant's server) can defeat TLS by reading data before encryption</li>
+          <li>Token vaults are catastrophic single points of failure if breached</li>
+          <li>3DS friction can lower conversion rates 5–15% if applied indiscriminately</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHAPTER 5 ============ -->
+  <section class="chapter">
+    <h2><span class="chip">05</span> Beyond Cards — Wallets, Bank Rails, and Real-Time Payments</h2>
+    <p>Cards aren't the only way to pay digitally — they're just the most familiar in the US. Around the world, several other <strong>rails</strong> (the underlying transfer system) carry a huge and growing share of payments. Knowing what's a "rail" versus what's a "wrapper" clears up most of the confusion.</p>
+
+    <p><strong>Card rails</strong> (everything in chapters 1–4): Visa, Mastercard, Amex, Discover, JCB, UnionPay. Strengths: ubiquitous, instant authorization, strong consumer protections. Weaknesses: 1.5–3% merchant cost, 1–3 day settlement.</p>
+
+    <p><strong>Bank rails</strong> move money directly between bank accounts, no card involved:</p>
+    <ul>
+      <li><strong>ACH</strong> (US) — cheap (~$0.25), slow (1–3 days), used for payroll, rent, recurring billing.</li>
+      <li><strong>SEPA</strong> (Europe) — bank transfers across the eurozone; SEPA Instant settles in seconds.</li>
+      <li><strong>UPI</strong> (India) — real-time, free for consumers, dominant for retail; Pix (Brazil) and PromptPay (Thailand) are similar.</li>
+      <li><strong>FedNow</strong> (US, launched 2023) and <strong>RTP</strong> — instant bank-to-bank rails finally arriving in the US.</li>
+      <li><strong>Faster Payments</strong> (UK) — instant bank transfers since 2008.</li>
+    </ul>
+
+    <p><strong>Wallets</strong> (Apple Pay, Google Pay, PayPal, Venmo, Cash App) are <em>wrappers</em>, not rails. They sit on top of an underlying card or bank account. Apple Pay, for example, replaces your card number with a network token and adds a biometric authentication step — but the actual money still moves on Visa or Mastercard rails underneath.</p>
+
+    <p><strong>All-in-one PSPs</strong> (Stripe, Adyen, PayPal, Square, Block, Mollie) bundle gateway + processor + acquiring relationships across many of these rails. One API, one contract, one dashboard — at the cost of bundled (often higher) pricing.</p>
+
+    <div class="analogy-box">
+      <strong>Highway view:</strong> Cards are one specific highway with seven cities and well-known tolls. Bank rails are an entirely different highway system — fewer cities, lower tolls, sometimes faster. Wallets aren't roads at all; they're <em>cars</em> that drive on whichever highway is available. All-in-one PSPs sell you a single ticket that's valid on any of these roads.
+    </div>
+
+    <div class="diagram">
+      <img src="placeholder.png" alt="Diagram">
+      <div class="caption"><strong>Draw in Excalidraw:</strong> A map view with three parallel rails running left-to-right, each labeled: <em>"Card rails (Visa, MC, Amex)"</em>, <em>"Bank rails (ACH, SEPA, UPI, FedNow)"</em>, <em>"Real-time rails (UPI, Pix, FedNow, Faster Payments)"</em>. Above the rails, draw three small icons labeled <em>"Apple Pay"</em>, <em>"Google Pay"</em>, <em>"PayPal"</em> with arrows showing each can ride on any rail. To the right, a single large box labeled <em>"All-in-One PSP (Stripe / Adyen / PayPal)"</em> with a multi-pronged plug connecting to all three rails.</div>
+    </div>
+
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>✓ Why this matters now</h4>
+        <ul>
+          <li>Real-time bank rails are growing faster than card rails — UPI processes more transactions monthly than Visa globally</li>
+          <li>Bank rails cost a fraction of card fees, attractive for high-ticket B2B</li>
+          <li>Wallets give you tokenization + strong authentication "for free" on top of legacy rails</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>✗ Where the picture frays</h4>
+        <ul>
+          <li>Bank rails generally lack the chargeback protections cardholders take for granted</li>
+          <li>Wallets are platform-locked: Apple Pay is iOS-only; some networks aren't supported in some regions</li>
+          <li>"All-in-one" doesn't mean "best for everyone" — large merchants often save millions by negotiating direct acquirer relationships</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PLAIN-ENGLISH RECAP ============ -->
+  <div class="analogy-card" style="border-left-color: var(--accent-2);">
+    <h3 style="color: var(--accent-2);">Plain-English Recap — The Restaurant Version</h3>
+    <p>Here is a simplified breakdown of the two vital systems that make digital payments possible.</p>
+    <p>To understand the difference, it helps to think of an online transaction like dining at a restaurant:</p>
+    <ul>
+      <li><strong>The Payment Gateway is the waiter.</strong> They take your order (card details), make sure it looks correct, and securely carry it to the kitchen.</li>
+      <li><strong>The Payment Processor is the kitchen.</strong> They actually do the heavy lifting of preparing the meal (moving the money between the banks).</li>
+    </ul>
+
+    <h4 style="color: var(--accent); margin-top: 22px; margin-bottom: 6px;">Payment Gateway: The Front-End Security Guard</h4>
+    <p>A payment gateway is a software application that acts as the secure bridge between a merchant's website and the payment processor.</p>
+    <ul>
+      <li><strong>Primary Role:</strong> It captures the customer's payment details at checkout, encrypts them (so hackers can't read them), and sends them off for approval.</li>
+      <li><strong>Customer-Facing:</strong> When you type your credit card number into a checkout page, you are interacting directly with the payment gateway.</li>
+      <li><strong>Analogy:</strong> It acts as the "virtual" version of the physical card reader you dip your chip into at a physical store.</li>
+    </ul>
+
+    <h4 style="color: var(--accent); margin-top: 22px; margin-bottom: 6px;">Payment Processor: The Back-End Money Mover</h4>
+    <p>A payment processor is the financial entity operating behind the scenes that actually executes the transaction.</p>
+    <ul>
+      <li><strong>Primary Role:</strong> It receives the encrypted data from the gateway and contacts the card networks (Visa, Mastercard) and the customer's bank (the Issuing Bank) to ask a simple question: <em>"Does this person have enough money/credit for this purchase?"</em></li>
+      <li><strong>Bank-Facing:</strong> It manages the complex communication between the banks and ultimately facilitates the settlement (the actual transfer of funds from the buyer's account to the seller's account).</li>
+    </ul>
+
+    <h4 style="color: var(--accent); margin-top: 22px; margin-bottom: 6px;">The Journey of a Digital Transaction</h4>
+    <p>It's not just magic; it's a very fast committee meeting. Here is how they work together in milliseconds:</p>
+    <ol>
+      <li><strong>Initiation:</strong> You click "Buy Now" on a website.</li>
+      <li><strong>The Gateway:</strong> The Payment Gateway encrypts your card data and safely transmits it to the Payment Processor.</li>
+      <li><strong>The Processor:</strong> The Payment Processor routes this request through the card network to your bank.</li>
+      <li><strong>The Bank:</strong> Your bank checks your balance, approves or declines the request, and sends the answer back to the Processor.</li>
+      <li><strong>The Relay:</strong> The Processor tells the Gateway the result. The Gateway displays "Payment Successful!" (or "Card Declined") on your screen.</li>
+      <li><strong>Settlement:</strong> A few days later, the Processor actually moves the funds into the merchant's bank account.</li>
+    </ol>
+  </div>
+
+  <!-- ============ REAL-WORLD PROVIDERS ============ -->
+  <section class="chapter">
+    <h2><span class="chip">06</span> Real-World Providers — Who Actually Does This?</h2>
+    <p>In the real world, very few companies do <em>only</em> gateway or <em>only</em> processor work — most modern providers bundle two or more roles. Here's a curated list of who you'll actually encounter, grouped by what they do under the hood.</p>
+
+    <h4 style="color: var(--accent); margin-top: 22px;">All-in-One (Gateway + Processor + often Acquirer)</h4>
+    <table class="compare">
+      <thead>
+        <tr><th>Provider</th><th>Strength / niche</th><th>Often used by</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Stripe</strong></td><td>Developer-first APIs, global coverage, strong tokenization &amp; fraud tools (Radar)</td><td>SaaS, marketplaces, startups (Shopify, Lyft, Instacart)</td></tr>
+        <tr><td><strong>Adyen</strong></td><td>Single global platform, direct acquiring in many countries, enterprise-grade</td><td>Uber, Spotify, McDonald's, Microsoft</td></tr>
+        <tr><td><strong>PayPal</strong></td><td>Consumer-side wallet trust + merchant gateway/processor</td><td>eBay, small merchants, B2C checkout</td></tr>
+        <tr><td><strong>Braintree</strong> (PayPal-owned)</td><td>Strong recurring billing &amp; mobile SDKs</td><td>Airbnb, Uber, DoorDash</td></tr>
+        <tr><td><strong>Square / Block</strong></td><td>In-person hardware (card readers) + online unified</td><td>Small retailers, restaurants, services</td></tr>
+        <tr><td><strong>Checkout.com</strong></td><td>Granular control, EU/MENA strength, enterprise pricing</td><td>Sony, Grab, Klarna, Patreon</td></tr>
+        <tr><td><strong>Razorpay</strong></td><td>India market leader, supports UPI + cards + wallets</td><td>Indian SMBs and startups</td></tr>
+        <tr><td><strong>Mollie</strong></td><td>European local payment methods (iDEAL, Bancontact)</td><td>EU SMBs and SaaS</td></tr>
+      </tbody>
+    </table>
+
+    <h4 style="color: var(--accent); margin-top: 22px;">Pure Gateways (need a separate processor)</h4>
+    <table class="compare">
+      <thead>
+        <tr><th>Provider</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Authorize.Net</strong> (Visa-owned)</td><td>One of the oldest gateways. Works with most US processors. Common in legacy SMB stacks.</td></tr>
+        <tr><td><strong>NMI</strong></td><td>White-label gateway resold by many ISOs and acquirers.</td></tr>
+        <tr><td><strong>Spreedly</strong></td><td>"Universal" gateway — abstracts over many other gateways for portability.</td></tr>
+      </tbody>
+    </table>
+
+    <h4 style="color: var(--accent); margin-top: 22px;">Pure Processors / Acquirers (the back end)</h4>
+    <table class="compare">
+      <thead>
+        <tr><th>Provider</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Fiserv</strong> (formerly First Data)</td><td>Largest US processor by volume. Powers many bank-branded merchant services.</td></tr>
+        <tr><td><strong>Worldpay</strong> (FIS)</td><td>Massive global processor; enterprise and large-merchant focus.</td></tr>
+        <tr><td><strong>Global Payments / TSYS</strong></td><td>Top-3 US processor; strong banking partnerships.</td></tr>
+        <tr><td><strong>Chase Merchant Services</strong></td><td>Bank-owned acquirer + processor; a common default for US enterprises banking with Chase.</td></tr>
+        <tr><td><strong>Elavon</strong> (US Bank)</td><td>Bank-owned acquirer/processor; common in hospitality and retail.</td></tr>
+        <tr><td><strong>Nuvei</strong></td><td>Global processor with strong coverage in regulated verticals (gaming, FX).</td></tr>
+      </tbody>
+    </table>
+
+    <h4 style="color: var(--accent); margin-top: 22px;">Wallets (sit on top of card or bank rails)</h4>
+    <table class="compare">
+      <thead>
+        <tr><th>Wallet</th><th>What it actually is</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Apple Pay</strong></td><td>Network tokenization + Face ID/Touch ID; rides Visa/MC/Amex underneath.</td></tr>
+        <tr><td><strong>Google Pay</strong></td><td>Same idea, Android-side; uses network tokens.</td></tr>
+        <tr><td><strong>PayPal</strong> / <strong>Venmo</strong> / <strong>Cash App</strong></td><td>Stored balance + card/bank linkages; can settle within their network or via cards/ACH.</td></tr>
+        <tr><td><strong>Amazon Pay</strong></td><td>Uses Amazon-stored card credentials; merchant gets card-on-file convenience without storing PAN.</td></tr>
+        <tr><td><strong>Klarna</strong> / <strong>Affirm</strong> / <strong>Afterpay</strong></td><td>Buy-now-pay-later — extends credit at checkout, settles with merchant immediately, collects from consumer over time.</td></tr>
+      </tbody>
+    </table>
+
+    <h4 style="color: var(--accent); margin-top: 22px;">Card Networks (the schemes themselves)</h4>
+    <table class="compare">
+      <thead>
+        <tr><th>Network</th><th>Type</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Visa</strong></td><td>Open-loop</td><td>Largest globally; not an issuer.</td></tr>
+        <tr><td><strong>Mastercard</strong></td><td>Open-loop</td><td>#2 globally; not an issuer.</td></tr>
+        <tr><td><strong>American Express</strong></td><td>Closed-loop</td><td>Network <em>and</em> issuer; charges merchants higher fees.</td></tr>
+        <tr><td><strong>Discover</strong></td><td>Closed-loop</td><td>Network + issuer; US-centric.</td></tr>
+        <tr><td><strong>UnionPay</strong></td><td>Open-loop</td><td>Largest by card count (China-dominant).</td></tr>
+        <tr><td><strong>JCB</strong></td><td>Open-loop</td><td>Japan-origin, accepted globally via partnerships.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ============ GLOSSARY ============ -->
+  <section class="chapter">
+    <h2><span class="chip">07</span> Payments Glossary — The Vocabulary</h2>
+    <p>The terms you'll see in any payments documentation, dashboard, or merchant statement. Keep this open in another tab the first few times you read a settlement report.</p>
+
+    <table class="compare">
+      <thead>
+        <tr><th>Term</th><th>Definition</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>3DS / 3-D Secure</strong></td><td>Cardholder authentication step (e.g., Visa Secure, Mastercard ID Check). Shifts fraud liability from merchant to issuer when used.</td></tr>
+        <tr><td><strong>ACH</strong></td><td>Automated Clearing House — US bank-to-bank rail. Cheap, slow (1–3 days), used for payroll, bills, recurring debits.</td></tr>
+        <tr><td><strong>Acquirer / Acquiring Bank</strong></td><td>The merchant's bank — receives funds during settlement and assumes liability for the merchant's transactions.</td></tr>
+        <tr><td><strong>Authorization (Auth)</strong></td><td>Issuer's approval to hold funds for a transaction. Doesn't move money on its own.</td></tr>
+        <tr><td><strong>AVS</strong></td><td>Address Verification Service — issuer compares the billing address provided at checkout to the one on file.</td></tr>
+        <tr><td><strong>BIN</strong></td><td>Bank Identification Number — first 6–8 digits of a card number. Identifies the issuer, card type, country.</td></tr>
+        <tr><td><strong>BNPL</strong></td><td>Buy Now, Pay Later — installment credit at checkout (Klarna, Affirm, Afterpay).</td></tr>
+        <tr><td><strong>Capture</strong></td><td>Step that converts an authorization hold into a request for actual settlement. Often automatic; can be delayed (e.g., hotels).</td></tr>
+        <tr><td><strong>Card Network / Scheme</strong></td><td>The rails that route messages between issuers and acquirers. Visa, Mastercard, Amex, Discover, etc.</td></tr>
+        <tr><td><strong>Card-on-File (COF)</strong></td><td>A stored card credential used for repeat or recurring charges without re-prompting the customer.</td></tr>
+        <tr><td><strong>Chargeback</strong></td><td>Dispute initiated by the cardholder via their issuer. Funds are clawed back from the merchant pending investigation.</td></tr>
+        <tr><td><strong>Clearing</strong></td><td>Network step that exchanges official transaction data between issuer and acquirer in preparation for settlement.</td></tr>
+        <tr><td><strong>CVV / CVC / CID</strong></td><td>The 3- or 4-digit security code on the back (or front, for Amex) of a card. Proves possession of the physical card.</td></tr>
+        <tr><td><strong>Decline Code</strong></td><td>Numeric reason why an auth was refused. Common: 05 (do not honor), 51 (insufficient funds), 14 (invalid card), 54 (expired card).</td></tr>
+        <tr><td><strong>EMV</strong></td><td>The chip-card standard (Europay-Mastercard-Visa). Cryptographically prevents counterfeit cards at the POS.</td></tr>
+        <tr><td><strong>Encryption</strong></td><td>Reversible scrambling of data with a key (TLS in transit, AES at rest). Useless to attackers without the key.</td></tr>
+        <tr><td><strong>Gateway</strong></td><td>Software that captures payment data from the merchant's site and forwards it to the processor.</td></tr>
+        <tr><td><strong>Interchange</strong></td><td>Fee paid by the acquirer to the issuer for each transaction. Set by the network, kept by the issuer. The largest single fee in card payments.</td></tr>
+        <tr><td><strong>Issuer / Issuing Bank</strong></td><td>The cardholder's bank — issued the card and ultimately approves or declines each transaction.</td></tr>
+        <tr><td><strong>ISO 8583</strong></td><td>The legacy message format used for card transactions across most networks. Slowly being replaced by ISO 20022.</td></tr>
+        <tr><td><strong>KYC / AML</strong></td><td>Know Your Customer / Anti-Money-Laundering — regulatory checks PSPs and banks run on merchants and consumers.</td></tr>
+        <tr><td><strong>MCC</strong></td><td>Merchant Category Code — 4-digit code identifying the merchant's industry (e.g., 5812 = restaurants). Drives interchange rates and rewards.</td></tr>
+        <tr><td><strong>MOTO</strong></td><td>Mail Order / Telephone Order — card-not-present transactions taken over the phone. Higher fraud risk, higher fees.</td></tr>
+        <tr><td><strong>Network Token</strong></td><td>A token issued by Visa/MC themselves (not the merchant or PSP). Auto-updates when the underlying card is reissued.</td></tr>
+        <tr><td><strong>NFC</strong></td><td>Near-Field Communication — the tap-to-pay radio standard underlying contactless cards and Apple/Google Pay.</td></tr>
+        <tr><td><strong>PAN</strong></td><td>Primary Account Number — the actual card number on the front of a card. The most sensitive piece of data in payments.</td></tr>
+        <tr><td><strong>PCI DSS</strong></td><td>Payment Card Industry Data Security Standard. The security rulebook every party touching card data must follow.</td></tr>
+        <tr><td><strong>Processor</strong></td><td>Routes transaction messages between merchant, network, and banks. Often bundled with the acquirer.</td></tr>
+        <tr><td><strong>PSP</strong></td><td>Payment Service Provider — umbrella term for an entity that combines gateway, processor, and (often) acquiring (Stripe, Adyen, PayPal).</td></tr>
+        <tr><td><strong>Refund vs Void</strong></td><td><em>Void</em> cancels an auth before settlement (free, instant). <em>Refund</em> reverses a settled transaction (slower, may incur fees).</td></tr>
+        <tr><td><strong>SCA</strong></td><td>Strong Customer Authentication — EU/UK regulatory requirement (PSD2) mandating two-factor authentication on most online card payments. Usually satisfied via 3DS.</td></tr>
+        <tr><td><strong>Settlement</strong></td><td>The actual movement of funds from issuer to acquirer (and on to the merchant). Typically T+1 to T+3 business days.</td></tr>
+        <tr><td><strong>Soft Decline / Hard Decline</strong></td><td><em>Soft</em> = retryable (insufficient funds, do not honor). <em>Hard</em> = don't retry (lost/stolen card, invalid card).</td></tr>
+        <tr><td><strong>TLS</strong></td><td>Transport Layer Security — the modern encryption protocol securing data in transit (the "S" in HTTPS).</td></tr>
+        <tr><td><strong>Tokenization</strong></td><td>Replacing the PAN with a non-sensitive surrogate ("token") that's worthless to a thief without access to the token vault.</td></tr>
+        <tr><td><strong>Wallet</strong></td><td>A consumer-facing layer that stores payment credentials and rides on top of underlying card or bank rails (Apple Pay, Google Pay, PayPal).</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</div>
+
+</body>
+</html>
