@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>USCIS 2025 పౌర పరీక్ష — తెలుగు అధ్యయన యాప్ (128 ప్రశ్నలు)</title>
+<style>
+  :root {
+    --bg: #f7f7f5;
+    --panel: #ffffff;
+    --text: #1a1a1a;
+    --muted: #666;
+    --border: #e2e2e0;
+    --accent: #b22234;
+    --accent-2: #3c3b6e;
+    --good: #1b7d3a;
+    --bad: #b00020;
+    --star: #d4a017;
+  }
+  [data-theme="dark"] {
+    --bg: #14161a;
+    --panel: #1d2027;
+    --text: #ececec;
+    --muted: #9aa0a6;
+    --border: #2c313a;
+    --accent: #ef4655;
+    --accent-2: #8b8acd;
+    --good: #4ade80;
+    --bad: #ff6b6b;
+    --star: #f5c542;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text);
+    font-family: "Noto Sans Telugu", "Gautami", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.55; }
+  header {
+    background: linear-gradient(135deg, var(--accent-2), var(--accent));
+    color: #fff; padding: 22px 24px; }
+  header h1 { margin: 0; font-size: 22px; font-weight: 700; }
+  header p { margin: 6px 0 0; opacity: 0.9; font-size: 13px; }
+  .stars { letter-spacing: 4px; font-size: 12px; opacity: 0.8; }
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--panel); border-bottom: 1px solid var(--border);
+    padding: 10px 16px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  nav button, nav select, nav input[type="text"] {
+    background: var(--panel); color: var(--text); border: 1px solid var(--border);
+    padding: 7px 12px; border-radius: 6px; font-size: 14px; cursor: pointer; font-family: inherit; }
+  nav button.active { background: var(--accent-2); color: #fff; border-color: var(--accent-2); }
+  nav button:hover { border-color: var(--accent-2); }
+  nav input[type="text"] { min-width: 200px; flex: 1; cursor: text; }
+  nav label { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: var(--muted); }
+  main { max-width: 900px; margin: 0 auto; padding: 20px 16px 60px; }
+  .info-bar {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px; margin-bottom: 16px; font-size: 14px; color: var(--muted); }
+  .info-bar strong { color: var(--text); }
+  .important-note {
+    background: #fff7e6; border: 1px solid #f5c542; color: #5a4500;
+    padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; }
+  [data-theme="dark"] .important-note {
+    background: #2a2410; border-color: #5a4500; color: #f5c542; }
+  .section-title {
+    font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px;
+    color: var(--accent); margin: 28px 0 6px; border-bottom: 2px solid var(--accent); padding-bottom: 4px; }
+  .subsection-title {
+    font-size: 14px; font-weight: 600; color: var(--accent-2);
+    margin: 18px 0 8px; }
+  .qcard {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px; margin-bottom: 10px; }
+  .qcard.hidden { display: none; }
+  .qhead { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
+  .qnum { font-weight: 700; color: var(--accent-2); flex-shrink: 0; min-width: 36px; }
+  .qtext { flex: 1; font-weight: 500; }
+  .qen { display: block; font-size: 13px; color: var(--muted); font-weight: normal; margin-top: 2px; font-style: italic; }
+  .qstar { color: var(--star); font-size: 16px; flex-shrink: 0; }
+  .answers {
+    margin: 10px 0 0 46px; padding-left: 14px; border-left: 3px solid var(--accent);
+    font-size: 14px; color: var(--text); }
+  .answers ul { margin: 0; padding-left: 18px; }
+  .answers li { margin: 4px 0; }
+  .answers .aen { color: var(--muted); font-size: 12px; font-style: italic; }
+  .answers.collapsed { display: none; }
+  .note { color: var(--muted); font-style: italic; font-size: 13px; }
+
+  /* Flashcard mode */
+  .flash-stage {
+    display: flex; flex-direction: column; align-items: center; padding: 30px 0; }
+  .flashcard {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+    padding: 40px 30px; width: 100%; max-width: 600px; min-height: 240px;
+    display: flex; flex-direction: column; justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06); cursor: pointer; user-select: none; }
+  .flash-q { font-size: 20px; font-weight: 600; text-align: center; }
+  .flash-q-en { font-size: 14px; color: var(--muted); text-align: center; margin-top: 8px; font-style: italic; }
+  .flash-tag { color: var(--muted); font-size: 13px; text-align: center; margin-bottom: 14px; }
+  .flash-a { margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--accent); }
+  .flash-a ul { margin: 0; padding-left: 22px; }
+  .flash-a .aen { color: var(--muted); font-size: 12px; font-style: italic; }
+  .flash-controls {
+    margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .flash-controls button {
+    padding: 10px 18px; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--panel); color: var(--text); cursor: pointer; font-size: 14px; font-family: inherit; }
+  .flash-controls button.primary { background: var(--accent-2); color: #fff; border-color: var(--accent-2); }
+  .flash-progress { color: var(--muted); font-size: 13px; margin-top: 10px; }
+
+  /* Quiz mode */
+  .quiz-intro, .quiz-result {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    padding: 24px; text-align: center; }
+  .quiz-intro h2 { margin-top: 0; }
+  .quiz-intro button, .quiz-result button {
+    background: var(--accent); color: #fff; border: none; padding: 12px 24px;
+    border-radius: 6px; font-size: 16px; cursor: pointer; margin-top: 14px; font-family: inherit; }
+  .quiz-q { background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    padding: 18px 20px; margin-bottom: 12px; }
+  .quiz-q.correct { border-left: 5px solid var(--good); }
+  .quiz-q.incorrect { border-left: 5px solid var(--bad); }
+  .quiz-q h3 { margin: 0 0 10px; font-size: 16px; }
+  .quiz-q .qen-small { display: block; font-size: 13px; color: var(--muted); font-weight: normal; font-style: italic; margin-top: 4px; }
+  .quiz-q textarea {
+    width: 100%; min-height: 50px; padding: 8px; border: 1px solid var(--border);
+    border-radius: 4px; font-size: 14px; background: var(--bg); color: var(--text);
+    font-family: inherit; resize: vertical; }
+  .quiz-q .reveal { margin-top: 10px; padding: 10px; background: var(--bg);
+    border-radius: 4px; font-size: 14px; }
+  .quiz-q .reveal ul { margin: 4px 0; padding-left: 20px; }
+  .quiz-q .reveal .aen { color: var(--muted); font-size: 12px; font-style: italic; }
+  .quiz-q .self-grade { margin-top: 8px; display: flex; gap: 8px; }
+  .quiz-q .self-grade button {
+    padding: 6px 14px; border-radius: 4px; border: 1px solid var(--border);
+    background: var(--panel); color: var(--text); cursor: pointer; font-size: 13px; font-family: inherit; }
+  .quiz-q .self-grade button.correct-btn { background: var(--good); color: #fff; border-color: var(--good); }
+  .quiz-q .self-grade button.wrong-btn { background: var(--bad); color: #fff; border-color: var(--bad); }
+  .quiz-score-big { font-size: 48px; font-weight: 700; margin: 16px 0; }
+  .quiz-pass { color: var(--good); }
+  .quiz-fail { color: var(--bad); }
+
+  footer { text-align: center; color: var(--muted); padding: 30px 16px; font-size: 12px; }
+  footer a { color: var(--accent-2); }
+
+  .empty { text-align: center; color: var(--muted); padding: 40px 0; }
+</style>
+</head>
+<body>
+<header>
+  <div class="stars">★ ★ ★ ★</div>
+  <h1>USCIS 2025 పౌర పరీక్ష — తెలుగు అధ్యయన యాప్</h1>
+  <p>128 ప్రశ్నలు · మీకు 20 అడుగుతారు · ఉత్తీర్ణతకు 12 సరైనవి కావాలి · అక్టోబర్ 20, 2025 నుండి అమలులో</p>
+</header>
+
+<nav>
+  <button id="mode-browse" class="active" onclick="setMode('browse')">చదవండి</button>
+  <button id="mode-flash" onclick="setMode('flash')">ఫ్లాష్‌కార్డ్‌లు</button>
+  <button id="mode-quiz" onclick="setMode('quiz')">క్విజ్</button>
+  <input type="text" id="search" placeholder="ప్రశ్నలు లేదా సమాధానాలను వెతకండి..." oninput="render()">
+  <label><input type="checkbox" id="only65" onchange="render()"> 65/20 మాత్రమే (★)</label>
+  <label><input type="checkbox" id="hideAns" onchange="render()"> సమాధానాలను దాచండి</label>
+  <label><input type="checkbox" id="hideEn" onchange="render()"> ఆంగ్లం దాచండి</label>
+  <button onclick="toggleTheme()" title="డార్క్ మోడ్">☾</button>
+</nav>
+
+<main id="app"></main>
+
+<footer>
+  మూలం: <a href="https://www.uscis.gov/sites/default/files/document/questions-and-answers/2025-Civics-Test-128-Questions-and-Answers.pdf" target="_blank">USCIS M-1778 (09/25)</a>
+  · మారే సమాధానాల కోసం (అధ్యక్షుడు, ఉప-అధ్యక్షుడు, స్పీకర్, ప్రధాన న్యాయమూర్తి, మీ సెనేటర్/ప్రతినిధి/గవర్నర్)
+  <a href="https://www.uscis.gov/citizenship/testupdates" target="_blank">uscis.gov/citizenship/testupdates</a> సందర్శించండి
+</footer>
+
+<script>
+// ===== DATA: 128 official USCIS civics questions (2025 version) with Telugu translations =====
+const SECTIONS = [
+  { title: "అమెరికన్ ప్రభుత్వం / American Government", sub: [
+    { title: "A: అమెరికన్ ప్రభుత్వ సూత్రాలు / Principles of American Government", range: [1, 15] },
+    { title: "B: ప్రభుత్వ వ్యవస్థ / System of Government", range: [16, 62] },
+    { title: "C: హక్కులు మరియు బాధ్యతలు / Rights and Responsibilities", range: [63, 72] },
+  ]},
+  { title: "అమెరికన్ చరిత్ర / American History", sub: [
+    { title: "A: కాలనీ కాలం మరియు స్వాతంత్ర్యం / Colonial Period and Independence", range: [73, 89] },
+    { title: "B: 1800లు / 1800s", range: [90, 99] },
+    { title: "C: ఇటీవలి అమెరికన్ చరిత్ర / Recent American History", range: [100, 118] },
+  ]},
+  { title: "చిహ్నాలు మరియు సెలవులు / Symbols and Holidays", sub: [
+    { title: "A: చిహ్నాలు / Symbols", range: [119, 124] },
+    { title: "B: సెలవులు / Holidays", range: [125, 128] },
+  ]},
+];
+
+// Each question: n, qte (Telugu), qen (English), ate (Telugu answers), aen (English answers), star, varies
+const QUESTIONS = [
+  {n:1, qte:"అమెరికా సంయుక్త రాష్ట్రాల ప్రభుత్వ రూపం ఏమిటి?", qen:"What is the form of government of the United States?",
+    ate:["గణతంత్రం","రాజ్యాంగ ఆధారిత సమాఖ్య గణతంత్రం","ప్రాతినిధ్య ప్రజాస్వామ్యం"],
+    aen:["Republic","Constitution-based federal republic","Representative democracy"]},
+  {n:2, qte:"దేశంలో సర్వోన్నత చట్టం ఏమిటి?", qen:"What is the supreme law of the land?",
+    ate:["(అమెరికా) రాజ్యాంగం"], aen:["(U.S.) Constitution"], star:true},
+  {n:3, qte:"అమెరికా రాజ్యాంగం చేసే ఒక పనిని పేర్కొనండి.", qen:"Name one thing the U.S. Constitution does.",
+    ate:["ప్రభుత్వాన్ని ఏర్పాటు చేస్తుంది","ప్రభుత్వ అధికారాలను నిర్వచిస్తుంది","ప్రభుత్వ భాగాలను నిర్వచిస్తుంది","ప్రజల హక్కులను రక్షిస్తుంది"],
+    aen:["Forms the government","Defines powers of government","Defines the parts of government","Protects the rights of the people"]},
+  {n:4, qte:"అమెరికా రాజ్యాంగం \"మేము ప్రజలము\" అనే పదాలతో ప్రారంభమవుతుంది. \"మేము ప్రజలము\" అంటే అర్థం ఏమిటి?", qen:"The U.S. Constitution starts with the words \"We the People.\" What does \"We the People\" mean?",
+    ate:["స్వయం పాలన","ప్రజల సార్వభౌమత్వం","పాలితుల అంగీకారం","ప్రజలు తమను తాము పరిపాలించుకోవాలి","(ఉదాహరణ) సామాజిక ఒప్పందం"],
+    aen:["Self-government","Popular sovereignty","Consent of the governed","People should govern themselves","(Example of) social contract"]},
+  {n:5, qte:"అమెరికా రాజ్యాంగానికి మార్పులు ఎలా చేస్తారు?", qen:"How are changes made to the U.S. Constitution?",
+    ate:["సవరణలు","సవరణ ప్రక్రియ"], aen:["Amendments","The amendment process"]},
+  {n:6, qte:"హక్కుల చట్టం (Bill of Rights) దేన్ని రక్షిస్తుంది?", qen:"What does the Bill of Rights protect?",
+    ate:["అమెరికన్ల (ప్రాథమిక) హక్కులు","అమెరికాలో నివసించే ప్రజల (ప్రాథమిక) హక్కులు"],
+    aen:["(The basic) rights of Americans","(The basic) rights of people living in the United States"]},
+  {n:7, qte:"అమెరికా రాజ్యాంగంలో ఎన్ని సవరణలు ఉన్నాయి?", qen:"How many amendments does the U.S. Constitution have?",
+    ate:["ఇరవై ఏడు (27)"], aen:["Twenty-seven (27)"], star:true},
+  {n:8, qte:"స్వాతంత్ర్య ప్రకటన ఎందుకు ముఖ్యమైనది?", qen:"Why is the Declaration of Independence important?",
+    ate:["అమెరికా బ్రిటిష్ నియంత్రణ నుండి స్వేచ్ఛగా ఉందని చెబుతుంది","అందరు ప్రజలు సమానంగా సృష్టించబడ్డారని చెబుతుంది","సహజ హక్కులను గుర్తిస్తుంది","వ్యక్తిగత స్వేచ్ఛలను గుర్తిస్తుంది"],
+    aen:["It says America is free from British control.","It says all people are created equal.","It identifies inherent rights.","It identifies individual freedoms."]},
+  {n:9, qte:"అమెరికన్ కాలనీలు బ్రిటన్ నుండి స్వేచ్ఛగా ఉన్నాయని ఏ స్థాపక పత్రం చెప్పింది?", qen:"What founding document said the American colonies were free from Britain?",
+    ate:["స్వాతంత్ర్య ప్రకటన"], aen:["Declaration of Independence"]},
+  {n:10, qte:"స్వాతంత్ర్య ప్రకటన మరియు అమెరికా రాజ్యాంగం నుండి రెండు ముఖ్యమైన ఆలోచనలను పేర్కొనండి.", qen:"Name two important ideas from the Declaration of Independence and the U.S. Constitution.",
+    ate:["సమానత్వం","స్వేచ్ఛ","సామాజిక ఒప్పందం","సహజ హక్కులు","పరిమిత ప్రభుత్వం","స్వయం పాలన"],
+    aen:["Equality","Liberty","Social contract","Natural rights","Limited government","Self-government"]},
+  {n:11, qte:"\"జీవితం, స్వేచ్ఛ, మరియు ఆనందాన్ని అన్వేషించడం\" అనే పదాలు ఏ స్థాపక పత్రంలో ఉన్నాయి?", qen:"The words \"Life, Liberty, and the pursuit of Happiness\" are in what founding document?",
+    ate:["స్వాతంత్ర్య ప్రకటన"], aen:["Declaration of Independence"]},
+  {n:12, qte:"అమెరికా ఆర్థిక వ్యవస్థ ఏమిటి?", qen:"What is the economic system of the United States?",
+    ate:["పెట్టుబడిదారీ విధానం","స్వేచ్ఛా మార్కెట్ ఆర్థిక వ్యవస్థ"], aen:["Capitalism","Free market economy"], star:true},
+  {n:13, qte:"చట్ట పాలన అంటే ఏమిటి?", qen:"What is the rule of law?",
+    ate:["ప్రతి ఒక్కరూ చట్టాన్ని పాటించాలి.","నాయకులు చట్టానికి కట్టుబడి ఉండాలి.","ప్రభుత్వం చట్టానికి కట్టుబడి ఉండాలి.","చట్టానికి ఎవరూ అతీతులు కాదు."],
+    aen:["Everyone must follow the law.","Leaders must obey the law.","Government must obey the law.","No one is above the law."]},
+  {n:14, qte:"అనేక పత్రాలు అమెరికా రాజ్యాంగాన్ని ప్రభావితం చేశాయి. ఒకటి పేర్కొనండి.", qen:"Many documents influenced the U.S. Constitution. Name one.",
+    ate:["స్వాతంత్ర్య ప్రకటన","కాన్ఫెడరేషన్ ఆర్టికల్స్","ఫెడరలిస్ట్ పేపర్స్","యాంటీ-ఫెడరలిస్ట్ పేపర్స్","వర్జీనియా హక్కుల ప్రకటన","కనెక్టికట్ ప్రాథమిక ఆదేశాలు","మేఫ్లవర్ ఒప్పందం","ఇరోక్వాయిస్ గ్రేట్ లా ఆఫ్ పీస్"],
+    aen:["Declaration of Independence","Articles of Confederation","Federalist Papers","Anti-Federalist Papers","Virginia Declaration of Rights","Fundamental Orders of Connecticut","Mayflower Compact","Iroquois Great Law of Peace"]},
+  {n:15, qte:"ప్రభుత్వంలో మూడు శాఖలు ఉన్నాయి. ఎందుకు?", qen:"There are three branches of government. Why?",
+    ate:["ఒక భాగం చాలా శక్తివంతం కాకుండా","తనిఖీలు మరియు సమతుల్యత","అధికారాల విభజన"],
+    aen:["So one part does not become too powerful","Checks and balances","Separation of powers"]},
+  {n:16, qte:"ప్రభుత్వంలోని మూడు శాఖలను పేర్కొనండి.", qen:"Name the three branches of government.",
+    ate:["శాసన, కార్యనిర్వాహక, మరియు న్యాయ","కాంగ్రెస్, అధ్యక్షుడు, మరియు న్యాయస్థానాలు"],
+    aen:["Legislative, executive, and judicial","Congress, president, and the courts"]},
+  {n:17, qte:"అమెరికా అధ్యక్షుడు ఏ ప్రభుత్వ శాఖకు బాధ్యత వహిస్తాడు?", qen:"The President of the United States is in charge of which branch of government?",
+    ate:["కార్యనిర్వాహక శాఖ"], aen:["Executive branch"]},
+  {n:18, qte:"సమాఖ్య ప్రభుత్వంలోని ఏ భాగం చట్టాలను రాస్తుంది?", qen:"What part of the federal government writes laws?",
+    ate:["(అమెరికా) కాంగ్రెస్","(అమెరికా లేదా జాతీయ) శాసనసభ","శాసన శాఖ"],
+    aen:["(U.S.) Congress","(U.S. or national) legislature","Legislative branch"]},
+  {n:19, qte:"అమెరికా కాంగ్రెస్ యొక్క రెండు భాగాలు ఏమిటి?", qen:"What are the two parts of the U.S. Congress?",
+    ate:["సెనేట్ మరియు (ప్రతినిధుల) సభ"], aen:["Senate and House (of Representatives)"]},
+  {n:20, qte:"అమెరికా కాంగ్రెస్ యొక్క ఒక అధికారాన్ని పేర్కొనండి.", qen:"Name one power of the U.S. Congress.",
+    ate:["చట్టాలను రాస్తుంది","యుద్ధాన్ని ప్రకటిస్తుంది","సమాఖ్య బడ్జెట్‌ను రూపొందిస్తుంది"],
+    aen:["Writes laws","Declares war","Makes the federal budget"], star:true},
+  {n:21, qte:"అమెరికాలో ఎంత మంది సెనేటర్లు ఉన్నారు?", qen:"How many U.S. senators are there?",
+    ate:["వంద (100)"], aen:["One hundred (100)"]},
+  {n:22, qte:"అమెరికా సెనేటర్ పదవీకాలం ఎంత?", qen:"How long is a term for a U.S. senator?",
+    ate:["ఆరు (6) సంవత్సరాలు"], aen:["Six (6) years"]},
+  {n:23, qte:"ఇప్పుడు మీ రాష్ట్రం యొక్క ఒక అమెరికా సెనేటర్ ఎవరు?", qen:"Who is one of your state's U.S. senators now?",
+    ate:["సమాధానాలు మారుతాయి. [D.C. మరియు అమెరికా భూభాగాల నివాసులు తమకు అమెరికా సెనేటర్లు లేరని సమాధానం ఇవ్వాలి.]"],
+    aen:["Answers will vary. [D.C. residents and U.S. territory residents should answer that D.C. (or the territory) has no U.S. senators.]"], varies:true},
+  {n:24, qte:"ప్రతినిధుల సభలో ఎంత మంది ఓటు హక్కు గల సభ్యులు ఉన్నారు?", qen:"How many voting members are in the House of Representatives?",
+    ate:["నాలుగు వందల ముప్పై ఐదు (435)"], aen:["Four hundred thirty-five (435)"]},
+  {n:25, qte:"ప్రతినిధుల సభ సభ్యుని పదవీకాలం ఎంత?", qen:"How long is a term for a member of the House of Representatives?",
+    ate:["రెండు (2) సంవత్సరాలు"], aen:["Two (2) years"]},
+  {n:26, qte:"అమెరికా ప్రతినిధులు సెనేటర్ల కంటే తక్కువ కాలం ఎందుకు పనిచేస్తారు?", qen:"Why do U.S. representatives serve shorter terms than U.S. senators?",
+    ate:["ప్రజల అభిప్రాయాన్ని మరింత దగ్గరగా అనుసరించడానికి"], aen:["To more closely follow public opinion"]},
+  {n:27, qte:"ప్రతి రాష్ట్రానికి ఎంత మంది సెనేటర్లు ఉంటారు?", qen:"How many senators does each state have?",
+    ate:["ఇద్దరు (2)"], aen:["Two (2)"]},
+  {n:28, qte:"ప్రతి రాష్ట్రానికి ఇద్దరు సెనేటర్లు ఎందుకు ఉన్నారు?", qen:"Why does each state have two senators?",
+    ate:["సమాన ప్రాతినిధ్యం (చిన్న రాష్ట్రాల కోసం)","గ్రేట్ కాంప్రమైజ్ (కనెక్టికట్ కాంప్రమైజ్)"],
+    aen:["Equal representation (for small states)","The Great Compromise (Connecticut Compromise)"]},
+  {n:29, qte:"మీ అమెరికా ప్రతినిధిని పేర్కొనండి.", qen:"Name your U.S. representative.",
+    ate:["సమాధానాలు మారుతాయి. [ఓటు లేని ప్రతినిధులు లేదా రెసిడెంట్ కమిషనర్లు ఉన్న భూభాగాల నివాసులు ఆ ప్రతినిధి లేదా కమిషనర్ పేరును ఇవ్వవచ్చు.]"],
+    aen:["Answers will vary."], varies:true},
+  {n:30, qte:"ఇప్పుడు ప్రతినిధుల సభ స్పీకర్ పేరు ఏమిటి?", qen:"What is the name of the Speaker of the House of Representatives now?",
+    ate:["ప్రస్తుత స్పీకర్ పేరు కోసం uscis.gov/citizenship/testupdates చూడండి."],
+    aen:["Visit uscis.gov/citizenship/testupdates for the current name."], varies:true, star:true},
+  {n:31, qte:"ఒక అమెరికా సెనేటర్ ఎవరికి ప్రాతినిధ్యం వహిస్తాడు?", qen:"Who does a U.S. senator represent?",
+    ate:["వారి రాష్ట్ర పౌరులకు","వారి రాష్ట్ర ప్రజలకు"], aen:["Citizens of their state","People of their state"]},
+  {n:32, qte:"అమెరికా సెనేటర్లను ఎవరు ఎన్నుకుంటారు?", qen:"Who elects U.S. senators?",
+    ate:["వారి రాష్ట్రం నుండి పౌరులు"], aen:["Citizens from their state"]},
+  {n:33, qte:"ప్రతినిధుల సభ సభ్యుడు ఎవరికి ప్రాతినిధ్యం వహిస్తాడు?", qen:"Who does a member of the House of Representatives represent?",
+    ate:["వారి (కాంగ్రెషనల్) జిల్లాలోని పౌరులకు","వారి జిల్లాలోని పౌరులకు","వారి (కాంగ్రెషనల్) జిల్లా ప్రజలకు","వారి జిల్లాలోని ప్రజలకు"],
+    aen:["Citizens in their (congressional) district","Citizens in their district","People from their (congressional) district","People in their district"]},
+  {n:34, qte:"ప్రతినిధుల సభ సభ్యులను ఎవరు ఎన్నుకుంటారు?", qen:"Who elects members of the House of Representatives?",
+    ate:["వారి (కాంగ్రెషనల్) జిల్లా నుండి పౌరులు"], aen:["Citizens from their (congressional) district"]},
+  {n:35, qte:"కొన్ని రాష్ట్రాలకు ఇతర రాష్ట్రాల కంటే ఎక్కువ ప్రతినిధులు ఉన్నారు. ఎందుకు?", qen:"Some states have more representatives than other states. Why?",
+    ate:["(కారణం) రాష్ట్ర జనాభా","(ఎందుకంటే) వారికి ఎక్కువ మంది ప్రజలు ఉన్నారు","(ఎందుకంటే) కొన్ని రాష్ట్రాలకు ఎక్కువ మంది ప్రజలు ఉన్నారు"],
+    aen:["(Because of) the state's population","(Because) they have more people","(Because) some states have more people"]},
+  {n:36, qte:"అమెరికా అధ్యక్షుడు ఎన్ని సంవత్సరాలకు ఎన్నుకోబడతారు?", qen:"The President of the United States is elected for how many years?",
+    ate:["నాలుగు (4) సంవత్సరాలు"], aen:["Four (4) years"], star:true},
+  {n:37, qte:"అమెరికా అధ్యక్షుడు రెండు పదవీకాలాలు మాత్రమే పనిచేయగలరు. ఎందుకు?", qen:"The President of the United States can serve only two terms. Why?",
+    ate:["(కారణం) 22వ సవరణ","అధ్యక్షుడు చాలా శక్తివంతం కాకుండా ఉంచడానికి"],
+    aen:["(Because of) the 22nd Amendment","To keep the president from becoming too powerful"]},
+  {n:38, qte:"ఇప్పుడు అమెరికా అధ్యక్షుడి పేరు ఏమిటి?", qen:"What is the name of the President of the United States now?",
+    ate:["ప్రస్తుత అధ్యక్షుడి పేరు కోసం uscis.gov/citizenship/testupdates చూడండి."],
+    aen:["Visit uscis.gov/citizenship/testupdates for the current name."], varies:true, star:true},
+  {n:39, qte:"ఇప్పుడు అమెరికా ఉప అధ్యక్షుడి పేరు ఏమిటి?", qen:"What is the name of the Vice President of the United States now?",
+    ate:["ప్రస్తుత ఉప అధ్యక్షుడి పేరు కోసం uscis.gov/citizenship/testupdates చూడండి."],
+    aen:["Visit uscis.gov/citizenship/testupdates for the current name."], varies:true, star:true},
+  {n:40, qte:"అధ్యక్షుడు ఇక పని చేయలేకపోతే, ఎవరు అధ్యక్షుడు అవుతారు?", qen:"If the president can no longer serve, who becomes president?",
+    ate:["(అమెరికా) ఉప అధ్యక్షుడు"], aen:["The Vice President (of the United States)"]},
+  {n:41, qte:"అధ్యక్షుడి ఒక అధికారాన్ని పేర్కొనండి.", qen:"Name one power of the president.",
+    ate:["బిల్లులపై సంతకం చేసి చట్టంగా మారుస్తాడు","బిల్లులను వీటో చేస్తాడు","చట్టాలను అమలు చేస్తాడు","(సైన్యానికి) ప్రధాన సేనాధిపతి","ప్రధాన దౌత్యవేత్త","సమాఖ్య న్యాయమూర్తులను నియమిస్తాడు"],
+    aen:["Signs bills into law","Vetoes bills","Enforces laws","Commander in Chief (of the military)","Chief diplomat","Appoints federal judges"]},
+  {n:42, qte:"అమెరికా సైన్యానికి ప్రధాన సేనాధిపతి ఎవరు?", qen:"Who is Commander in Chief of the U.S. military?",
+    ate:["(అమెరికా) అధ్యక్షుడు"], aen:["The President (of the United States)"]},
+  {n:43, qte:"బిల్లులను చట్టాలుగా చేయడానికి ఎవరు సంతకం చేస్తారు?", qen:"Who signs bills to become laws?",
+    ate:["(అమెరికా) అధ్యక్షుడు"], aen:["The President (of the United States)"]},
+  {n:44, qte:"బిల్లులను ఎవరు వీటో చేస్తారు?", qen:"Who vetoes bills?",
+    ate:["(అమెరికా) అధ్యక్షుడు"], aen:["The President (of the United States)"], star:true},
+  {n:45, qte:"సమాఖ్య న్యాయమూర్తులను ఎవరు నియమిస్తారు?", qen:"Who appoints federal judges?",
+    ate:["(అమెరికా) అధ్యక్షుడు"], aen:["The President (of the United States)"]},
+  {n:46, qte:"కార్యనిర్వాహక శాఖలో అనేక భాగాలు ఉన్నాయి. ఒకటి పేర్కొనండి.", qen:"The executive branch has many parts. Name one.",
+    ate:["(అమెరికా) అధ్యక్షుడు","కేబినెట్","సమాఖ్య విభాగాలు మరియు సంస్థలు"],
+    aen:["President (of the United States)","Cabinet","Federal departments and agencies"]},
+  {n:47, qte:"అధ్యక్షుడి కేబినెట్ ఏమి చేస్తుంది?", qen:"What does the President's Cabinet do?",
+    ate:["(అమెరికా) అధ్యక్షుడికి సలహా ఇస్తుంది"], aen:["Advises the President (of the United States)"]},
+  {n:48, qte:"రెండు కేబినెట్-స్థాయి పదవులు ఏమిటి?", qen:"What are two Cabinet-level positions?",
+    ate:["అటార్నీ జనరల్","వ్యవసాయ కార్యదర్శి","వాణిజ్య కార్యదర్శి","విద్యా కార్యదర్శి","శక్తి కార్యదర్శి","ఆరోగ్య మరియు మానవ సేవల కార్యదర్శి","హోమ్‌లాండ్ సెక్యూరిటీ కార్యదర్శి","గృహ మరియు పట్టణ అభివృద్ధి కార్యదర్శి","అంతరంగిక కార్యదర్శి","కార్మిక కార్యదర్శి","విదేశాంగ కార్యదర్శి","రవాణా కార్యదర్శి","ఖజానా కార్యదర్శి","వెటరన్స్ వ్యవహారాల కార్యదర్శి","యుద్ధ (రక్షణ) కార్యదర్శి","ఉప-అధ్యక్షుడు","పర్యావరణ పరిరక్షణ సంస్థ నిర్వాహకుడు","చిన్న వ్యాపార నిర్వహణ నిర్వాహకుడు","సెంట్రల్ ఇంటెలిజెన్స్ ఏజెన్సీ డైరెక్టర్","మేనేజ్‌మెంట్ మరియు బడ్జెట్ కార్యాలయ డైరెక్టర్","జాతీయ ఇంటెలిజెన్స్ డైరెక్టర్","అమెరికా వాణిజ్య ప్రతినిధి"],
+    aen:["Attorney General","Secretary of Agriculture","Secretary of Commerce","Secretary of Education","Secretary of Energy","Secretary of Health and Human Services","Secretary of Homeland Security","Secretary of Housing and Urban Development","Secretary of the Interior","Secretary of Labor","Secretary of State","Secretary of Transportation","Secretary of the Treasury","Secretary of Veterans Affairs","Secretary of War (Defense)","Vice-President","Administrator of the Environmental Protection Agency","Administrator of the Small Business Administration","Director of the Central Intelligence Agency","Director of the Office of Management and Budget","Director of National Intelligence","United States Trade Representative"]},
+  {n:49, qte:"ఎలక్టోరల్ కాలేజీ ఎందుకు ముఖ్యమైనది?", qen:"Why is the Electoral College important?",
+    ate:["అధ్యక్షుడిగా ఎవరు ఎన్నుకోబడతారో ఇది నిర్ణయిస్తుంది.","అధ్యక్షుడి ప్రజల ఎన్నిక మరియు కాంగ్రెషనల్ ఎంపిక మధ్య ఇది రాజీని అందిస్తుంది."],
+    aen:["It decides who is elected president.","It provides a compromise between the popular election of the president and congressional selection."]},
+  {n:50, qte:"న్యాయ శాఖలో ఒక భాగం ఏమిటి?", qen:"What is one part of the judicial branch?",
+    ate:["సుప్రీం కోర్టు","సమాఖ్య న్యాయస్థానాలు"], aen:["Supreme Court","Federal Courts"]},
+  {n:51, qte:"న్యాయ శాఖ ఏమి చేస్తుంది?", qen:"What does the judicial branch do?",
+    ate:["చట్టాలను సమీక్షిస్తుంది","చట్టాలను వివరిస్తుంది","చట్టానికి సంబంధించిన వివాదాలను (అసమ్మతులను) పరిష్కరిస్తుంది","ఒక చట్టం (అమెరికా) రాజ్యాంగానికి విరుద్ధంగా ఉందా అని నిర్ణయిస్తుంది"],
+    aen:["Reviews laws","Explains laws","Resolves disputes (disagreements) about the law","Decides if a law goes against the (U.S.) Constitution"]},
+  {n:52, qte:"అమెరికాలో అత్యున్నత న్యాయస్థానం ఏది?", qen:"What is the highest court in the United States?",
+    ate:["సుప్రీం కోర్టు"], aen:["Supreme Court"], star:true},
+  {n:53, qte:"సుప్రీం కోర్టులో ఎన్ని సీట్లు ఉన్నాయి?", qen:"How many seats are on the Supreme Court?",
+    ate:["తొమ్మిది (9)"], aen:["Nine (9)"]},
+  {n:54, qte:"ఒక కేసును నిర్ణయించడానికి సాధారణంగా ఎంత మంది సుప్రీం కోర్టు న్యాయమూర్తులు అవసరం?", qen:"How many Supreme Court justices are usually needed to decide a case?",
+    ate:["ఐదుగురు (5)"], aen:["Five (5)"]},
+  {n:55, qte:"సుప్రీం కోర్టు న్యాయమూర్తులు ఎంతకాలం పనిచేస్తారు?", qen:"How long do Supreme Court justices serve?",
+    ate:["జీవితకాలం","జీవితకాల నియామకం","పదవీ విరమణ వరకు"], aen:["(For) life","Lifetime appointment","(Until) retirement"]},
+  {n:56, qte:"సుప్రీం కోర్టు న్యాయమూర్తులు జీవితకాలం పనిచేస్తారు. ఎందుకు?", qen:"Supreme Court justices serve for life. Why?",
+    ate:["(రాజకీయాల నుండి) స్వతంత్రంగా ఉండటానికి","బాహ్య (రాజకీయ) ప్రభావాన్ని పరిమితం చేయడానికి"],
+    aen:["To be independent (of politics)","To limit outside (political) influence"]},
+  {n:57, qte:"ఇప్పుడు అమెరికా ప్రధాన న్యాయమూర్తి ఎవరు?", qen:"Who is the Chief Justice of the United States now?",
+    ate:["ప్రస్తుత ప్రధాన న్యాయమూర్తి పేరు కోసం uscis.gov/citizenship/testupdates చూడండి."],
+    aen:["Visit uscis.gov/citizenship/testupdates for the current name."], varies:true},
+  {n:58, qte:"సమాఖ్య ప్రభుత్వానికి మాత్రమే ఉన్న ఒక అధికారాన్ని పేర్కొనండి.", qen:"Name one power that is only for the federal government.",
+    ate:["కాగితపు డబ్బును ముద్రించడం","నాణేలను ముద్రించడం","యుద్ధాన్ని ప్రకటించడం","సైన్యాన్ని సృష్టించడం","ఒప్పందాలు చేయడం","విదేశీ విధానాన్ని ఏర్పాటు చేయడం"],
+    aen:["Print paper money","Mint coins","Declare war","Create an army","Make treaties","Set foreign policy"]},
+  {n:59, qte:"రాష్ట్రాలకు మాత్రమే ఉన్న ఒక అధికారాన్ని పేర్కొనండి.", qen:"Name one power that is only for the states.",
+    ate:["పాఠశాల మరియు విద్యను అందించడం","రక్షణ (పోలీసు) అందించడం","భద్రత (అగ్నిమాపక విభాగాలు) అందించడం","డ్రైవింగ్ లైసెన్స్ ఇవ్వడం","జోనింగ్ మరియు భూ వినియోగానికి ఆమోదం"],
+    aen:["Provide schooling and education","Provide protection (police)","Provide safety (fire departments)","Give a driver's license","Approve zoning and land use"]},
+  {n:60, qte:"10వ సవరణ యొక్క ఉద్దేశ్యం ఏమిటి?", qen:"What is the purpose of the 10th Amendment?",
+    ate:["సమాఖ్య ప్రభుత్వానికి ఇవ్వని అధికారాలు రాష్ట్రాలకు లేదా ప్రజలకు చెందుతాయని ఇది పేర్కొంటుంది."],
+    aen:["(It states that the) powers not given to the federal government belong to the states or to the people."]},
+  {n:61, qte:"ఇప్పుడు మీ రాష్ట్ర గవర్నర్ ఎవరు?", qen:"Who is the governor of your state now?",
+    ate:["సమాధానాలు మారుతాయి. [D.C. నివాసులు D.C.కి గవర్నర్ లేరని సమాధానం ఇవ్వాలి.]"],
+    aen:["Answers will vary. [D.C. residents should answer that D.C. does not have a governor.]"], varies:true, star:true},
+  {n:62, qte:"మీ రాష్ట్ర రాజధాని ఏది?", qen:"What is the capital of your state?",
+    ate:["సమాధానాలు మారుతాయి. [D.C. నివాసులు D.C. ఒక రాష్ట్రం కాదని, దానికి రాజధాని లేదని సమాధానం ఇవ్వాలి. భూభాగ నివాసులు వారి భూభాగ రాజధానిని పేర్కొనాలి.]"],
+    aen:["Answers will vary."], varies:true},
+  {n:63, qte:"ఎవరు ఓటు వేయవచ్చు అనే విషయంపై అమెరికా రాజ్యాంగానికి నాలుగు సవరణలు ఉన్నాయి. వాటిలో ఒకదాన్ని వివరించండి.", qen:"There are four amendments to the U.S. Constitution about who can vote. Describe one of them.",
+    ate:["పద్దెనిమిది (18) సంవత్సరాలు మరియు అంతకంటే ఎక్కువ వయస్సు ఉన్న పౌరులు (ఓటు వేయవచ్చు).","ఓటు వేయడానికి మీరు (పోల్ టాక్స్) చెల్లించాల్సిన అవసరం లేదు.","ఏ పౌరుడైనా ఓటు వేయవచ్చు. (స్త్రీలు మరియు పురుషులు ఓటు వేయవచ్చు.)","ఏ జాతికి చెందిన పురుష పౌరుడైనా (ఓటు వేయవచ్చు)."],
+    aen:["Citizens eighteen (18) and older (can vote).","You don't have to pay (a poll tax) to vote.","Any citizen can vote. (Women and men can vote.)","A male citizen of any race (can vote)."]},
+  {n:64, qte:"అమెరికాలో సమాఖ్య ఎన్నికలలో ఓటు వేయడానికి, సమాఖ్య పదవికి పోటీ చేయడానికి, మరియు జ్యూరీలో పనిచేయడానికి ఎవరు అర్హులు?", qen:"Who can vote in federal elections, run for federal office, and serve on a jury in the United States?",
+    ate:["పౌరులు","అమెరికా పౌరులు","అమెరికా పౌరులు (U.S. citizens)"],
+    aen:["Citizens","Citizens of the United States","U.S. citizens"]},
+  {n:65, qte:"అమెరికాలో నివసించే ప్రతి ఒక్కరి మూడు హక్కులు ఏమిటి?", qen:"What are three rights of everyone living in the United States?",
+    ate:["వ్యక్తీకరణ స్వేచ్ఛ","మాట్లాడే స్వేచ్ఛ","సమావేశ స్వేచ్ఛ","ప్రభుత్వానికి విజ్ఞప్తి చేసే స్వేచ్ఛ","మత స్వేచ్ఛ","ఆయుధాలు ధరించే హక్కు"],
+    aen:["Freedom of expression","Freedom of speech","Freedom of assembly","Freedom to petition the government","Freedom of religion","The right to bear arms"]},
+  {n:66, qte:"ప్రతిజ్ఞ చేసేటప్పుడు మనం దేనికి విధేయత చూపిస్తాము?", qen:"What do we show loyalty to when we say the Pledge of Allegiance?",
+    ate:["అమెరికా సంయుక్త రాష్ట్రాలు","జెండా"], aen:["The United States","The flag"], star:true},
+  {n:67, qte:"ప్రమాణ స్వీకారంలో కొత్త పౌరులు చేసే రెండు వాగ్దానాలను పేర్కొనండి.", qen:"Name two promises that new citizens make in the Oath of Allegiance.",
+    ate:["ఇతర దేశాలకు విధేయతను వదులుకోవడం","(అమెరికా) రాజ్యాంగాన్ని రక్షించడం","అమెరికా చట్టాలను పాటించడం","(అవసరమైతే) సైన్యంలో సేవ చేయడం","(అవసరమైతే) దేశానికి సేవ చేయడం (సహాయం చేయడం, ముఖ్యమైన పని చేయడం)","అమెరికాకు విధేయుడిగా ఉండటం"],
+    aen:["Give up loyalty to other countries","Defend the (U.S.) Constitution","Obey the laws of the United States","Serve in the military (if needed)","Serve (help, do important work for) the nation (if needed)","Be loyal to the United States"]},
+  {n:68, qte:"ప్రజలు అమెరికా పౌరులుగా ఎలా మారవచ్చు?", qen:"How can people become United States citizens?",
+    ate:["14వ సవరణ నిర్దేశించిన షరతుల ప్రకారం అమెరికాలో జన్మించడం","సహజీకరణ పొందడం (Naturalize)","(కాంగ్రెస్ నిర్దేశించిన షరతుల ప్రకారం) పౌరసత్వాన్ని పొందడం"],
+    aen:["Be born in the United States, under the conditions set by the 14th Amendment","Naturalize","Derive citizenship (under conditions set by Congress)"]},
+  {n:69, qte:"అమెరికాలో పౌర భాగస్వామ్యానికి రెండు ఉదాహరణలు ఏమిటి?", qen:"What are two examples of civic participation in the United States?",
+    ate:["ఓటు వేయడం","పదవికి పోటీ చేయడం","రాజకీయ పార్టీలో చేరడం","ప్రచారానికి సహాయం చేయడం","పౌర సమూహంలో చేరడం","సంఘ సమూహంలో చేరడం","(ఒక సమస్యపై) ఎన్నికైన అధికారికి మీ అభిప్రాయం తెలియజేయడం","ఎన్నికైన అధికారులను సంప్రదించడం","ఒక సమస్య లేదా విధానానికి మద్దతు లేదా వ్యతిరేకత తెలపడం","వార్తాపత్రికకు రాయడం"],
+    aen:["Vote","Run for office","Join a political party","Help with a campaign","Join a civic group","Join a community group","Give an elected official your opinion (on an issue)","Contact elected officials","Support or oppose an issue or policy","Write to a newspaper"]},
+  {n:70, qte:"అమెరికన్లు తమ దేశానికి సేవ చేయగల ఒక మార్గం ఏమిటి?", qen:"What is one way Americans can serve their country?",
+    ate:["ఓటు వేయడం","పన్నులు చెల్లించడం","చట్టాన్ని పాటించడం","సైన్యంలో సేవ చేయడం","పదవికి పోటీ చేయడం","స్థానిక, రాష్ట్ర, లేదా సమాఖ్య ప్రభుత్వం కోసం పని చేయడం"],
+    aen:["Vote","Pay taxes","Obey the law","Serve in the military","Run for office","Work for local, state, or federal government"]},
+  {n:71, qte:"సమాఖ్య పన్నులు చెల్లించడం ఎందుకు ముఖ్యమైనది?", qen:"Why is it important to pay federal taxes?",
+    ate:["చట్టం ద్వారా అవసరం","సమాఖ్య ప్రభుత్వానికి నిధులు సమకూర్చడానికి అందరూ చెల్లిస్తారు","(అమెరికా) రాజ్యాంగం (16వ సవరణ) ద్వారా అవసరం","పౌర విధి"],
+    aen:["Required by law","All people pay to fund the federal government","Required by the (U.S.) Constitution (16th Amendment)","Civic duty"]},
+  {n:72, qte:"18 నుండి 25 సంవత్సరాల వయస్సు గల పురుషులందరూ సెలెక్టివ్ సర్వీస్‌లో నమోదు చేసుకోవడం ముఖ్యం. ఒక కారణం పేర్కొనండి.", qen:"It is important for all men age 18 through 25 to register for the Selective Service. Name one reason why.",
+    ate:["చట్టం ద్వారా అవసరం","పౌర విధి","అవసరమైతే డ్రాఫ్ట్‌ను న్యాయంగా చేస్తుంది"],
+    aen:["Required by law","Civic duty","Makes the draft fair, if needed"]},
+  {n:73, qte:"కాలనీవాసులు అనేక కారణాలతో అమెరికాకు వచ్చారు. ఒకటి పేర్కొనండి.", qen:"The colonists came to America for many reasons. Name one.",
+    ate:["స్వేచ్ఛ","రాజకీయ స్వేచ్ఛ","మత స్వేచ్ఛ","ఆర్థిక అవకాశం","హింస నుండి తప్పించుకోవడం"],
+    aen:["Freedom","Political liberty","Religious freedom","Economic opportunity","Escape persecution"]},
+  {n:74, qte:"యూరోపియన్లు రాకముందు అమెరికాలో ఎవరు నివసించారు?", qen:"Who lived in America before the Europeans arrived?",
+    ate:["అమెరికన్ ఇండియన్లు","స్థానిక అమెరికన్లు (నేటివ్ అమెరికన్లు)"],
+    aen:["American Indians","Native Americans"], star:true},
+  {n:75, qte:"ఏ సమూహాన్ని తీసుకువెళ్లి బానిసలుగా అమ్మారు?", qen:"What group of people was taken and sold as slaves?",
+    ate:["ఆఫ్రికన్లు","ఆఫ్రికా నుండి వచ్చిన ప్రజలు"], aen:["Africans","People from Africa"]},
+  {n:76, qte:"బ్రిటన్ నుండి స్వాతంత్ర్యం పొందడానికి అమెరికన్లు ఏ యుద్ధం పోరాడారు?", qen:"What war did the Americans fight to win independence from Britain?",
+    ate:["అమెరికన్ విప్లవం","(అమెరికన్) విప్లవ యుద్ధం","(అమెరికన్) స్వాతంత్ర్య యుద్ధం"],
+    aen:["American Revolution","The (American) Revolutionary War","War for (American) Independence"]},
+  {n:77, qte:"అమెరికన్లు బ్రిటన్ నుండి స్వాతంత్ర్యం ఎందుకు ప్రకటించారో ఒక కారణం పేర్కొనండి.", qen:"Name one reason why the Americans declared independence from Britain.",
+    ate:["అధిక పన్నులు","ప్రాతినిధ్యం లేకుండా పన్ను విధించడం","బ్రిటిష్ సైనికులు అమెరికన్ల ఇళ్లలో ఉండిపోయారు (boarding, quartering)","వారికి స్వయం పాలన లేదు","బోస్టన్ ఊచకోత","బోస్టన్ టీ పార్టీ (టీ చట్టం)","స్టాంప్ చట్టం","షుగర్ చట్టం","టౌన్షెండ్ చట్టాలు","భరించలేని (బలవంతపు) చట్టాలు"],
+    aen:["High taxes","Taxation without representation","British soldiers stayed in Americans' houses (boarding, quartering)","They did not have self-government","Boston Massacre","Boston Tea Party (Tea Act)","Stamp Act","Sugar Act","Townshend Acts","Intolerable (Coercive) Acts"]},
+  {n:78, qte:"స్వాతంత్ర్య ప్రకటనను ఎవరు రాశారు?", qen:"Who wrote the Declaration of Independence?",
+    ate:["(థామస్) జెఫర్సన్"], aen:["(Thomas) Jefferson"], star:true},
+  {n:79, qte:"స్వాతంత్ర్య ప్రకటన ఎప్పుడు ఆమోదించబడింది?", qen:"When was the Declaration of Independence adopted?",
+    ate:["జూలై 4, 1776"], aen:["July 4, 1776"]},
+  {n:80, qte:"అమెరికన్ విప్లవంలో అనేక ముఖ్యమైన సంఘటనలు ఉన్నాయి. ఒకటి పేర్కొనండి.", qen:"The American Revolution had many important events. Name one.",
+    ate:["(బంకర్ హిల్) యుద్ధం","స్వాతంత్ర్య ప్రకటన","వాషింగ్టన్ డెలావేర్ దాటడం (ట్రెంటన్ యుద్ధం)","(సరటోగా) యుద్ధం","వ్యాలీ ఫోర్జ్ (శిబిరం)","(యార్క్‌టౌన్) యుద్ధం (యార్క్‌టౌన్‌లో బ్రిటిష్ లొంగుబాటు)"],
+    aen:["(Battle of) Bunker Hill","Declaration of Independence","Washington Crossing the Delaware (Battle of Trenton)","(Battle of) Saratoga","Valley Forge (Encampment)","(Battle of) Yorktown (British surrender at Yorktown)"]},
+  {n:81, qte:"13 అసలు రాష్ట్రాలు ఉన్నాయి. ఐదు పేర్కొనండి.", qen:"There were 13 original states. Name five.",
+    ate:["న్యూ హాంప్‌షైర్","మసాచుసెట్స్","రోడ్ ఐలాండ్","కనెక్టికట్","న్యూయార్క్","న్యూజెర్సీ","పెన్సిల్వేనియా","డెలావేర్","మేరీలాండ్","వర్జీనియా","ఉత్తర కరోలినా","దక్షిణ కరోలినా","జార్జియా"],
+    aen:["New Hampshire","Massachusetts","Rhode Island","Connecticut","New York","New Jersey","Pennsylvania","Delaware","Maryland","Virginia","North Carolina","South Carolina","Georgia"]},
+  {n:82, qte:"1787లో ఏ స్థాపక పత్రం రాయబడింది?", qen:"What founding document was written in 1787?",
+    ate:["(అమెరికా) రాజ్యాంగం"], aen:["(U.S.) Constitution"]},
+  {n:83, qte:"ఫెడరలిస్ట్ పేపర్స్ అమెరికా రాజ్యాంగం ఆమోదానికి మద్దతు ఇచ్చాయి. రచయితలలో ఒకరిని పేర్కొనండి.", qen:"The Federalist Papers supported the passage of the U.S. Constitution. Name one of the writers.",
+    ate:["(జేమ్స్) మాడిసన్","(అలెగ్జాండర్) హామిల్టన్","(జాన్) జే","పబ్లియస్"],
+    aen:["(James) Madison","(Alexander) Hamilton","(John) Jay","Publius"]},
+  {n:84, qte:"ఫెడరలిస్ట్ పేపర్స్ ఎందుకు ముఖ్యమైనవి?", qen:"Why were the Federalist Papers important?",
+    ate:["అవి ప్రజలు (అమెరికా) రాజ్యాంగాన్ని అర్థం చేసుకోవడంలో సహాయపడ్డాయి.","(అమెరికా) రాజ్యాంగాన్ని ఆమోదించడానికి అవి మద్దతు ఇచ్చాయి."],
+    aen:["They helped people understand the (U.S.) Constitution.","They supported passing the (U.S.) Constitution."]},
+  {n:85, qte:"బెంజమిన్ ఫ్రాంక్లిన్ అనేక విషయాలకు ప్రసిద్ధి. ఒకటి పేర్కొనండి.", qen:"Benjamin Franklin is famous for many things. Name one.",
+    ate:["మొదటి ఉచిత ప్రభుత్వ గ్రంథాలయాలను స్థాపించారు","అమెరికా మొదటి పోస్ట్‌మాస్టర్ జనరల్","స్వాతంత్ర్య ప్రకటన రాయడంలో సహాయపడ్డారు","ఆవిష్కర్త","అమెరికా దౌత్యవేత్త"],
+    aen:["Founded the first free public libraries","First Postmaster General of the United States","Helped write the Declaration of Independence","Inventor","U.S. diplomat"]},
+  {n:86, qte:"జార్జ్ వాషింగ్టన్ అనేక విషయాలకు ప్రసిద్ధి. ఒకటి పేర్కొనండి.", qen:"George Washington is famous for many things. Name one.",
+    ate:["\"మన దేశ పితామహుడు\"","అమెరికా మొదటి అధ్యక్షుడు","కాంటినెంటల్ ఆర్మీ జనరల్","రాజ్యాంగ సమావేశ అధ్యక్షుడు"],
+    aen:["\"Father of Our Country\"","First president of the United States","General of the Continental Army","President of the Constitutional Convention"], star:true},
+  {n:87, qte:"థామస్ జెఫర్సన్ అనేక విషయాలకు ప్రసిద్ధి. ఒకటి పేర్కొనండి.", qen:"Thomas Jefferson is famous for many things. Name one.",
+    ate:["స్వాతంత్ర్య ప్రకటన రచయిత","అమెరికా మూడవ అధ్యక్షుడు","అమెరికా పరిమాణాన్ని రెట్టింపు చేశారు (లూసియానా కొనుగోలు)","మొదటి విదేశాంగ కార్యదర్శి","వర్జీనియా విశ్వవిద్యాలయాన్ని స్థాపించారు","మత స్వేచ్ఛపై వర్జీనియా శాసనం రచయిత"],
+    aen:["Writer of the Declaration of Independence","Third president of the United States","Doubled the size of the United States (Louisiana Purchase)","First Secretary of State","Founded the University of Virginia","Writer of the Virginia Statute on Religious Freedom"]},
+  {n:88, qte:"జేమ్స్ మాడిసన్ అనేక విషయాలకు ప్రసిద్ధి. ఒకటి పేర్కొనండి.", qen:"James Madison is famous for many things. Name one.",
+    ate:["\"రాజ్యాంగ పితామహుడు\"","అమెరికా నాల్గవ అధ్యక్షుడు","1812 యుద్ధ సమయంలో అధ్యక్షుడు","ఫెడరలిస్ట్ పేపర్స్ రచయితలలో ఒకరు"],
+    aen:["\"Father of the Constitution\"","Fourth president of the United States","President during the War of 1812","One of the writers of the Federalist Papers"]},
+  {n:89, qte:"అలెగ్జాండర్ హామిల్టన్ అనేక విషయాలకు ప్రసిద్ధి. ఒకటి పేర్కొనండి.", qen:"Alexander Hamilton is famous for many things. Name one.",
+    ate:["మొదటి ఖజానా కార్యదర్శి","ఫెడరలిస్ట్ పేపర్స్ రచయితలలో ఒకరు","అమెరికా మొదటి బ్యాంకును స్థాపించడంలో సహాయపడ్డారు","జనరల్ జార్జ్ వాషింగ్టన్‌కు సహాయకుడు","కాంటినెంటల్ కాంగ్రెస్ సభ్యుడు"],
+    aen:["First Secretary of the Treasury","One of the writers of the Federalist Papers","Helped establish the First Bank of the United States","Aide to General George Washington","Member of the Continental Congress"]},
+  {n:90, qte:"1803లో అమెరికా ఫ్రాన్స్ నుండి ఏ భూభాగాన్ని కొనుగోలు చేసింది?", qen:"What territory did the United States buy from France in 1803?",
+    ate:["లూసియానా భూభాగం","లూసియానా"], aen:["Louisiana Territory","Louisiana"]},
+  {n:91, qte:"1800లలో అమెరికా పోరాడిన ఒక యుద్ధం పేరు చెప్పండి.", qen:"Name one war fought by the United States in the 1800s.",
+    ate:["1812 యుద్ధం","మెక్సికన్-అమెరికన్ యుద్ధం","అంతర్యుద్ధం","స్పానిష్-అమెరికన్ యుద్ధం"],
+    aen:["War of 1812","Mexican-American War","Civil War","Spanish-American War"]},
+  {n:92, qte:"ఉత్తరం మరియు దక్షిణం మధ్య జరిగిన అమెరికా యుద్ధం పేరు చెప్పండి.", qen:"Name the U.S. war between the North and the South.",
+    ate:["అంతర్యుద్ధం (సివిల్ వార్)"], aen:["The Civil War"]},
+  {n:93, qte:"అంతర్యుద్ధంలో అనేక ముఖ్యమైన సంఘటనలు ఉన్నాయి. ఒకటి పేర్కొనండి.", qen:"The Civil War had many important events. Name one.",
+    ate:["(ఫోర్ట్ సమ్టర్) యుద్ధం","విముక్తి ప్రకటన","(విక్స్‌బర్గ్) యుద్ధం","(గెట్టీస్‌బర్గ్) యుద్ధం","షెర్మాన్ యాత్ర","(అపోమాట్టాక్స్‌లో) లొంగుబాటు","(ఆంటీటామ్/షార్ప్స్‌బర్గ్) యుద్ధం","లింకన్ హత్య చేయబడ్డాడు."],
+    aen:["(Battle of) Fort Sumter","Emancipation Proclamation","(Battle of) Vicksburg","(Battle of) Gettysburg","Sherman's March","(Surrender at) Appomattox","(Battle of) Antietam/Sharpsburg","Lincoln was assassinated."]},
+  {n:94, qte:"అబ్రహాం లింకన్ అనేక విషయాలకు ప్రసిద్ధి. ఒకటి పేర్కొనండి.", qen:"Abraham Lincoln is famous for many things. Name one.",
+    ate:["బానిసలను విడిపించారు (విముక్తి ప్రకటన)","యూనియన్‌ను రక్షించారు","అంతర్యుద్ధ సమయంలో అమెరికాను నడిపించారు","అమెరికా 16వ అధ్యక్షుడు","గెట్టీస్‌బర్గ్ ప్రసంగాన్ని ఇచ్చారు"],
+    aen:["Freed the slaves (Emancipation Proclamation)","Saved (or preserved) the Union","Led the United States during the Civil War","16th president of the United States","Delivered the Gettysburg Address"], star:true},
+  {n:95, qte:"విముక్తి ప్రకటన (Emancipation Proclamation) ఏమి చేసింది?", qen:"What did the Emancipation Proclamation do?",
+    ate:["బానిసలను విడిపించింది","కాన్ఫెడరసీలో బానిసలను విడిపించింది","కాన్ఫెడరేట్ రాష్ట్రాలలో బానిసలను విడిపించింది","చాలా దక్షిణ రాష్ట్రాలలో బానిసలను విడిపించింది"],
+    aen:["Freed the slaves","Freed slaves in the Confederacy","Freed slaves in the Confederate states","Freed slaves in most Southern states"]},
+  {n:96, qte:"ఏ అమెరికా యుద్ధం బానిసత్వాన్ని అంతం చేసింది?", qen:"What U.S. war ended slavery?",
+    ate:["అంతర్యుద్ధం (సివిల్ వార్)"], aen:["The Civil War"]},
+  {n:97, qte:"అమెరికాలో జన్మించిన లేదా సహజీకరణ పొందిన మరియు దాని పరిధికి లోబడిన అందరూ అమెరికా పౌరులు అని ఏ సవరణ చెబుతుంది?", qen:"What amendment says all persons born or naturalized in the United States, and subject to the jurisdiction thereof, are U.S. citizens?",
+    ate:["14వ సవరణ"], aen:["14th Amendment"]},
+  {n:98, qte:"పురుషులందరికీ ఓటు హక్కు ఎప్పుడు లభించింది?", qen:"When did all men get the right to vote?",
+    ate:["అంతర్యుద్ధం తర్వాత","పునర్నిర్మాణ సమయంలో","(15వ సవరణతో)","1870"],
+    aen:["After the Civil War","During Reconstruction","(With the) 15th Amendment","1870"]},
+  {n:99, qte:"1800లలో మహిళా హక్కుల ఉద్యమ నాయకులలో ఒకరి పేరు చెప్పండి.", qen:"Name one leader of the women's rights movement in the 1800s.",
+    ate:["సూసన్ బి. ఆంథోనీ","ఎలిజబెత్ కేడీ స్టాంటన్","సోజర్నర్ ట్రూత్","హ్యారియట్ టబ్మన్","లుక్రెటియా మాట్","లూసీ స్టోన్"],
+    aen:["Susan B. Anthony","Elizabeth Cady Stanton","Sojourner Truth","Harriet Tubman","Lucretia Mott","Lucy Stone"]},
+  {n:100, qte:"1900లలో అమెరికా పోరాడిన ఒక యుద్ధం పేరు చెప్పండి.", qen:"Name one war fought by the United States in the 1900s.",
+    ate:["మొదటి ప్రపంచ యుద్ధం","రెండవ ప్రపంచ యుద్ధం","కొరియన్ యుద్ధం","వియత్నాం యుద్ధం","(పర్షియన్) గల్ఫ్ యుద్ధం"],
+    aen:["World War I","World War II","Korean War","Vietnam War","(Persian) Gulf War"]},
+  {n:101, qte:"అమెరికా మొదటి ప్రపంచ యుద్ధంలో ఎందుకు ప్రవేశించింది?", qen:"Why did the United States enter World War I?",
+    ate:["జర్మనీ అమెరికా (పౌర) నౌకలపై దాడి చేసినందున","మిత్రరాజ్యాలకు (ఇంగ్లాండ్, ఫ్రాన్స్, ఇటలీ, రష్యా) మద్దతు ఇవ్వడానికి","కేంద్ర శక్తులను (జర్మనీ, ఆస్ట్రియా-హంగేరీ, ఒట్టోమన్ సామ్రాజ్యం, బల్గేరియా) వ్యతిరేకించడానికి"],
+    aen:["Because Germany attacked U.S. (civilian) ships","To support the Allied Powers (England, France, Italy, and Russia)","To oppose the Central Powers (Germany, Austria-Hungary, the Ottoman Empire, and Bulgaria)"]},
+  {n:102, qte:"మహిళలందరికీ ఓటు హక్కు ఎప్పుడు లభించింది?", qen:"When did all women get the right to vote?",
+    ate:["1920","మొదటి ప్రపంచ యుద్ధం తర్వాత","(19వ సవరణతో)"],
+    aen:["1920","After World War I","(With the) 19th Amendment"]},
+  {n:103, qte:"గ్రేట్ డిప్రెషన్ అంటే ఏమిటి?", qen:"What was the Great Depression?",
+    ate:["ఆధునిక చరిత్రలో అత్యంత దీర్ఘకాలిక ఆర్థిక మాంద్యం"], aen:["Longest economic recession in modern history"]},
+  {n:104, qte:"గ్రేట్ డిప్రెషన్ ఎప్పుడు ప్రారంభమైంది?", qen:"When did the Great Depression start?",
+    ate:["గ్రేట్ క్రాష్ (1929)","1929 స్టాక్ మార్కెట్ క్రాష్"], aen:["The Great Crash (1929)","Stock market crash of 1929"]},
+  {n:105, qte:"గ్రేట్ డిప్రెషన్ మరియు రెండవ ప్రపంచ యుద్ధ సమయంలో అధ్యక్షుడు ఎవరు?", qen:"Who was president during the Great Depression and World War II?",
+    ate:["(ఫ్రాంక్లిన్) రూజ్‌వెల్ట్"], aen:["(Franklin) Roosevelt"]},
+  {n:106, qte:"అమెరికా రెండవ ప్రపంచ యుద్ధంలో ఎందుకు ప్రవేశించింది?", qen:"Why did the United States enter World War II?",
+    ate:["(పెర్ల్ హార్బర్ బాంబు దాడి)","జపనీయులు పెర్ల్ హార్బర్‌పై దాడి చేశారు","మిత్రరాజ్యాలకు (ఇంగ్లాండ్, ఫ్రాన్స్, రష్యా) మద్దతు ఇవ్వడానికి","అక్ష శక్తులను (జర్మనీ, ఇటలీ, జపాన్) వ్యతిరేకించడానికి"],
+    aen:["(Bombing of) Pearl Harbor","Japanese attacked Pearl Harbor","To support the Allied Powers (England, France, and Russia)","To oppose the Axis Powers (Germany, Italy, and Japan)"]},
+  {n:107, qte:"డ్వైట్ ఐసన్‌హోవర్ అనేక విషయాలకు ప్రసిద్ధి. ఒకటి పేర్కొనండి.", qen:"Dwight Eisenhower is famous for many things. Name one.",
+    ate:["రెండవ ప్రపంచ యుద్ధ సమయంలో జనరల్","కొరియన్ యుద్ధం చివరిలో అధ్యక్షుడు","అమెరికా 34వ అధ్యక్షుడు","1956 ఫెడరల్-ఎయిడ్ హైవే చట్టంపై సంతకం చేశారు (ఇంటర్‌స్టేట్ సిస్టమ్‌ను సృష్టించారు)"],
+    aen:["General during World War II","President at the end of (during) the Korean War","34th president of the United States","Signed the Federal-Aid Highway Act of 1956 (Created the Interstate System)"]},
+  {n:108, qte:"ప్రచ్ఛన్న యుద్ధ సమయంలో అమెరికా ప్రధాన ప్రత్యర్థి ఎవరు?", qen:"Who was the United States' main rival during the Cold War?",
+    ate:["సోవియట్ యూనియన్","యుఎస్ఎస్ఆర్ (USSR)","రష్యా"], aen:["Soviet Union","USSR","Russia"]},
+  {n:109, qte:"ప్రచ్ఛన్న యుద్ధ సమయంలో అమెరికాకు ఒక ప్రధాన ఆందోళన ఏమిటి?", qen:"During the Cold War, what was one main concern of the United States?",
+    ate:["కమ్యూనిజం","అణు యుద్ధం"], aen:["Communism","Nuclear war"]},
+  {n:110, qte:"అమెరికా కొరియన్ యుద్ధంలో ఎందుకు ప్రవేశించింది?", qen:"Why did the United States enter the Korean War?",
+    ate:["కమ్యూనిజం వ్యాప్తిని ఆపడానికి"], aen:["To stop the spread of communism"]},
+  {n:111, qte:"అమెరికా వియత్నాం యుద్ధంలో ఎందుకు ప్రవేశించింది?", qen:"Why did the United States enter the Vietnam War?",
+    ate:["కమ్యూనిజం వ్యాప్తిని ఆపడానికి"], aen:["To stop the spread of communism"]},
+  {n:112, qte:"పౌర హక్కుల ఉద్యమం ఏమి చేసింది?", qen:"What did the civil rights movement do?",
+    ate:["జాతి వివక్షను అంతం చేయడానికి పోరాడింది"], aen:["Fought to end racial discrimination"]},
+  {n:113, qte:"మార్టిన్ లూథర్ కింగ్, జూనియర్ అనేక విషయాలకు ప్రసిద్ధి. ఒకటి పేర్కొనండి.", qen:"Martin Luther King, Jr. is famous for many things. Name one.",
+    ate:["పౌర హక్కుల కోసం పోరాడారు","అమెరికన్లందరికీ సమానత్వం కోసం కృషి చేశారు","ప్రజలు \"వారి చర్మ రంగు ద్వారా కాకుండా, వారి స్వభావం ద్వారా నిర్ణయించబడాలి\" అని నిర్ధారించడానికి కృషి చేశారు"],
+    aen:["Fought for civil rights","Worked for equality for all Americans","Worked to ensure that people would \"not be judged by the color of their skin, but by the content of their character\""], star:true},
+  {n:114, qte:"అమెరికా పర్షియన్ గల్ఫ్ యుద్ధంలో ఎందుకు ప్రవేశించింది?", qen:"Why did the United States enter the Persian Gulf War?",
+    ate:["ఇరాకీ సైన్యాన్ని కువైట్ నుండి బలవంతంగా బయటకు పంపడానికి"], aen:["To force the Iraqi military from Kuwait"]},
+  {n:115, qte:"సెప్టెంబర్ 11, 2001న అమెరికాలో ఏ ప్రధాన సంఘటన జరిగింది?", qen:"What major event happened on September 11, 2001 in the United States?",
+    ate:["తీవ్రవాదులు అమెరికాపై దాడి చేశారు","తీవ్రవాదులు రెండు విమానాలను స్వాధీనం చేసుకుని న్యూయార్క్ నగరంలోని వరల్డ్ ట్రేడ్ సెంటర్‌లో కూల్చారు","తీవ్రవాదులు ఒక విమానాన్ని స్వాధీనం చేసుకుని వర్జీనియాలోని ఆర్లింగ్టన్‌లోని పెంటగాన్‌లో కూల్చారు","తీవ్రవాదులు ఒక విమానాన్ని స్వాధీనం చేసుకుని వాషింగ్టన్, డి.సి.కి లక్ష్యంగా చేసుకున్నారు, అది పెన్సిల్వేనియాలోని ఒక పొలంలో కూలిపోయింది"],
+    aen:["Terrorists attacked the United States","Terrorists took over two planes and crashed them into the World Trade Center in New York City","Terrorists took over a plane and crashed into the Pentagon in Arlington, Virginia","Terrorists took over a plane originally aimed at Washington, D.C., and crashed in a field in Pennsylvania"], star:true},
+  {n:116, qte:"సెప్టెంబర్ 11, 2001 దాడుల తర్వాత ఒక అమెరికా సైనిక సంఘర్షణను పేర్కొనండి.", qen:"Name one U.S. military conflict after the September 11, 2001 attacks.",
+    ate:["(ప్రపంచ) తీవ్రవాదంపై యుద్ధం","ఆఫ్ఘనిస్తాన్‌లో యుద్ధం","ఇరాక్‌లో యుద్ధం"],
+    aen:["(Global) War on Terror","War in Afghanistan","War in Iraq"]},
+  {n:117, qte:"అమెరికాలోని ఒక అమెరికన్ ఇండియన్ తెగ పేరు చెప్పండి.", qen:"Name one American Indian tribe in the United States.",
+    ate:["అపాచీ","బ్లాక్‌ఫీట్","కయుగా","చెరోకీ","చెయెన్","చిప్పెవా","చోక్టా","క్రీక్","క్రో","హోపీ","హ్యూరాన్","ఇనుపియాట్","లకోటా","మోహాక్","మోహెగన్","నవాజో","ఒనెయిడా","ఒనొండగా","ప్యూబ్లో","సెమినోల్","సెనెకా","షాని","సియోక్స్","టెటాన్","టుస్కరోరా"],
+    aen:["Apache","Blackfeet","Cayuga","Cherokee","Cheyenne","Chippewa","Choctaw","Creek","Crow","Hopi","Huron","Inupiat","Lakota","Mohawk","Mohegan","Navajo","Oneida","Onondaga","Pueblo","Seminole","Seneca","Shawnee","Sioux","Teton","Tuscarora"]},
+  {n:118, qte:"అమెరికన్ ఆవిష్కరణకు ఒక ఉదాహరణ చెప్పండి.", qen:"Name one example of an American innovation.",
+    ate:["లైట్ బల్బ్","ఆటోమొబైల్ (కార్లు, అంతర్గత దహన ఇంజిన్)","ఆకాశహర్మ్యాలు","విమానం","అసెంబ్లీ లైన్","చంద్రుడిపై దిగడం","ఇంటిగ్రేటెడ్ సర్క్యూట్ (IC)"],
+    aen:["Light bulb","Automobile (cars, internal combustion engine)","Skyscrapers","Airplane","Assembly line","Landing on the moon","Integrated circuit (IC)"]},
+  {n:119, qte:"అమెరికా రాజధాని ఏది?", qen:"What is the capital of the United States?",
+    ate:["వాషింగ్టన్, డి.సి."], aen:["Washington, D.C."]},
+  {n:120, qte:"స్టాచ్యూ ఆఫ్ లిబర్టీ ఎక్కడ ఉంది?", qen:"Where is the Statue of Liberty?",
+    ate:["న్యూయార్క్ (హార్బర్)","లిబర్టీ ఐలాండ్ [న్యూజెర్సీ, న్యూయార్క్ నగరం దగ్గర, మరియు హడ్సన్ (నది)పై కూడా ఆమోదయోగ్యమైనవి.]"],
+    aen:["New York (Harbor)","Liberty Island [Also acceptable: New Jersey, near New York City, and on the Hudson (River).]"]},
+  {n:121, qte:"జెండాకు 13 చారలు ఎందుకు ఉన్నాయి?", qen:"Why does the flag have 13 stripes?",
+    ate:["(ఎందుకంటే) 13 అసలు కాలనీలు ఉన్నాయి","(చారలు) అసలు కాలనీలను సూచిస్తాయి"],
+    aen:["(Because there were) 13 original colonies","(Because the stripes) represent the original colonies"], star:true},
+  {n:122, qte:"జెండాకు 50 నక్షత్రాలు ఎందుకు ఉన్నాయి?", qen:"Why does the flag have 50 stars?",
+    ate:["(ఎందుకంటే) ప్రతి రాష్ట్రానికి ఒక నక్షత్రం ఉంది","ప్రతి నక్షత్రం ఒక రాష్ట్రాన్ని సూచిస్తుంది","(ఎందుకంటే) 50 రాష్ట్రాలు ఉన్నాయి"],
+    aen:["(Because there is) one star for each state","(Because) each star represents a state","(Because there are) 50 states"]},
+  {n:123, qte:"జాతీయ గీతం పేరు ఏమిటి?", qen:"What is the name of the national anthem?",
+    ate:["ది స్టార్-స్పాంగ్‌ల్డ్ బ్యానర్"], aen:["The Star-Spangled Banner"]},
+  {n:124, qte:"దేశం యొక్క మొదటి నినాదం \"E Pluribus Unum.\" దాని అర్థం ఏమిటి?", qen:"The Nation's first motto was \"E Pluribus Unum.\" What does that mean?",
+    ate:["అనేకులలో నుండి, ఒకటి","మనమందరం ఒకటిగా అవుతాము"],
+    aen:["Out of many, one","We all become one"]},
+  {n:125, qte:"స్వాతంత్ర్య దినోత్సవం అంటే ఏమిటి?", qen:"What is Independence Day?",
+    ate:["(బ్రిటన్ నుండి) అమెరికా స్వాతంత్ర్యాన్ని జరుపుకునే సెలవు","దేశం పుట్టినరోజు"],
+    aen:["A holiday to celebrate U.S. independence (from Britain)","The country's birthday"]},
+  {n:126, qte:"మూడు జాతీయ అమెరికా సెలవులను పేర్కొనండి.", qen:"Name three national U.S. holidays.",
+    ate:["నూతన సంవత్సర దినోత్సవం","మార్టిన్ లూథర్ కింగ్, జూనియర్ దినోత్సవం","అధ్యక్షుల దినోత్సవం (వాషింగ్టన్ పుట్టినరోజు)","స్మారక దినోత్సవం (మెమోరియల్ డే)","జూన్‌టీన్త్","స్వాతంత్ర్య దినోత్సవం","కార్మిక దినోత్సవం","కొలంబస్ దినోత్సవం","వెటరన్స్ దినోత్సవం","కృతజ్ఞతా దినోత్సవం (థాంక్స్‌గివింగ్)","క్రిస్మస్ దినోత్సవం"],
+    aen:["New Year's Day","Martin Luther King, Jr. Day","Presidents Day (Washington's Birthday)","Memorial Day","Juneteenth","Independence Day","Labor Day","Columbus Day","Veterans Day","Thanksgiving Day","Christmas Day"], star:true},
+  {n:127, qte:"మెమోరియల్ డే అంటే ఏమిటి?", qen:"What is Memorial Day?",
+    ate:["సైనిక సేవలో మరణించిన సైనికులను గౌరవించే సెలవు"], aen:["A holiday to honor soldiers who died in military service"]},
+  {n:128, qte:"వెటరన్స్ డే అంటే ఏమిటి?", qen:"What is Veterans Day?",
+    ate:["(అమెరికా) సైన్యంలో ఉన్న ప్రజలను గౌరవించే సెలవు","(అమెరికా సైన్యంలో) సేవ చేసిన ప్రజలను గౌరవించే సెలవు"],
+    aen:["A holiday to honor people in the (U.S.) military","A holiday to honor people who have served (in the U.S. military)"]},
+];
+
+// ===== STATE =====
+let mode = 'browse';
+let flashIndex = 0;
+let flashOrder = [];
+let flashRevealed = false;
+let quizState = null;
+
+// ===== HELPERS =====
+function getFiltered() {
+  const term = document.getElementById('search').value.trim().toLowerCase();
+  const only65 = document.getElementById('only65').checked;
+  return QUESTIONS.filter(q => {
+    if (only65 && !q.star) return false;
+    if (!term) return true;
+    if (q.qte.toLowerCase().includes(term)) return true;
+    if (q.qen.toLowerCase().includes(term)) return true;
+    if (q.ate.some(a => a.toLowerCase().includes(term))) return true;
+    if (q.aen.some(a => a.toLowerCase().includes(term))) return true;
+    return false;
+  });
+}
+
+function setMode(m) {
+  mode = m;
+  ['browse','flash','quiz'].forEach(x => {
+    document.getElementById('mode-'+x).classList.toggle('active', x===m);
+  });
+  if (m === 'flash') {
+    flashOrder = shuffle(getFiltered().map(q => q.n));
+    flashIndex = 0;
+    flashRevealed = false;
+  }
+  if (m === 'quiz') quizState = null;
+  render();
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme');
+  document.documentElement.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+  localStorage.setItem('theme', document.documentElement.getAttribute('data-theme'));
+}
+
+// ===== RENDERERS =====
+function render() {
+  if (mode === 'browse') renderBrowse();
+  else if (mode === 'flash') renderFlash();
+  else if (mode === 'quiz') renderQuiz();
+}
+
+function renderBrowse() {
+  const app = document.getElementById('app');
+  const filtered = getFiltered();
+  const hideAns = document.getElementById('hideAns').checked;
+  const hideEn = document.getElementById('hideEn').checked;
+  const visibleNums = new Set(filtered.map(q => q.n));
+
+  let html = `<div class="important-note">
+    <strong>ముఖ్యమైన గమనిక:</strong> అసలు పౌర పరీక్ష ఆంగ్లంలో నిర్వహించబడుతుంది (మీరు 65/20 మినహాయింపునకు అర్హులైతే తప్ప). తెలుగు అనువాదాలు అర్థం చేసుకోవడం కోసం మాత్రమే — ఆంగ్లంలో సమాధానం ఇవ్వడం సాధన చేయండి.
+  </div>
+  <div class="info-bar">
+    128లో <strong>${filtered.length}</strong> ప్రశ్నలు చూపుతున్నాము. సమాధానాలను చూపడానికి ప్రశ్నపై క్లిక్ చేయండి. స్టార్ (<span style="color:var(--star)">★</span>) 65/20 ప్రశ్నలను సూచిస్తుంది.
+  </div>`;
+
+  if (filtered.length === 0) {
+    html += `<div class="empty">మీ ఫిల్టర్‌లతో ప్రశ్నలు లేవు.</div>`;
+  } else {
+    for (const sec of SECTIONS) {
+      const secQuestions = QUESTIONS.filter(q =>
+        sec.sub.some(s => q.n >= s.range[0] && q.n <= s.range[1]) && visibleNums.has(q.n));
+      if (secQuestions.length === 0) continue;
+      html += `<div class="section-title">${sec.title}</div>`;
+      for (const sub of sec.sub) {
+        const subQuestions = QUESTIONS.filter(q =>
+          q.n >= sub.range[0] && q.n <= sub.range[1] && visibleNums.has(q.n));
+        if (subQuestions.length === 0) continue;
+        html += `<div class="subsection-title">${sub.title}</div>`;
+        for (const q of subQuestions) html += renderQCard(q, hideAns, hideEn);
+      }
+    }
+  }
+  app.innerHTML = html;
+}
+
+function renderQCard(q, hideAns, hideEn) {
+  const ansClass = hideAns ? 'answers collapsed' : 'answers';
+  const star = q.star ? '<span class="qstar" title="65/20 ప్రశ్న">★</span>' : '';
+  const varies = q.varies ? '<div class="note">(సమాధానం మారుతుంది — uscis.gov/citizenship/testupdates లో తనిఖీ చేయండి)</div>' : '';
+  const enLine = hideEn ? '' : `<span class="qen">${escapeHtml(q.qen)}</span>`;
+  const answersHtml = q.ate.map((a, i) => {
+    const enPart = (hideEn || !q.aen[i]) ? '' : `<div class="aen">${escapeHtml(q.aen[i])}</div>`;
+    return `<li>${escapeHtml(a)}${enPart}</li>`;
+  }).join('');
+  return `<div class="qcard" data-n="${q.n}">
+    <div class="qhead" onclick="toggleAnswer(${q.n})">
+      <div class="qnum">${q.n}.</div>
+      <div class="qtext">${escapeHtml(q.qte)}${enLine}</div>
+      ${star}
+    </div>
+    <div class="${ansClass}" id="ans-${q.n}">
+      <ul>${answersHtml}</ul>
+      ${varies}
+    </div>
+  </div>`;
+}
+
+function toggleAnswer(n) {
+  const el = document.getElementById('ans-'+n);
+  if (el) el.classList.toggle('collapsed');
+}
+
+function renderFlash() {
+  const app = document.getElementById('app');
+  const filtered = getFiltered();
+  const filteredNums = new Set(filtered.map(q => q.n));
+  flashOrder = flashOrder.filter(n => filteredNums.has(n));
+  for (const q of filtered) if (!flashOrder.includes(q.n)) flashOrder.push(q.n);
+
+  if (flashOrder.length === 0) {
+    app.innerHTML = `<div class="empty">మీ ఫిల్టర్‌లతో ప్రశ్నలు లేవు.</div>`;
+    return;
+  }
+  if (flashIndex >= flashOrder.length) flashIndex = 0;
+  const q = QUESTIONS.find(x => x.n === flashOrder[flashIndex]);
+  const hideEn = document.getElementById('hideEn').checked;
+  const star = q.star ? ' ★' : '';
+  const enQ = hideEn ? '' : `<div class="flash-q-en">${escapeHtml(q.qen)}</div>`;
+  const ansList = q.ate.map((a, i) => {
+    const enPart = (hideEn || !q.aen[i]) ? '' : `<div class="aen">${escapeHtml(q.aen[i])}</div>`;
+    return `<li>${escapeHtml(a)}${enPart}</li>`;
+  }).join('');
+
+  app.innerHTML = `
+    <div class="flash-stage">
+      <div class="flashcard" onclick="flashFlip()">
+        <div class="flash-tag">ప్రశ్న ${q.n}${star}</div>
+        <div class="flash-q">${escapeHtml(q.qte)}</div>
+        ${enQ}
+        ${flashRevealed ? `<div class="flash-a"><ul>${ansList}</ul>${q.varies ? '<div class="note">(uscis.gov/citizenship/testupdates లో తనిఖీ చేయండి)</div>' : ''}</div>` : `<div class="flash-tag" style="margin-top:20px">(సమాధానం చూడటానికి కార్డుపై క్లిక్ చేయండి)</div>`}
+      </div>
+      <div class="flash-controls">
+        <button onclick="flashPrev()">← మునుపటి</button>
+        <button class="primary" onclick="flashFlip()">${flashRevealed ? 'దాచు' : 'చూపించు'} సమాధానం</button>
+        <button onclick="flashNext()">తరువాత →</button>
+        <button onclick="flashShuffle()">షఫుల్</button>
+      </div>
+      <div class="flash-progress">${flashIndex + 1} / ${flashOrder.length}</div>
+    </div>`;
+}
+
+function flashFlip() { flashRevealed = !flashRevealed; renderFlash(); }
+function flashPrev() { flashIndex = (flashIndex - 1 + flashOrder.length) % flashOrder.length; flashRevealed = false; renderFlash(); }
+function flashNext() { flashIndex = (flashIndex + 1) % flashOrder.length; flashRevealed = false; renderFlash(); }
+function flashShuffle() { flashOrder = shuffle(flashOrder); flashIndex = 0; flashRevealed = false; renderFlash(); }
+
+function renderQuiz() {
+  const app = document.getElementById('app');
+  if (!quizState) {
+    const only65 = document.getElementById('only65').checked;
+    const totalQ = only65 ? 10 : 20;
+    const passQ = only65 ? 6 : 12;
+    app.innerHTML = `
+      <div class="quiz-intro">
+        <h2>${only65 ? '65/20 సాధన పరీక్ష' : 'పౌర సాధన పరీక్ష'}</h2>
+        <p>మీకు <strong>${totalQ} యాదృచ్ఛిక ప్రశ్నలు</strong> వస్తాయి. ఉత్తీర్ణతకు <strong>${passQ}</strong> సరైనవి కావాలి.</p>
+        <p style="color:var(--muted); font-size:13px">
+          మీ సమాధానాన్ని టైప్ చేసి, అధికారిక సమాధానంతో మీరే గ్రేడ్ చేసుకోండి (అసలు పరీక్ష మౌఖికం, అధికారి నిర్ణయిస్తారు).
+        </p>
+        <button onclick="startQuiz()">క్విజ్ ప్రారంభించండి</button>
+      </div>`;
+    return;
+  }
+
+  const hideEn = document.getElementById('hideEn').checked;
+  let html = '';
+  quizState.questions.forEach((q, i) => {
+    const grade = quizState.grades[i];
+    const cls = grade === true ? 'quiz-q correct' : grade === false ? 'quiz-q incorrect' : 'quiz-q';
+    const star = q.star ? ' ★' : '';
+    const enQ = hideEn ? '' : `<span class="qen-small">${escapeHtml(q.qen)}</span>`;
+    const ansList = q.ate.map((a, idx) => {
+      const enPart = (hideEn || !q.aen[idx]) ? '' : `<div class="aen">${escapeHtml(q.aen[idx])}</div>`;
+      return `<li>${escapeHtml(a)}${enPart}</li>`;
+    }).join('');
+    html += `<div class="${cls}">
+      <h3>${i+1}. ${escapeHtml(q.qte)} <span style="color:var(--muted);font-weight:normal;font-size:13px">(#${q.n}${star})</span>${enQ}</h3>
+      <textarea id="qa-${i}" placeholder="మీ సమాధానం టైప్ చేయండి..." oninput="updateQuizAnswer(${i}, this.value)">${escapeHtml(quizState.answers[i] || '')}</textarea>
+      <div class="reveal">
+        <strong>అధికారిక సమాధానం${q.ate.length > 1 ? '్లు (ఏదైనా ఒకటి)' : ''}:</strong>
+        <ul>${ansList}</ul>
+        ${q.varies ? '<div class="note">(uscis.gov/citizenship/testupdates లో తనిఖీ చేయండి)</div>' : ''}
+      </div>
+      <div class="self-grade">
+        <button class="${grade===true?'correct-btn':''}" onclick="gradeQuiz(${i}, true)">✓ సరిగా చెప్పాను</button>
+        <button class="${grade===false?'wrong-btn':''}" onclick="gradeQuiz(${i}, false)">✗ తప్పుగా చెప్పాను</button>
+      </div>
+    </div>`;
+  });
+
+  const graded = quizState.grades.filter(g => g !== null).length;
+  const total = quizState.questions.length;
+  const correct = quizState.grades.filter(g => g === true).length;
+  const passQ = total === 10 ? 6 : 12;
+  const allGraded = graded === total;
+  const passed = correct >= passQ;
+
+  if (allGraded) {
+    html += `<div class="quiz-result">
+      <h2>ఫలితం</h2>
+      <div class="quiz-score-big ${passed ? 'quiz-pass' : 'quiz-fail'}">${correct} / ${total}</div>
+      <p class="${passed ? 'quiz-pass' : 'quiz-fail'}" style="font-size:20px;font-weight:600">
+        ${passed ? '✓ ఉత్తీర్ణత (అవసరం ' + passQ + ')' : '✗ ఉత్తీర్ణత కాలేదు (అవసరం ' + passQ + ')'}
+      </p>
+      <button onclick="quizState=null;render()">కొత్త క్విజ్</button>
+    </div>`;
+  } else {
+    html += `<div class="quiz-result">
+      <p>గ్రేడ్ చేసినవి: ${graded} / ${total} · ఇప్పటివరకు సరైనవి: ${correct}</p>
+      <button onclick="if(confirm('క్విజ్ రీసెట్ చేయాలా?')){quizState=null;render()}">క్విజ్ రద్దు</button>
+    </div>`;
+  }
+
+  app.innerHTML = html;
+}
+
+function startQuiz() {
+  const only65 = document.getElementById('only65').checked;
+  const pool = only65 ? QUESTIONS.filter(q => q.star) : QUESTIONS;
+  const totalQ = only65 ? 10 : 20;
+  const picked = shuffle(pool.slice()).slice(0, totalQ);
+  quizState = {
+    questions: picked,
+    answers: new Array(totalQ).fill(''),
+    grades: new Array(totalQ).fill(null),
+  };
+  render();
+}
+
+function updateQuizAnswer(i, val) { if (quizState) quizState.answers[i] = val; }
+function gradeQuiz(i, correct) {
+  if (!quizState) return;
+  quizState.grades[i] = correct;
+  render();
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ===== INIT =====
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+render();
+</script>
+</body>
+</html>
