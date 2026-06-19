@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dynamic Civics Answers — New Jersey (USCIS 2025 Test)</title>
+<style>
+  :root {
+    --bg: #f7f7f5;
+    --panel: #ffffff;
+    --text: #1a1a1a;
+    --muted: #666;
+    --border: #e2e2e0;
+    --accent: #b22234;
+    --accent-2: #3c3b6e;
+    --good: #1b7d3a;
+    --star: #d4a017;
+  }
+  [data-theme="dark"] {
+    --bg: #14161a;
+    --panel: #1d2027;
+    --text: #ececec;
+    --muted: #9aa0a6;
+    --border: #2c313a;
+    --accent: #ef4655;
+    --accent-2: #8b8acd;
+    --good: #4ade80;
+    --star: #f5c542;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5; }
+  header {
+    background: linear-gradient(135deg, var(--accent-2), var(--accent));
+    color: #fff; padding: 22px 24px; }
+  header h1 { margin: 0; font-size: 22px; font-weight: 700; }
+  header p { margin: 6px 0 0; opacity: 0.92; font-size: 13px; }
+  nav { position: sticky; top: 0; z-index: 10; background: var(--panel);
+    border-bottom: 1px solid var(--border); padding: 10px 16px;
+    display: flex; gap: 8px; align-items: center; justify-content: flex-end; }
+  nav button { background: var(--panel); color: var(--text); border: 1px solid var(--border);
+    padding: 7px 12px; border-radius: 6px; font-size: 14px; cursor: pointer; font-family: inherit; }
+  nav button:hover { border-color: var(--accent-2); }
+  main { max-width: 860px; margin: 0 auto; padding: 20px 16px 60px; }
+  .note { background: var(--panel); border: 1px solid var(--border); border-left: 4px solid var(--star);
+    border-radius: 8px; padding: 14px 16px; margin-bottom: 18px; font-size: 14px; color: var(--muted); }
+  .note strong { color: var(--text); }
+  .qcard { background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px 18px; margin-bottom: 12px; }
+  .qnum { font-weight: 700; color: var(--accent-2); margin-right: 8px; }
+  .star { color: var(--star); }
+  .qtext { font-weight: 600; font-size: 16px; }
+  .qtext-te { color: var(--muted); font-size: 14px; margin-top: 3px; }
+  .answer { margin-top: 12px; padding: 12px 14px; background: rgba(27,125,58,0.08);
+    border: 1px solid var(--good); border-radius: 6px; }
+  .answer .label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--good); font-weight: 700; margin-bottom: 6px; }
+  .answer .val { font-size: 17px; font-weight: 600; }
+  .answer .alt { color: var(--muted); font-size: 14px; margin-top: 4px; }
+  .answer .te { color: var(--muted); font-size: 13px; margin-top: 4px; }
+  details { margin-top: 10px; font-size: 13px; color: var(--muted); }
+  summary { cursor: pointer; color: var(--accent-2); font-weight: 600; }
+  ul.deleg { margin: 8px 0 0; padding-left: 18px; font-size: 13px; line-height: 1.7; }
+  a { color: var(--accent-2); }
+  footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px 16px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Dynamic Civics Answers — New Jersey</h1>
+  <p>The 8 USCIS 2025 civics questions whose answers change by where you live and the current officeholders. ★ = especially important for applicants 65+.</p>
+</header>
+<nav>
+  <button id="themeBtn" onclick="toggleTheme()">🌓 Theme</button>
+</nav>
+<main>
+  <div class="note">
+    <strong>Location:</strong> Franklin Park, NJ 08823 (NJ-12) &nbsp;·&nbsp; <strong>Last updated:</strong> June 19, 2026.<br>
+    These answers change over time. Always confirm the current names of officials at
+    <a href="https://www.uscis.gov/citizenship/testupdates" target="_blank" rel="noopener">uscis.gov/citizenship/testupdates</a>
+    before your interview.
+  </div>
+  <div id="list"></div>
+</main>
+<footer>For study only. Verify time-sensitive answers before your USCIS interview.</footer>
+
+<script>
+const Q = [
+  {
+    n: 23, star: false,
+    q: "Who is one of your state's U.S. senators now?",
+    te: "ఇప్పుడు మీ రాష్ట్ర U.S. సెనేటర్లలో ఒకరు ఎవరు?",
+    val: "Cory Booker",
+    alt: "Either one is acceptable. New Jersey's two U.S. senators are <b>Cory Booker</b> and <b>Andy Kim</b>.",
+    teA: "న్యూజెర్సీ సెనేటర్లు: కోరీ బుకర్ మరియు ఆండీ కిమ్ — ఏ ఒక్కరి పేరైనా సరిపోతుంది."
+  },
+  {
+    n: 29, star: false,
+    q: "Name your U.S. representative.",
+    te: "మీ U.S. ప్రతినిధి పేరు చెప్పండి.",
+    val: "Bonnie Watson Coleman",
+    alt: "Franklin Park (Franklin Township, Somerset County) is in <b>New Jersey's 12th district (NJ-12)</b>. " +
+         "Verify at <a href='https://www.house.gov/representatives/find-your-representative' target='_blank' rel='noopener'>house.gov/representatives/find-your-representative</a>.",
+    teA: "బానీ వాట్సన్ కోల్‌మన్ — ఫ్రాంక్లిన్ పార్క్ NJ-12 జిల్లాలో ఉంది.",
+    deleg: true
+  },
+  {
+    n: 30, star: true,
+    q: "What is the name of the Speaker of the House of Representatives now?",
+    te: "ఇప్పుడు ప్రతినిధుల సభ స్పీకర్ పేరు ఏమిటి?",
+    val: "Mike Johnson",
+    teA: "మైక్ జాన్సన్"
+  },
+  {
+    n: 38, star: true,
+    q: "What is the name of the President of the United States now?",
+    te: "ఇప్పుడు యునైటెడ్ స్టేట్స్ అధ్యక్షుడి పేరు ఏమిటి?",
+    val: "Donald J. Trump",
+    teA: "డొనాల్డ్ J. ట్రంప్"
+  },
+  {
+    n: 39, star: true,
+    q: "What is the name of the Vice President of the United States now?",
+    te: "ఇప్పుడు యునైటెడ్ స్టేట్స్ ఉపాధ్యక్షుడి పేరు ఏమిటి?",
+    val: "JD Vance",
+    teA: "JD వాన్స్"
+  },
+  {
+    n: 57, star: false,
+    q: "Who is the Chief Justice of the United States now?",
+    te: "ఇప్పుడు యునైటెడ్ స్టేట్స్ ప్రధాన న్యాయమూర్తి ఎవరు?",
+    val: "John G. Roberts, Jr.",
+    teA: "జాన్ G. రాబర్ట్స్, జూనియర్"
+  },
+  {
+    n: 61, star: true,
+    q: "Who is the governor of your state now?",
+    te: "ఇప్పుడు మీ రాష్ట్ర గవర్నర్ ఎవరు?",
+    val: "Mikie Sherrill",
+    alt: "Governor of New Jersey, inaugurated January 2026.",
+    teA: "మికీ షెరిల్ — జనవరి 2026లో న్యూజెర్సీ గవర్నర్‌గా బాధ్యతలు స్వీకరించారు."
+  },
+  {
+    n: 62, star: false,
+    q: "What is the capital of your state?",
+    te: "మీ రాష్ట్ర రాజధాని ఏమిటి?",
+    val: "Trenton",
+    teA: "ట్రెంటన్"
+  }
+];
+
+const DELEGATION = [
+  ["NJ-1", "Donald Norcross (D)"],
+  ["NJ-2", "Jeff Van Drew (R)"],
+  ["NJ-3", "Herb Conaway (D)"],
+  ["NJ-4", "Chris Smith (R)"],
+  ["NJ-5", "Josh Gottheimer (D)"],
+  ["NJ-6", "Frank Pallone (D)"],
+  ["NJ-7", "Tom Kean Jr. (R)"],
+  ["NJ-8", "Rob Menendez (D)"],
+  ["NJ-9", "Nellie Pou (D)"],
+  ["NJ-10", "LaMonica McIver (D)"],
+  ["NJ-11", "Seat vacated when Mikie Sherrill became Governor (Jan 2026) — verify current officeholder"],
+  ["NJ-12", "Bonnie Watson Coleman (D)"]
+];
+
+function render() {
+  const el = document.getElementById('list');
+  el.innerHTML = Q.map(item => {
+    const star = item.star ? ' <span class="star" title="Important for applicants 65+">★</span>' : '';
+    let deleg = '';
+    if (item.deleg) {
+      deleg = `<details><summary>Show NJ House delegation (as of early 2026)</summary>
+        <ul class="deleg">${DELEGATION.map(d => `<li><b>${d[0]}:</b> ${d[1]}</li>`).join('')}</ul></details>`;
+    }
+    return `<div class="qcard">
+      <div><span class="qnum">${item.n}.</span><span class="qtext">${item.q}</span>${star}</div>
+      <div class="qtext-te">${item.te}</div>
+      <div class="answer">
+        <div class="label">Answer · New Jersey</div>
+        <div class="val">${item.val}</div>
+        ${item.alt ? `<div class="alt">${item.alt}</div>` : ''}
+        ${item.teA ? `<div class="te">తెలుగు: ${item.teA}</div>` : ''}
+      </div>
+      ${deleg}
+    </div>`;
+  }).join('');
+}
+
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme');
+  const next = cur === 'dark' ? '' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  try { localStorage.setItem('nj-dyn-theme', next); } catch (e) {}
+}
+
+(function init() {
+  try {
+    const saved = localStorage.getItem('nj-dyn-theme');
+    if (saved) document.documentElement.setAttribute('data-theme', saved);
+  } catch (e) {}
+  render();
+})();
+</script>
+</body>
+</html>
