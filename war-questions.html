@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>War & Conflict Questions — USCIS Civics Test (English + తెలుగు)</title>
+<style>
+  :root { --bg:#f7f7f5; --panel:#ffffff; --text:#1a1a1a; --muted:#666; --border:#e2e2e0;
+    --accent:#b22234; --accent-2:#3c3b6e; --good:#1b7d3a; }
+  [data-theme="dark"] { --bg:#14161a; --panel:#1d2027; --text:#ececec; --muted:#9aa0a6;
+    --border:#2c313a; --accent:#ef4655; --accent-2:#8b8acd; --good:#4ade80; }
+  * { box-sizing:border-box; }
+  html,body { margin:0; padding:0; background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; line-height:1.5; }
+  header { background:linear-gradient(135deg,var(--accent-2),var(--accent)); color:#fff; padding:22px 24px; }
+  header h1 { margin:0; font-size:22px; font-weight:700; }
+  header p { margin:6px 0 0; opacity:.92; font-size:13px; }
+  nav { position:sticky; top:0; z-index:10; background:var(--panel); border-bottom:1px solid var(--border);
+    padding:10px 16px; display:flex; gap:8px; align-items:center; justify-content:flex-end; }
+  nav button { background:var(--panel); color:var(--text); border:1px solid var(--border);
+    padding:7px 12px; border-radius:6px; font-size:14px; cursor:pointer; font-family:inherit; }
+  nav button:hover { border-color:var(--accent-2); }
+  main { max-width:880px; margin:0 auto; padding:18px 16px 60px; }
+  .info { background:var(--panel); border:1px solid var(--border); border-radius:8px;
+    padding:12px 14px; margin-bottom:16px; font-size:13px; color:var(--muted); }
+  .group-title { font-size:16px; font-weight:700; text-transform:uppercase; letter-spacing:1px;
+    color:var(--accent); margin:26px 0 4px; border-bottom:2px solid var(--accent); padding-bottom:4px; }
+  .group-title .te { display:block; font-size:12px; font-weight:600; letter-spacing:0; color:var(--accent-2);
+    text-transform:none; margin-top:2px; }
+  .qcard { background:var(--panel); border:1px solid var(--border); border-radius:8px;
+    padding:14px 16px; margin-bottom:10px; }
+  .qnum { font-weight:700; color:var(--accent-2); margin-right:8px; }
+  .qtext { font-weight:600; font-size:15px; }
+  .qte { color:var(--muted); font-size:13px; margin-top:3px; }
+  .answer { margin-top:10px; padding:10px 12px; background:rgba(27,125,58,.08);
+    border:1px solid var(--good); border-radius:6px; }
+  .answer .label { font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--good);
+    font-weight:700; margin-bottom:5px; }
+  .answer ul { margin:0; padding-left:18px; }
+  .answer li { margin:2px 0; font-size:14px; }
+  .answer .te { margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); color:var(--muted); }
+  footer { text-align:center; color:var(--muted); font-size:12px; padding:24px 16px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>War &amp; Conflict Questions</h1>
+  <p>Every USCIS 2025 civics question about a U.S. war or military conflict, grouped by war. English + తెలుగు. Question numbers match the 128-question test.</p>
+</header>
+<nav><button onclick="toggleTheme()">🌓 Theme</button></nav>
+<main>
+  <div class="info"><strong id="count"></strong> questions across <strong id="gcount"></strong> wars/topics. The official answer is enough to answer correctly — you don't need to memorize every alternative.</div>
+  <div id="list"></div>
+</main>
+<footer>For study only — based on the USCIS 2025 (128-question) civics test.</footer>
+<script>
+const GROUPS = [{"ten": "Revolutionary War (War for Independence)", "tte": "విప్లవ యుద్ధం (స్వాతంత్ర్య యుద్ధం)", "items": [{"n": 76, "qen": "What war did the Americans fight to win independence from Britain?", "qte": "బ్రిటన్ నుండి స్వాతంత్ర్యం పొందడానికి అమెరికన్లు ఏ యుద్ధం పోరాడారు?", "aen": ["American Revolution", "The (American) Revolutionary War", "War for (American) Independence"], "ate": ["అమెరికన్ విప్లవం", "(అమెరికన్) విప్లవ యుద్ధం", "(అమెరికన్) స్వాతంత్ర్య యుద్ధం"]}, {"n": 77, "qen": "Name one reason why the Americans declared independence from Britain.", "qte": "అమెరికన్లు బ్రిటన్ నుండి స్వాతంత్ర్యం ఎందుకు ప్రకటించారో ఒక కారణం పేర్కొనండి.", "aen": ["High taxes", "Taxation without representation", "British soldiers stayed in Americans' houses (boarding, quartering)", "They did not have self-government", "Boston Massacre", "Boston Tea Party (Tea Act)", "Stamp Act", "Sugar Act", "Townshend Acts", "Intolerable (Coercive) Acts"], "ate": ["అధిక పన్నులు", "ప్రాతినిధ్యం లేకుండా పన్ను విధించడం", "బ్రిటిష్ సైనికులు అమెరికన్ల ఇళ్లలో ఉండిపోయారు (boarding, quartering)", "వారికి స్వయం పాలన లేదు", "బోస్టన్ ఊచకోత", "బోస్టన్ టీ పార్టీ (టీ చట్టం)", "స్టాంప్ చట్టం", "షుగర్ చట్టం", "టౌన్షెండ్ చట్టాలు", "భరించలేని (బలవంతపు) చట్టాలు"]}, {"n": 80, "qen": "The American Revolution had many important events. Name one.", "qte": "అమెరికన్ విప్లవంలో అనేక ముఖ్యమైన సంఘటనలు ఉన్నాయి. ఒకటి పేర్కొనండి.", "aen": ["(Battle of) Bunker Hill", "Declaration of Independence", "Washington Crossing the Delaware (Battle of Trenton)", "(Battle of) Saratoga", "Valley Forge (Encampment)", "(Battle of) Yorktown (British surrender at Yorktown)"], "ate": ["(బంకర్ హిల్) యుద్ధం", "స్వాతంత్ర్య ప్రకటన", "వాషింగ్టన్ డెలావేర్ దాటడం (ట్రెంటన్ యుద్ధం)", "(సరటోగా) యుద్ధం", "వ్యాలీ ఫోర్జ్ (శిబిరం)", "(యార్క్‌టౌన్) యుద్ధం (యార్క్‌టౌన్‌లో బ్రిటిష్ లొంగుబాటు)"]}]}, {"ten": "War of 1812", "tte": "1812 యుద్ధం", "items": [{"n": 88, "qen": "James Madison is famous for many things. Name one.", "qte": "జేమ్స్ మాడిసన్ అనేక విషయాలకు ప్రసిద్ధి. ఒకటి పేర్కొనండి.", "aen": ["\"Father of the Constitution\"", "Fourth president of the United States", "President during the War of 1812", "One of the writers of the Federalist Papers"], "ate": ["\"రాజ్యాంగ పితామహుడు\"", "అమెరికా నాల్గవ అధ్యక్షుడు", "1812 యుద్ధ సమయంలో అధ్యక్షుడు", "ఫెడరలిస్ట్ పేపర్స్ రచయితలలో ఒకరు"]}]}, {"ten": "Wars of the 1800s & the Civil War", "tte": "1800ల యుద్ధాలు & అంతర్యుద్ధం", "items": [{"n": 91, "qen": "Name one war fought by the United States in the 1800s.", "qte": "1800లలో అమెరికా పోరాడిన ఒక యుద్ధం పేరు చెప్పండి.", "aen": ["War of 1812", "Mexican-American War", "Civil War", "Spanish-American War"], "ate": ["1812 యుద్ధం", "మెక్సికన్-అమెరికన్ యుద్ధం", "అంతర్యుద్ధం", "స్పానిష్-అమెరికన్ యుద్ధం"]}, {"n": 92, "qen": "Name the U.S. war between the North and the South.", "qte": "ఉత్తరం మరియు దక్షిణం మధ్య జరిగిన అమెరికా యుద్ధం పేరు చెప్పండి.", "aen": ["The Civil War"], "ate": ["అంతర్యుద్ధం (సివిల్ వార్)"]}, {"n": 93, "qen": "The Civil War had many important events. Name one.", "qte": "అంతర్యుద్ధంలో అనేక ముఖ్యమైన సంఘటనలు ఉన్నాయి. ఒకటి పేర్కొనండి.", "aen": ["(Battle of) Fort Sumter", "Emancipation Proclamation", "(Battle of) Vicksburg", "(Battle of) Gettysburg", "Sherman's March", "(Surrender at) Appomattox", "(Battle of) Antietam/Sharpsburg", "Lincoln was assassinated."], "ate": ["(ఫోర్ట్ సమ్టర్) యుద్ధం", "విముక్తి ప్రకటన", "(విక్స్‌బర్గ్) యుద్ధం", "(గెట్టీస్‌బర్గ్) యుద్ధం", "షెర్మాన్ యాత్ర", "(అపోమాట్టాక్స్‌లో) లొంగుబాటు", "(ఆంటీటామ్/షార్ప్స్‌బర్గ్) యుద్ధం", "లింకన్ హత్య చేయబడ్డాడు."]}, {"n": 94, "qen": "Abraham Lincoln is famous for many things. Name one.", "qte": "అబ్రహాం లింకన్ అనేక విషయాలకు ప్రసిద్ధి. ఒకటి పేర్కొనండి.", "aen": ["Freed the slaves (Emancipation Proclamation)", "Saved (or preserved) the Union", "Led the United States during the Civil War", "16th president of the United States", "Delivered the Gettysburg Address"], "ate": ["బానిసలను విడిపించారు (విముక్తి ప్రకటన)", "యూనియన్‌ను రక్షించారు", "అంతర్యుద్ధ సమయంలో అమెరికాను నడిపించారు", "అమెరికా 16వ అధ్యక్షుడు", "గెట్టీస్‌బర్గ్ ప్రసంగాన్ని ఇచ్చారు"]}, {"n": 96, "qen": "What U.S. war ended slavery?", "qte": "ఏ అమెరికా యుద్ధం బానిసత్వాన్ని అంతం చేసింది?", "aen": ["The Civil War"], "ate": ["అంతర్యుద్ధం (సివిల్ వార్)"]}, {"n": 98, "qen": "When did all men get the right to vote?", "qte": "పురుషులందరికీ ఓటు హక్కు ఎప్పుడు లభించింది?", "aen": ["After the Civil War", "During Reconstruction", "(With the) 15th Amendment", "1870"], "ate": ["అంతర్యుద్ధం తర్వాత", "పునర్నిర్మాణ సమయంలో", "(15వ సవరణతో)", "1870"]}]}, {"ten": "Wars of the 1900s", "tte": "1900ల యుద్ధాలు", "items": [{"n": 100, "qen": "Name one war fought by the United States in the 1900s.", "qte": "1900లలో అమెరికా పోరాడిన ఒక యుద్ధం పేరు చెప్పండి.", "aen": ["World War I", "World War II", "Korean War", "Vietnam War", "(Persian) Gulf War"], "ate": ["మొదటి ప్రపంచ యుద్ధం", "రెండవ ప్రపంచ యుద్ధం", "కొరియన్ యుద్ధం", "వియత్నాం యుద్ధం", "(పర్షియన్) గల్ఫ్ యుద్ధం"]}]}, {"ten": "World War I", "tte": "మొదటి ప్రపంచ యుద్ధం", "items": [{"n": 101, "qen": "Why did the United States enter World War I?", "qte": "అమెరికా మొదటి ప్రపంచ యుద్ధంలో ఎందుకు ప్రవేశించింది?", "aen": ["Because Germany attacked U.S. (civilian) ships", "To support the Allied Powers (England, France, Italy, and Russia)", "To oppose the Central Powers (Germany, Austria-Hungary, the Ottoman Empire, and Bulgaria)"], "ate": ["జర్మనీ అమెరికా (పౌర) నౌకలపై దాడి చేసినందున", "మిత్రరాజ్యాలకు (ఇంగ్లాండ్, ఫ్రాన్స్, ఇటలీ, రష్యా) మద్దతు ఇవ్వడానికి", "కేంద్ర శక్తులను (జర్మనీ, ఆస్ట్రియా-హంగేరీ, ఒట్టోమన్ సామ్రాజ్యం, బల్గేరియా) వ్యతిరేకించడానికి"]}, {"n": 102, "qen": "When did all women get the right to vote?", "qte": "మహిళలందరికీ ఓటు హక్కు ఎప్పుడు లభించింది?", "aen": ["1920", "After World War I", "(With the) 19th Amendment"], "ate": ["1920", "మొదటి ప్రపంచ యుద్ధం తర్వాత", "(19వ సవరణతో)"]}]}, {"ten": "World War II", "tte": "రెండవ ప్రపంచ యుద్ధం", "items": [{"n": 105, "qen": "Who was president during the Great Depression and World War II?", "qte": "గ్రేట్ డిప్రెషన్ మరియు రెండవ ప్రపంచ యుద్ధ సమయంలో అధ్యక్షుడు ఎవరు?", "aen": ["(Franklin) Roosevelt"], "ate": ["(ఫ్రాంక్లిన్) రూజ్‌వెల్ట్"]}, {"n": 106, "qen": "Why did the United States enter World War II?", "qte": "అమెరికా రెండవ ప్రపంచ యుద్ధంలో ఎందుకు ప్రవేశించింది?", "aen": ["(Bombing of) Pearl Harbor", "Japanese attacked Pearl Harbor", "To support the Allied Powers (England, France, and Russia)", "To oppose the Axis Powers (Germany, Italy, and Japan)"], "ate": ["(పెర్ల్ హార్బర్ బాంబు దాడి)", "జపనీయులు పెర్ల్ హార్బర్‌పై దాడి చేశారు", "మిత్రరాజ్యాలకు (ఇంగ్లాండ్, ఫ్రాన్స్, రష్యా) మద్దతు ఇవ్వడానికి", "అక్ష శక్తులను (జర్మనీ, ఇటలీ, జపాన్) వ్యతిరేకించడానికి"]}, {"n": 107, "qen": "Dwight Eisenhower is famous for many things. Name one.", "qte": "డ్వైట్ ఐసన్‌హోవర్ అనేక విషయాలకు ప్రసిద్ధి. ఒకటి పేర్కొనండి.", "aen": ["General during World War II", "President at the end of (during) the Korean War", "34th president of the United States", "Signed the Federal-Aid Highway Act of 1956 (Created the Interstate System)"], "ate": ["రెండవ ప్రపంచ యుద్ధ సమయంలో జనరల్", "కొరియన్ యుద్ధం చివరిలో అధ్యక్షుడు", "అమెరికా 34వ అధ్యక్షుడు", "1956 ఫెడరల్-ఎయిడ్ హైవే చట్టంపై సంతకం చేశారు (ఇంటర్‌స్టేట్ సిస్టమ్‌ను సృష్టించారు)"]}]}, {"ten": "Cold War", "tte": "ప్రచ్ఛన్న యుద్ధం", "items": [{"n": 108, "qen": "Who was the United States' main rival during the Cold War?", "qte": "ప్రచ్ఛన్న యుద్ధ సమయంలో అమెరికా ప్రధాన ప్రత్యర్థి ఎవరు?", "aen": ["Soviet Union", "USSR", "Russia"], "ate": ["సోవియట్ యూనియన్", "యుఎస్ఎస్ఆర్ (USSR)", "రష్యా"]}, {"n": 109, "qen": "During the Cold War, what was one main concern of the United States?", "qte": "ప్రచ్ఛన్న యుద్ధ సమయంలో అమెరికాకు ఒక ప్రధాన ఆందోళన ఏమిటి?", "aen": ["Communism", "Nuclear war"], "ate": ["కమ్యూనిజం", "అణు యుద్ధం"]}]}, {"ten": "Korean War", "tte": "కొరియన్ యుద్ధం", "items": [{"n": 110, "qen": "Why did the United States enter the Korean War?", "qte": "అమెరికా కొరియన్ యుద్ధంలో ఎందుకు ప్రవేశించింది?", "aen": ["To stop the spread of communism"], "ate": ["కమ్యూనిజం వ్యాప్తిని ఆపడానికి"]}]}, {"ten": "Vietnam War", "tte": "వియత్నాం యుద్ధం", "items": [{"n": 111, "qen": "Why did the United States enter the Vietnam War?", "qte": "అమెరికా వియత్నాం యుద్ధంలో ఎందుకు ప్రవేశించింది?", "aen": ["To stop the spread of communism"], "ate": ["కమ్యూనిజం వ్యాప్తిని ఆపడానికి"]}]}, {"ten": "Persian Gulf War", "tte": "పర్షియన్ గల్ఫ్ యుద్ధం", "items": [{"n": 114, "qen": "Why did the United States enter the Persian Gulf War?", "qte": "అమెరికా పర్షియన్ గల్ఫ్ యుద్ధంలో ఎందుకు ప్రవేశించింది?", "aen": ["To force the Iraqi military from Kuwait"], "ate": ["ఇరాకీ సైన్యాన్ని కువైట్ నుండి బలవంతంగా బయటకు పంపడానికి"]}]}, {"ten": "After September 11, 2001", "tte": "సెప్టెంబర్ 11, 2001 తర్వాత", "items": [{"n": 115, "qen": "What major event happened on September 11, 2001 in the United States?", "qte": "సెప్టెంబర్ 11, 2001న అమెరికాలో ఏ ప్రధాన సంఘటన జరిగింది?", "aen": ["Terrorists attacked the United States", "Terrorists took over two planes and crashed them into the World Trade Center in New York City", "Terrorists took over a plane and crashed into the Pentagon in Arlington, Virginia", "Terrorists took over a plane originally aimed at Washington, D.C., and crashed in a field in Pennsylvania"], "ate": ["తీవ్రవాదులు అమెరికాపై దాడి చేశారు", "తీవ్రవాదులు రెండు విమానాలను స్వాధీనం చేసుకుని న్యూయార్క్ నగరంలోని వరల్డ్ ట్రేడ్ సెంటర్‌లో కూల్చారు", "తీవ్రవాదులు ఒక విమానాన్ని స్వాధీనం చేసుకుని వర్జీనియాలోని ఆర్లింగ్టన్‌లోని పెంటగాన్‌లో కూల్చారు", "తీవ్రవాదులు ఒక విమానాన్ని స్వాధీనం చేసుకుని వాషింగ్టన్, డి.సి.కి లక్ష్యంగా చేసుకున్నారు, అది పెన్సిల్వేనియాలోని ఒక పొలంలో కూలిపోయింది"]}, {"n": 116, "qen": "Name one U.S. military conflict after the September 11, 2001 attacks.", "qte": "సెప్టెంబర్ 11, 2001 దాడుల తర్వాత ఒక అమెరికా సైనిక సంఘర్షణను పేర్కొనండి.", "aen": ["(Global) War on Terror", "War in Afghanistan", "War in Iraq"], "ate": ["(ప్రపంచ) తీవ్రవాదంపై యుద్ధం", "ఆఫ్ఘనిస్తాన్‌లో యుద్ధం", "ఇరాక్‌లో యుద్ధం"]}]}, {"ten": "Honoring Those Who Served", "tte": "సేవ చేసిన వారిని గౌరవించడం", "items": [{"n": 127, "qen": "What is Memorial Day?", "qte": "మెమోరియల్ డే అంటే ఏమిటి?", "aen": ["A holiday to honor soldiers who died in military service"], "ate": ["సైనిక సేవలో మరణించిన సైనికులను గౌరవించే సెలవు"]}, {"n": 128, "qen": "What is Veterans Day?", "qte": "వెటరన్స్ డే అంటే ఏమిటి?", "aen": ["A holiday to honor people in the (U.S.) military", "A holiday to honor people who have served (in the U.S. military)"], "ate": ["(అమెరికా) సైన్యంలో ఉన్న ప్రజలను గౌరవించే సెలవు", "(అమెరికా సైన్యంలో) సేవ చేసిన ప్రజలను గౌరవించే సెలవు"]}]}];
+
+function li(arr){ return '<ul>'+arr.map(a=>'<li>'+a.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</li>').join('')+'</ul>'; }
+
+function render(){
+  let total=0;
+  const htmlOut = GROUPS.map(g=>{
+    total += g.items.length;
+    const cards = g.items.map(it=>`
+      <div class="qcard">
+        <div><span class="qnum">${it.n}.</span><span class="qtext">${it.qen}</span></div>
+        <div class="qte">${it.qte}</div>
+        <div class="answer">
+          <div class="label">Answer</div>
+          ${li(it.aen)}
+          <div class="te"><div class="label">తెలుగు సమాధానం</div>${li(it.ate)}</div>
+        </div>
+      </div>`).join('');
+    return `<div class="group-title">${g.ten}<span class="te">${g.tte}</span></div>${cards}`;
+  }).join('');
+  document.getElementById('list').innerHTML = htmlOut;
+  document.getElementById('count').textContent = total;
+  document.getElementById('gcount').textContent = GROUPS.length;
+}
+
+function toggleTheme(){
+  const cur=document.documentElement.getAttribute('data-theme');
+  const next=cur==='dark'?'':'dark';
+  document.documentElement.setAttribute('data-theme',next);
+  try{ localStorage.setItem('war-theme',next); }catch(e){}
+}
+(function(){
+  try{ const s=localStorage.getItem('war-theme'); if(s) document.documentElement.setAttribute('data-theme',s); }catch(e){}
+  render();
+})();
+</script>
+</body>
+</html>
