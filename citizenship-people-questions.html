@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>USCIS 2025 Civics Test — People & Names (Flashcards + Quiz)</title>
+<style>
+  :root {
+    --bg: #f7f7f5;
+    --panel: #ffffff;
+    --text: #1a1a1a;
+    --muted: #666;
+    --border: #e2e2e0;
+    --accent: #b22234;
+    --accent-2: #3c3b6e;
+    --good: #1b7d3a;
+    --bad: #b00020;
+    --star: #d4a017;
+  }
+  [data-theme="dark"] {
+    --bg: #14161a;
+    --panel: #1d2027;
+    --text: #ececec;
+    --muted: #9aa0a6;
+    --border: #2c313a;
+    --accent: #ef4655;
+    --accent-2: #8b8acd;
+    --good: #4ade80;
+    --bad: #ff6b6b;
+    --star: #f5c542;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.45; }
+  header {
+    background: linear-gradient(135deg, var(--accent-2), var(--accent));
+    color: #fff; padding: 22px 24px; }
+  header h1 { margin: 0; font-size: 22px; font-weight: 700; }
+  header p { margin: 6px 0 0; opacity: 0.9; font-size: 13px; }
+  .stars { letter-spacing: 4px; font-size: 12px; opacity: 0.8; }
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--panel); border-bottom: 1px solid var(--border);
+    padding: 10px 16px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  nav button, nav select, nav input[type="text"] {
+    background: var(--panel); color: var(--text); border: 1px solid var(--border);
+    padding: 7px 12px; border-radius: 6px; font-size: 14px; cursor: pointer; font-family: inherit; }
+  nav button.active { background: var(--accent-2); color: #fff; border-color: var(--accent-2); }
+  nav button:hover { border-color: var(--accent-2); }
+  nav input[type="text"] { min-width: 200px; flex: 1; cursor: text; }
+  nav label { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: var(--muted); }
+  main { max-width: 900px; margin: 0 auto; padding: 20px 16px 60px; }
+  .info-bar {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px; margin-bottom: 16px; font-size: 14px; color: var(--muted); }
+  .info-bar strong { color: var(--text); }
+  .section-title {
+    font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px;
+    color: var(--accent); margin: 28px 0 6px; border-bottom: 2px solid var(--accent); padding-bottom: 4px; }
+  .subsection-title {
+    font-size: 14px; font-weight: 600; color: var(--accent-2);
+    margin: 18px 0 8px; }
+  .qcard {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px; margin-bottom: 10px; }
+  .qcard.hidden { display: none; }
+  .qhead { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
+  .qnum { font-weight: 700; color: var(--accent-2); flex-shrink: 0; min-width: 36px; }
+  .qtext { flex: 1; font-weight: 500; }
+  .qstar { color: var(--star); font-size: 16px; flex-shrink: 0; }
+  .answers {
+    margin: 10px 0 0 46px; padding-left: 14px; border-left: 3px solid var(--accent);
+    font-size: 14px; color: var(--text); }
+  .answers ul { margin: 0; padding-left: 18px; }
+  .answers li { margin: 2px 0; }
+  .answers.collapsed { display: none; }
+  .note { color: var(--muted); font-style: italic; font-size: 13px; }
+
+  /* Flashcard mode */
+  .flash-stage {
+    display: flex; flex-direction: column; align-items: center; padding: 30px 0; }
+  .flashcard {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+    padding: 40px 30px; width: 100%; max-width: 600px; min-height: 240px;
+    display: flex; flex-direction: column; justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06); cursor: pointer; user-select: none; }
+  .flash-q { font-size: 20px; font-weight: 600; text-align: center; }
+  .flash-tag { color: var(--muted); font-size: 13px; text-align: center; margin-bottom: 14px; }
+  .flash-a { margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--accent); }
+  .flash-a ul { margin: 0; padding-left: 22px; }
+  .flash-controls {
+    margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .flash-controls button {
+    padding: 10px 18px; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--panel); color: var(--text); cursor: pointer; font-size: 14px; font-family: inherit; }
+  .flash-controls button.primary { background: var(--accent-2); color: #fff; border-color: var(--accent-2); }
+  .flash-progress { color: var(--muted); font-size: 13px; margin-top: 10px; }
+
+  /* Quiz mode */
+  .quiz-intro, .quiz-result {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    padding: 24px; text-align: center; }
+  .quiz-intro h2 { margin-top: 0; }
+  .quiz-intro button, .quiz-result button {
+    background: var(--accent); color: #fff; border: none; padding: 12px 24px;
+    border-radius: 6px; font-size: 16px; cursor: pointer; margin-top: 14px; font-family: inherit; }
+  .quiz-q { background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    padding: 18px 20px; margin-bottom: 12px; }
+  .quiz-q.correct { border-left: 5px solid var(--good); }
+  .quiz-q.incorrect { border-left: 5px solid var(--bad); }
+  .quiz-q h3 { margin: 0 0 10px; font-size: 16px; }
+  .quiz-q textarea {
+    width: 100%; min-height: 50px; padding: 8px; border: 1px solid var(--border);
+    border-radius: 4px; font-size: 14px; background: var(--bg); color: var(--text);
+    font-family: inherit; resize: vertical; }
+  .quiz-q .reveal { margin-top: 10px; padding: 10px; background: var(--bg);
+    border-radius: 4px; font-size: 14px; }
+  .quiz-q .reveal ul { margin: 4px 0; padding-left: 20px; }
+  .quiz-q .self-grade { margin-top: 8px; display: flex; gap: 8px; }
+  .quiz-q .self-grade button {
+    padding: 6px 14px; border-radius: 4px; border: 1px solid var(--border);
+    background: var(--panel); color: var(--text); cursor: pointer; font-size: 13px; font-family: inherit; }
+  .quiz-q .self-grade button.correct-btn { background: var(--good); color: #fff; border-color: var(--good); }
+  .quiz-q .self-grade button.wrong-btn { background: var(--bad); color: #fff; border-color: var(--bad); }
+  .quiz-score-big { font-size: 48px; font-weight: 700; margin: 16px 0; }
+  .quiz-pass { color: var(--good); }
+  .quiz-fail { color: var(--bad); }
+
+  footer { text-align: center; color: var(--muted); padding: 30px 16px; font-size: 12px; }
+  footer a { color: var(--accent-2); }
+
+  .empty { text-align: center; color: var(--muted); padding: 40px 0; }
+</style>
+</head>
+<body>
+<header>
+  <div class="stars">★ ★ ★ ★</div>
+  <h1>USCIS 2025 Civics Test — People &amp; Names</h1>
+  <p>Only the questions that involve a person's name · Browse · Flashcards · Quiz</p>
+</header>
+
+<nav>
+  <button id="mode-browse" class="active" onclick="setMode('browse')">Browse</button>
+  <button id="mode-flash" onclick="setMode('flash')">Flashcards</button>
+  <button id="mode-quiz" onclick="setMode('quiz')">Quiz</button>
+  <input type="text" id="search" placeholder="Search names or questions..." oninput="render()">
+  <label><input type="checkbox" id="only65" onchange="render()"> 65/20 only (★)</label>
+  <label><input type="checkbox" id="hideAns" onchange="render()"> Hide answers</label>
+  <button onclick="toggleTheme()" title="Toggle dark mode">☾</button>
+</nav>
+
+<main id="app"></main>
+
+<footer>
+  Subset of the official <a href="https://www.uscis.gov/sites/default/files/document/questions-and-answers/2025-Civics-Test-128-Questions-and-Answers.pdf" target="_blank">USCIS 2025 (128-question)</a> civics test — only items about named people.
+  · Time-sensitive answers (President, VP, Speaker, Chief Justice, your Governor/Senator/Rep) — verify at
+  <a href="https://www.uscis.gov/citizenship/testupdates" target="_blank">uscis.gov/citizenship/testupdates</a>
+</footer>
+
+<script>
+// ===== DATA: only the USCIS 2025 civics questions that involve a person's name =====
+const SECTIONS = [
+  { title: "American Government", sub: [
+    { title: "B: System of Government", range: [16, 62] },
+  ]},
+  { title: "American History", sub: [
+    { title: "A: Colonial Period and Independence", range: [73, 89] },
+    { title: "B: 1800s", range: [90, 99] },
+    { title: "C: Recent American History", range: [100, 118] },
+  ]},
+];
+
+// star=true means 65/20 question; varies=true means time-sensitive (verify current officeholder)
+const QUESTIONS = [
+  {n:23, q:"Who is one of your state's U.S. senators now?", a:["Cory Booker (New Jersey)","Andy Kim (New Jersey) — either one is acceptable"], varies:true},
+  {n:29, q:"Name your U.S. representative.", a:["Bonnie Watson Coleman (NJ-12 — Franklin Park, Somerset County)"], varies:true},
+  {n:30, q:"What is the name of the Speaker of the House of Representatives now?", a:["Mike Johnson"], varies:true, star:true},
+  {n:38, q:"What is the name of the President of the United States now?", a:["Donald J. Trump"], varies:true, star:true},
+  {n:39, q:"What is the name of the Vice President of the United States now?", a:["JD Vance"], varies:true, star:true},
+  {n:57, q:"Who is the Chief Justice of the United States now?", a:["John G. Roberts, Jr."], varies:true},
+  {n:61, q:"Who is the governor of your state now?", a:["Mikie Sherrill (Governor of New Jersey)"], varies:true, star:true},
+  {n:78, q:"Who wrote the Declaration of Independence?", a:["(Thomas) Jefferson"], star:true},
+  {n:83, q:"The Federalist Papers supported the passage of the U.S. Constitution. Name one of the writers.", a:["(James) Madison","(Alexander) Hamilton","(John) Jay","Publius"]},
+  {n:85, q:"Benjamin Franklin is famous for many things. Name one.", a:["Founded the first free public libraries","First Postmaster General of the United States","Helped write the Declaration of Independence","Inventor","U.S. diplomat"]},
+  {n:86, q:"George Washington is famous for many things. Name one.", a:["\"Father of Our Country\"","First president of the United States","General of the Continental Army","President of the Constitutional Convention"], star:true},
+  {n:87, q:"Thomas Jefferson is famous for many things. Name one.", a:["Writer of the Declaration of Independence","Third president of the United States","Doubled the size of the United States (Louisiana Purchase)","First Secretary of State","Founded the University of Virginia","Writer of the Virginia Statute on Religious Freedom"]},
+  {n:88, q:"James Madison is famous for many things. Name one.", a:["\"Father of the Constitution\"","Fourth president of the United States","President during the War of 1812","One of the writers of the Federalist Papers"]},
+  {n:89, q:"Alexander Hamilton is famous for many things. Name one.", a:["First Secretary of the Treasury","One of the writers of the Federalist Papers","Helped establish the First Bank of the United States","Aide to General George Washington","Member of the Continental Congress"]},
+  {n:94, q:"Abraham Lincoln is famous for many things. Name one.", a:["Freed the slaves (Emancipation Proclamation)","Saved (or preserved) the Union","Led the United States during the Civil War","16th president of the United States","Delivered the Gettysburg Address"], star:true},
+  {n:99, q:"Name one leader of the women's rights movement in the 1800s.", a:["Susan B. Anthony","Elizabeth Cady Stanton","Sojourner Truth","Harriet Tubman","Lucretia Mott","Lucy Stone"]},
+  {n:105, q:"Who was president during the Great Depression and World War II?", a:["(Franklin) Roosevelt"]},
+  {n:107, q:"Dwight Eisenhower is famous for many things. Name one.", a:["General during World War II","President at the end of (during) the Korean War","34th president of the United States","Signed the Federal-Aid Highway Act of 1956 (Created the Interstate System)"]},
+  {n:113, q:"Martin Luther King, Jr. is famous for many things. Name one.", a:["Fought for civil rights","Worked for equality for all Americans","Worked to ensure that people would \"not be judged by the color of their skin, but by the content of their character\""], star:true},
+];
+
+// ===== STATE =====
+let mode = 'browse';
+let flashIndex = 0;
+let flashOrder = [];
+let flashRevealed = false;
+let quizState = null;
+
+// ===== HELPERS =====
+function getFiltered() {
+  const term = document.getElementById('search').value.trim().toLowerCase();
+  const only65 = document.getElementById('only65').checked;
+  return QUESTIONS.filter(q => {
+    if (only65 && !q.star) return false;
+    if (!term) return true;
+    if (q.q.toLowerCase().includes(term)) return true;
+    if (q.a.some(a => a.toLowerCase().includes(term))) return true;
+    return false;
+  });
+}
+
+function setMode(m) {
+  mode = m;
+  ['browse','flash','quiz'].forEach(x => {
+    document.getElementById('mode-'+x).classList.toggle('active', x===m);
+  });
+  if (m === 'flash') {
+    flashOrder = shuffle(getFiltered().map(q => q.n));
+    flashIndex = 0;
+    flashRevealed = false;
+  }
+  if (m === 'quiz') {
+    quizState = null;
+  }
+  render();
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme');
+  document.documentElement.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+  localStorage.setItem('theme', document.documentElement.getAttribute('data-theme'));
+}
+
+// ===== RENDERERS =====
+function render() {
+  if (mode === 'browse') renderBrowse();
+  else if (mode === 'flash') renderFlash();
+  else if (mode === 'quiz') renderQuiz();
+}
+
+function renderBrowse() {
+  const app = document.getElementById('app');
+  const filtered = getFiltered();
+  const hideAns = document.getElementById('hideAns').checked;
+  const visibleNums = new Set(filtered.map(q => q.n));
+
+  let html = `<div class="info-bar">
+    Showing <strong>${filtered.length}</strong> of ${QUESTIONS.length} people questions.
+    Click a question to toggle its answers. Star (<span style="color:var(--star)">★</span>) marks 65/20 questions.
+  </div>`;
+
+  if (filtered.length === 0) {
+    html += `<div class="empty">No questions match your filters.</div>`;
+  } else {
+    for (const sec of SECTIONS) {
+      const secQuestions = QUESTIONS.filter(q =>
+        sec.sub.some(s => q.n >= s.range[0] && q.n <= s.range[1]) && visibleNums.has(q.n));
+      if (secQuestions.length === 0) continue;
+      html += `<div class="section-title">${sec.title}</div>`;
+      for (const sub of sec.sub) {
+        const subQuestions = QUESTIONS.filter(q =>
+          q.n >= sub.range[0] && q.n <= sub.range[1] && visibleNums.has(q.n));
+        if (subQuestions.length === 0) continue;
+        html += `<div class="subsection-title">${sub.title}</div>`;
+        for (const q of subQuestions) {
+          html += renderQCard(q, hideAns);
+        }
+      }
+    }
+  }
+  app.innerHTML = html;
+}
+
+function renderQCard(q, hideAns) {
+  const ansClass = hideAns ? 'answers collapsed' : 'answers';
+  const star = q.star ? '<span class="qstar" title="65/20 question">★</span>' : '';
+  const varies = q.varies ? '<div class="note">(Answer changes — verify on uscis.gov/citizenship/testupdates)</div>' : '';
+  return `<div class="qcard" data-n="${q.n}">
+    <div class="qhead" onclick="toggleAnswer(${q.n})">
+      <div class="qnum">${q.n}.</div>
+      <div class="qtext">${escapeHtml(q.q)}</div>
+      ${star}
+    </div>
+    <div class="${ansClass}" id="ans-${q.n}">
+      <ul>${q.a.map(a => `<li>${escapeHtml(a)}</li>`).join('')}</ul>
+      ${varies}
+    </div>
+  </div>`;
+}
+
+function toggleAnswer(n) {
+  const el = document.getElementById('ans-'+n);
+  if (el) el.classList.toggle('collapsed');
+}
+
+function renderFlash() {
+  const app = document.getElementById('app');
+  const filtered = getFiltered();
+  const filteredNums = new Set(filtered.map(q => q.n));
+  flashOrder = flashOrder.filter(n => filteredNums.has(n));
+  for (const q of filtered) if (!flashOrder.includes(q.n)) flashOrder.push(q.n);
+
+  if (flashOrder.length === 0) {
+    app.innerHTML = `<div class="empty">No questions match your filters.</div>`;
+    return;
+  }
+  if (flashIndex >= flashOrder.length) flashIndex = 0;
+  const q = QUESTIONS.find(x => x.n === flashOrder[flashIndex]);
+
+  const star = q.star ? ' ★' : '';
+  app.innerHTML = `
+    <div class="flash-stage">
+      <div class="flashcard" onclick="flashFlip()">
+        <div class="flash-tag">Question ${q.n}${star}</div>
+        <div class="flash-q">${escapeHtml(q.q)}</div>
+        ${flashRevealed ? `<div class="flash-a"><ul>${q.a.map(a => `<li>${escapeHtml(a)}</li>`).join('')}</ul>${q.varies ? '<div class="note">(Verify on uscis.gov/citizenship/testupdates)</div>' : ''}</div>` : `<div class="flash-tag" style="margin-top:20px">(click card to reveal answer)</div>`}
+      </div>
+      <div class="flash-controls">
+        <button onclick="flashPrev()">← Prev</button>
+        <button class="primary" onclick="flashFlip()">${flashRevealed ? 'Hide' : 'Reveal'} Answer</button>
+        <button onclick="flashNext()">Next →</button>
+        <button onclick="flashShuffle()">Shuffle</button>
+      </div>
+      <div class="flash-progress">${flashIndex + 1} / ${flashOrder.length}</div>
+    </div>`;
+}
+
+function flashFlip() { flashRevealed = !flashRevealed; renderFlash(); }
+function flashPrev() { flashIndex = (flashIndex - 1 + flashOrder.length) % flashOrder.length; flashRevealed = false; renderFlash(); }
+function flashNext() { flashIndex = (flashIndex + 1) % flashOrder.length; flashRevealed = false; renderFlash(); }
+function flashShuffle() { flashOrder = shuffle(flashOrder); flashIndex = 0; flashRevealed = false; renderFlash(); }
+
+function renderQuiz() {
+  const app = document.getElementById('app');
+  if (!quizState) {
+    const only65 = document.getElementById('only65').checked;
+    const pool = only65 ? QUESTIONS.filter(q => q.star) : QUESTIONS;
+    const totalQ = Math.min(10, pool.length);
+    const passQ = Math.ceil(totalQ * 0.6);
+    app.innerHTML = `
+      <div class="quiz-intro">
+        <h2>${only65 ? '65/20 People Practice' : 'People & Names Practice'}</h2>
+        <p>You'll get <strong>${totalQ} random questions</strong> about named people. Need <strong>${passQ}</strong> correct to pass.</p>
+        <p style="color:var(--muted); font-size:13px">
+          Type the name/answer, then grade yourself against the official answer (the real test is oral and the officer judges).
+        </p>
+        <button onclick="startQuiz()">Start Quiz</button>
+      </div>`;
+    return;
+  }
+
+  let html = '';
+  quizState.questions.forEach((q, i) => {
+    const grade = quizState.grades[i];
+    const cls = grade === true ? 'quiz-q correct' : grade === false ? 'quiz-q incorrect' : 'quiz-q';
+    const star = q.star ? ' ★' : '';
+    html += `<div class="${cls}">
+      <h3>${i+1}. ${escapeHtml(q.q)} <span style="color:var(--muted);font-weight:normal;font-size:13px">(#${q.n}${star})</span></h3>
+      <textarea id="qa-${i}" placeholder="Type your answer..." oninput="updateQuizAnswer(${i}, this.value)">${escapeHtml(quizState.answers[i] || '')}</textarea>
+      <div class="reveal">
+        <strong>Official answer${q.a.length > 1 ? 's (any one)' : ''}:</strong>
+        <ul>${q.a.map(a => `<li>${escapeHtml(a)}</li>`).join('')}</ul>
+        ${q.varies ? '<div class="note">(Verify on uscis.gov/citizenship/testupdates)</div>' : ''}
+      </div>
+      <div class="self-grade">
+        <button class="${grade===true?'correct-btn':''}" onclick="gradeQuiz(${i}, true)">✓ I got it right</button>
+        <button class="${grade===false?'wrong-btn':''}" onclick="gradeQuiz(${i}, false)">✗ I got it wrong</button>
+      </div>
+    </div>`;
+  });
+
+  const graded = quizState.grades.filter(g => g !== null).length;
+  const total = quizState.questions.length;
+  const correct = quizState.grades.filter(g => g === true).length;
+  const passQ = Math.ceil(total * 0.6);
+  const allGraded = graded === total;
+  const passed = correct >= passQ;
+
+  if (allGraded) {
+    html += `<div class="quiz-result">
+      <h2>Result</h2>
+      <div class="quiz-score-big ${passed ? 'quiz-pass' : 'quiz-fail'}">${correct} / ${total}</div>
+      <p class="${passed ? 'quiz-pass' : 'quiz-fail'}" style="font-size:20px;font-weight:600">
+        ${passed ? '✓ Passed (need ' + passQ + ')' : '✗ Did not pass (need ' + passQ + ')'}
+      </p>
+      <button onclick="quizState=null;render()">New Quiz</button>
+    </div>`;
+  } else {
+    html += `<div class="quiz-result">
+      <p>Graded: ${graded} / ${total} · Correct so far: ${correct}</p>
+      <button onclick="if(confirm('Reset quiz?')){quizState=null;render()}">Cancel Quiz</button>
+    </div>`;
+  }
+
+  app.innerHTML = html;
+}
+
+function startQuiz() {
+  const only65 = document.getElementById('only65').checked;
+  const pool = only65 ? QUESTIONS.filter(q => q.star) : QUESTIONS;
+  const totalQ = Math.min(10, pool.length);
+  const picked = shuffle(pool.slice()).slice(0, totalQ);
+  quizState = {
+    questions: picked,
+    answers: new Array(totalQ).fill(''),
+    grades: new Array(totalQ).fill(null),
+  };
+  render();
+}
+
+function updateQuizAnswer(i, val) {
+  if (quizState) quizState.answers[i] = val;
+}
+
+function gradeQuiz(i, correct) {
+  if (!quizState) return;
+  quizState.grades[i] = correct;
+  render();
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ===== INIT =====
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+render();
+</script>
+</body>
+</html>

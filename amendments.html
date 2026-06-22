@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Constitutional Amendments — Citizenship Study Guide</title>
+<style>
+  :root {
+    --bg: #f7f7f5;
+    --card: #ffffff;
+    --text: #1c1c1a;
+    --muted: #6b6b66;
+    --accent: #3c3b6e;
+    --flag: #b22234;
+    --border: #e3e3df;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06);
+    --star: #d4a017;
+  }
+  [data-theme="dark"] {
+    --bg: #16161a;
+    --card: #1f1f25;
+    --text: #ececec;
+    --muted: #9a9aa0;
+    --accent: #8b8acd;
+    --flag: #ef4655;
+    --border: #2e2e36;
+    --shadow: 0 1px 3px rgba(0,0,0,0.4);
+    --star: #f5c542;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    transition: background 0.2s, color 0.2s;
+  }
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 20px;
+    box-shadow: var(--shadow);
+  }
+  .header-inner {
+    max-width: 880px; margin: 0 auto;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  h1 { font-size: 1.35rem; margin: 0; flex: 1 1 auto; }
+  .controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  input[type="search"] {
+    padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px;
+    background: var(--bg); color: var(--text); font-size: 0.95rem; width: 190px;
+  }
+  button, label.toggle {
+    padding: 8px 14px; border: 1px solid var(--border); border-radius: 8px;
+    background: var(--bg); color: var(--text); cursor: pointer; font-size: 0.9rem;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  button:hover { border-color: var(--accent); color: var(--accent); }
+  .tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .tab.active:hover { color: #fff; }
+  main { max-width: 880px; margin: 0 auto; padding: 24px 20px 80px; }
+  .intro { color: var(--muted); margin: 0 0 24px; font-size: 0.98rem; }
+  .badge {
+    display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em;
+    background: var(--star); color: #1c1c1a; border-radius: 5px; padding: 2px 7px;
+    vertical-align: middle;
+  }
+  .badge.vote { background: var(--accent); color: #fff; }
+  .amd {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px 18px; margin-bottom: 12px; box-shadow: var(--shadow);
+    border-left: 4px solid var(--star);
+  }
+  .amd-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .num { font-weight: 700; color: var(--flag); font-size: 1.05rem; min-width: 52px; flex-shrink: 0; }
+  .title { font-size: 1.1rem; font-weight: 700; margin: 0; }
+  .year { font-size: 0.82rem; color: var(--accent); font-weight: 600; }
+  .amd p { margin: 8px 0 0; }
+  .amd .test-note { color: var(--text); font-size: 0.92rem; margin-top: 8px;
+    background: rgba(212,160,23,0.12); border-radius: 6px; padding: 8px 10px; }
+  .amd .test-note strong { color: var(--flag); }
+  .count { color: var(--muted); font-size: 0.85rem; }
+  .empty { color: var(--muted); text-align: center; padding: 40px; display: none; }
+
+  /* Flashcards */
+  .flash-stage { display: flex; flex-direction: column; align-items: center; padding: 10px 0; }
+  .flashcard {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    padding: 36px 28px; width: 100%; max-width: 620px; min-height: 280px;
+    display: flex; flex-direction: column; justify-content: center;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08); cursor: pointer; user-select: none;
+  }
+  .fc-num { font-size: 0.85rem; color: var(--flag); font-weight: 700; text-align: center; margin-bottom: 6px; }
+  .fc-title { font-size: 1.5rem; font-weight: 700; margin: 0; text-align: center; }
+  .fc-year { font-size: 0.95rem; color: var(--accent); font-weight: 600; text-align: center; margin-top: 4px; }
+  .fc-hint { color: var(--muted); font-size: 0.85rem; text-align: center; margin-top: 22px; }
+  .fc-answer { margin-top: 20px; padding-top: 18px; border-top: 2px solid var(--accent); }
+  .fc-answer p { margin: 0; }
+  .fc-test { margin-top: 12px; background: rgba(212,160,23,0.12); border-radius: 8px; padding: 10px 12px; font-size: 0.9rem; }
+  .fc-test strong { color: var(--flag); }
+  .flash-controls { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .flash-controls button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .flash-controls button.primary:hover { color: #fff; }
+  .flash-progress { color: var(--muted); font-size: 0.85rem; margin-top: 12px; }
+
+  footer { max-width: 880px; margin: 0 auto; padding: 0 20px 40px; color: var(--muted); font-size: 0.8rem; }
+  footer a { color: var(--accent); }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <h1>📜 Amendments on the Citizenship Test</h1>
+    <div class="controls">
+      <button class="tab active" id="tab-list" onclick="setView('list')">List</button>
+      <button class="tab" id="tab-flash" onclick="setView('flash')">Flashcards</button>
+      <input type="search" id="search" placeholder="Search…" aria-label="Search">
+      <button id="theme">Dark</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div id="listView">
+    <p class="intro">Only the constitutional amendments referenced in the <strong>USCIS 2025 civics test</strong>, in order. The Constitution has <strong>27 amendments</strong> total (Q7); the first 10 are the <strong>Bill of Rights</strong> (Q6). A blue <span class="badge vote">VOTING</span> badge marks the four amendments about who can vote (Q63). <span class="count" id="count"></span></p>
+    <div id="list"></div>
+    <p class="empty" id="empty">No amendment matches your search.</p>
+  </div>
+
+  <div id="flashView" style="display:none">
+    <p class="intro">Flashcards in fixed order (1st → 26th). Click the card to flip; use Prev / Next to move through them in order.</p>
+    <div class="flash-stage" id="flashStage"></div>
+  </div>
+</main>
+
+<footer>
+  Facts match the official <a href="https://www.uscis.gov/citizenship/find-study-materials-and-resources" target="_blank">USCIS 2025 (128-question)</a> civics test, using the official answer wording.
+</footer>
+
+<script>
+// label, title, year, desc, test (citizenship Q&A), vote (one of the 4 voting amendments)
+const AMENDMENTS = [
+  {label:"1st", title:"Freedoms of Speech & Religion", year:"1791", vote:false,
+    desc:"Protects freedom of religion, freedom of speech, freedom of the press, freedom of assembly, and the right to petition the government. It is part of the Bill of Rights.",
+    test:"Q65: Three rights of everyone living in the U.S. → freedom of expression, speech, assembly, petition, and religion. Q6: The Bill of Rights protects the basic rights of people in the U.S."},
+  {label:"2nd", title:"Right to Bear Arms", year:"1791", vote:false,
+    desc:"Protects the right to keep and bear arms. It is part of the Bill of Rights.",
+    test:"Q65: One of the rights of everyone living in the United States → the right to bear arms."},
+  {label:"10th", title:"Powers Reserved to the States", year:"1791", vote:false,
+    desc:"States that any powers not given to the federal government belong to the states or to the people. It is part of the Bill of Rights.",
+    test:"Q60: What is the purpose of the 10th Amendment? → Powers not given to the federal government belong to the states or to the people."},
+  {label:"14th", title:"Citizenship & Equal Protection", year:"1868", vote:false,
+    desc:"Says all persons born or naturalized in the United States, and subject to its jurisdiction, are U.S. citizens. It also guarantees equal protection of the laws.",
+    test:"Q97: Which amendment says all persons born or naturalized in the U.S. are citizens? → 14th Amendment. Q68: One way to become a citizen → be born in the U.S. under the conditions of the 14th Amendment."},
+  {label:"15th", title:"Right to Vote — Race", year:"1870", vote:true,
+    desc:"Gave all men the right to vote regardless of race or color. This is when all men (of any race) got the right to vote, during Reconstruction after the Civil War.",
+    test:"Q98: When did all men get the right to vote? → After the Civil War / 15th Amendment / 1870. Q63: A male citizen of any race can vote."},
+  {label:"16th", title:"Federal Income Tax", year:"1913", vote:false,
+    desc:"Gives the federal government the power to collect an income tax. It is why paying federal taxes is required by the Constitution.",
+    test:"Q71: Why is it important to pay federal taxes? → Required by the Constitution (16th Amendment); it funds the federal government; civic duty."},
+  {label:"19th", title:"Women's Right to Vote", year:"1920", vote:true,
+    desc:"Gave women the right to vote. This is when all women got the right to vote, after World War I.",
+    test:"Q102: When did all women get the right to vote? → 1920 / after World War I / 19th Amendment. Q63: Women and men (any citizen) can vote."},
+  {label:"22nd", title:"Two-Term Limit for President", year:"1951", vote:false,
+    desc:"Limits the president to being elected to only two terms. It keeps the president from becoming too powerful.",
+    test:"Q37: The president can serve only two terms. Why? → Because of the 22nd Amendment / to keep the president from becoming too powerful."},
+  {label:"24th", title:"No Poll Tax to Vote", year:"1964", vote:true,
+    desc:"Bans the poll tax — you do not have to pay money in order to vote in federal elections.",
+    test:"Q63: One of the four voting amendments → You don't have to pay (a poll tax) to vote."},
+  {label:"26th", title:"Voting Age Set to 18", year:"1971", vote:true,
+    desc:"Set the national voting age at 18 — citizens eighteen (18) and older can vote.",
+    test:"Q63: One of the four voting amendments → Citizens eighteen (18) and older can vote."},
+];
+
+var root = document.documentElement, btn = document.getElementById('theme');
+var saved = localStorage.getItem('amd-theme');
+if (saved) root.setAttribute('data-theme', saved);
+function syncBtn() { btn.textContent = root.getAttribute('data-theme') === 'dark' ? 'Light' : 'Dark'; }
+syncBtn();
+btn.addEventListener('click', function () {
+  var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  localStorage.setItem('amd-theme', next);
+  syncBtn();
+});
+
+var listEl = document.getElementById('list');
+var countEl = document.getElementById('count');
+var emptyEl = document.getElementById('empty');
+var search = document.getElementById('search');
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
+  });
+}
+
+function render() {
+  var q = search.value.trim().toLowerCase();
+  var shown = 0;
+  var html = '';
+  AMENDMENTS.forEach(function (a) {
+    if (q && (a.label + ' ' + a.title + ' ' + a.desc + ' ' + a.test).toLowerCase().indexOf(q) === -1) return;
+    shown++;
+    html += '<div class="amd">' +
+      '<div class="amd-head">' +
+        '<span class="num">' + esc(a.label) + '</span>' +
+        '<span class="title">' + esc(a.title) + '</span>' +
+        '<span class="year">ratified ' + esc(a.year) + '</span>' +
+        (a.vote ? ' <span class="badge vote">VOTING</span>' : '') +
+      '</div>' +
+      '<p>' + esc(a.desc) + '</p>' +
+      '<div class="test-note"><strong>On the test —</strong> ' + esc(a.test) + '</div>' +
+    '</div>';
+  });
+  listEl.innerHTML = html;
+  emptyEl.style.display = shown === 0 ? 'block' : 'none';
+  countEl.textContent = shown + ' of ' + AMENDMENTS.length + ' amendments shown.';
+}
+
+// ===== Tabs / views =====
+var view = 'list';
+var flashIndex = 0;       // fixed order: indexes AMENDMENTS in order
+var flashFlipped = false;
+
+function setView(v) {
+  view = v;
+  document.getElementById('tab-list').classList.toggle('active', v === 'list');
+  document.getElementById('tab-flash').classList.toggle('active', v === 'flash');
+  document.getElementById('listView').style.display = v === 'list' ? 'block' : 'none';
+  document.getElementById('flashView').style.display = v === 'flash' ? 'block' : 'none';
+  search.style.display = v === 'list' ? '' : 'none';
+  if (v === 'flash') renderFlash();
+}
+
+function renderFlash() {
+  var a = AMENDMENTS[flashIndex];
+  var stage = document.getElementById('flashStage');
+  var answer = flashFlipped
+    ? '<div class="fc-answer"><p>' + esc(a.desc) + '</p>' +
+        '<div class="fc-test"><strong>On the test —</strong> ' + esc(a.test) + '</div>' +
+      '</div>'
+    : '<div class="fc-hint">(click card to reveal)</div>';
+  stage.innerHTML =
+    '<div class="flashcard" onclick="flashFlip()">' +
+      '<div class="fc-num">' + esc(a.label) + ' Amendment' + (a.vote ? ' &nbsp;• voting' : '') + '</div>' +
+      '<h2 class="fc-title">' + esc(a.title) + '</h2>' +
+      '<div class="fc-year">ratified ' + esc(a.year) + '</div>' +
+      answer +
+    '</div>' +
+    '<div class="flash-controls">' +
+      '<button onclick="flashPrev()">← Prev</button>' +
+      '<button class="primary" onclick="flashFlip()">' + (flashFlipped ? 'Hide' : 'Reveal') + '</button>' +
+      '<button onclick="flashNext()">Next →</button>' +
+    '</div>' +
+    '<div class="flash-progress">' + (flashIndex + 1) + ' / ' + AMENDMENTS.length + '</div>';
+}
+
+function flashFlip() { flashFlipped = !flashFlipped; renderFlash(); }
+function flashPrev() { flashIndex = (flashIndex - 1 + AMENDMENTS.length) % AMENDMENTS.length; flashFlipped = false; renderFlash(); }
+function flashNext() { flashIndex = (flashIndex + 1) % AMENDMENTS.length; flashFlipped = false; renderFlash(); }
+
+search.addEventListener('input', render);
+render();
+</script>
+</body>
+</html>

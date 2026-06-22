@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wars on the Citizenship Test — Study Guide</title>
+<style>
+  :root {
+    --bg: #f7f7f5;
+    --card: #ffffff;
+    --text: #1c1c1a;
+    --muted: #6b6b66;
+    --accent: #b03a2e;
+    --border: #e3e3df;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  [data-theme="dark"] {
+    --bg: #16161a;
+    --card: #1f1f25;
+    --text: #ececec;
+    --muted: #9a9aa0;
+    --accent: #e07a5f;
+    --border: #2e2e36;
+    --shadow: 0 1px 3px rgba(0,0,0,0.4);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    transition: background 0.2s, color 0.2s;
+  }
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 20px;
+    box-shadow: var(--shadow);
+  }
+  .header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  h1 {
+    font-size: 1.35rem;
+    margin: 0;
+    flex: 1 1 auto;
+  }
+  .controls { display: flex; gap: 10px; align-items: center; }
+  input[type="search"] {
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 0.95rem;
+    width: 200px;
+  }
+  button {
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  button:hover { border-color: var(--accent); color: var(--accent); }
+  .tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .tab.active:hover { color: #fff; }
+  main { max-width: 860px; margin: 0 auto; padding: 24px 20px 80px; }
+  .intro { color: var(--muted); margin: 0 0 28px; font-size: 0.98rem; }
+  .era {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-weight: 700;
+    margin: 36px 0 14px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .war {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+  }
+  .war h2 {
+    font-size: 1.12rem;
+    margin: 0 0 4px;
+  }
+  .when {
+    display: inline-block;
+    font-size: 0.82rem;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .war p { margin: 0; color: var(--text); }
+  .war .cause { margin: 0 0 10px; }
+  .war .cause strong { color: var(--accent); }
+  .war .test {
+    margin-top: 12px; background: rgba(176,58,46,0.10); border-radius: 8px;
+    padding: 10px 12px; font-size: 0.92rem; color: var(--text);
+  }
+  [data-theme="dark"] .war .test { background: rgba(224,122,95,0.14); }
+  .war .test strong { color: var(--accent); }
+  .war .test ul { margin: 6px 0 0; padding-left: 20px; }
+  .war .test li { margin: 3px 0; }
+  .count { color: var(--muted); font-size: 0.85rem; }
+  .empty { color: var(--muted); text-align: center; padding: 40px; }
+
+  /* Flashcards */
+  .flash-stage { display: flex; flex-direction: column; align-items: center; padding: 10px 0; }
+  .flashcard {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    padding: 36px 28px; width: 100%; max-width: 620px; min-height: 280px;
+    display: flex; flex-direction: column; justify-content: center;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08); cursor: pointer; user-select: none;
+  }
+  .fc-era { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--accent); font-weight: 700; text-align: center; margin-bottom: 6px; }
+  .fc-name { font-size: 1.5rem; font-weight: 700; margin: 0; text-align: center; }
+  .fc-when { font-size: 0.95rem; color: var(--accent); font-weight: 600; text-align: center; margin-top: 4px; }
+  .fc-hint { color: var(--muted); font-size: 0.85rem; text-align: center; margin-top: 22px; }
+  .fc-answer { margin-top: 20px; padding-top: 18px; border-top: 2px solid var(--accent); }
+  .fc-answer p { margin: 0; }
+  .fc-test { margin-top: 12px; background: rgba(176,58,46,0.10); border-radius: 8px; padding: 10px 12px; font-size: 0.9rem; }
+  [data-theme="dark"] .fc-test { background: rgba(224,122,95,0.14); }
+  .fc-test ul { margin: 6px 0 0; padding-left: 20px; }
+  .fc-test li { margin: 3px 0; }
+  .flash-controls { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .flash-controls button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .flash-controls button.primary:hover { color: #fff; }
+  .flash-progress { color: var(--muted); font-size: 0.85rem; margin-top: 12px; }
+  footer {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 20px 40px;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <h1>⚔️ Wars on the Citizenship Test</h1>
+    <div class="controls">
+      <button class="tab active" id="tab-list" onclick="setView('list')">List</button>
+      <button class="tab" id="tab-flash" onclick="setView('flash')">Flashcards</button>
+      <input type="search" id="search" placeholder="Search wars…" aria-label="Search wars">
+      <button id="themeBtn" aria-label="Toggle theme">🌙</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div id="listView">
+    <p class="intro">Only the wars and conflicts named in the <strong>USCIS 2025 civics test</strong>, in chronological order. Each entry gives <strong>when</strong> it happened, the citizenship-relevant facts, and the exact <strong>test questions &amp; answers</strong> tied to it. <span class="count" id="count"></span></p>
+    <div id="list"></div>
+    <div class="empty" id="empty" style="display:none">No wars match your search.</div>
+  </div>
+
+  <div id="flashView" style="display:none">
+    <p class="intro">Flashcards in fixed order (oldest → newest). Click the card to flip; use Prev / Next to move through them in order.</p>
+    <div class="flash-stage" id="flashStage"></div>
+  </div>
+</main>
+
+<footer>
+  Facts match the official USCIS 2025 (128-question) civics test. The "On the test" answers use the official wording — confirm against
+  <a href="https://www.uscis.gov/citizenship/find-study-materials-and-resources" target="_blank">uscis.gov/citizenship</a>.
+</footer>
+
+<script>
+// Only the wars/conflicts named in the USCIS 2025 civics test, in chronological order.
+// reason = citizenship-relevant summary; test = official questions & answers tied to the war.
+const WARS = [
+  {
+    era: "Independence (1700s)",
+    name: "American Revolution (Revolutionary War)",
+    when: "1775–1783",
+    cause: "The 13 colonies resented British rule: taxes imposed without any representation in Parliament, laws dictated from London, and British soldiers quartered in their homes. They wanted self-government and broke away to form an independent nation.",
+    reason: "The war the Americans fought to win independence from Britain. Colonists declared independence over high taxes (\"taxation without representation\"), having no self-government, and British soldiers being quartered in their houses. Key events included the Battles of Bunker Hill, Saratoga, the Valley Forge encampment, and the British surrender at Yorktown.",
+    test: ["<strong>Q76:</strong> What war did the Americans fight to win independence from Britain? → <em>American Revolution / the (American) Revolutionary War / War for (American) Independence.</em>","<strong>Q77:</strong> One reason the Americans declared independence → <em>high taxes / taxation without representation / no self-government / Boston Tea Party.</em>","<strong>Q80:</strong> One important event of the Revolution → <em>Bunker Hill, Saratoga, Valley Forge, Yorktown.</em>"]
+  },
+  {
+    era: "Wars of the 1800s (Q91)",
+    name: "War of 1812",
+    when: "1812–1815",
+    cause: "Britain interfered with American trade, seized (impressed) U.S. sailors into its navy, and backed Native American resistance on the frontier. The U.S. declared war to defend its sovereignty and shipping.",
+    reason: "Fought between the United States and Britain. It is one acceptable answer for a war fought by the U.S. in the 1800s. James Madison was president during the War of 1812.",
+    test: ["<strong>Q91:</strong> Name one war fought by the U.S. in the 1800s → <em>War of 1812</em> (also Mexican-American War, Civil War, Spanish-American War).","<strong>Q88:</strong> James Madison was president during the War of 1812."]
+  },
+  {
+    era: "Wars of the 1800s (Q91)",
+    name: "Mexican-American War",
+    when: "1846–1848",
+    cause: "A dispute over the annexation of Texas and its southern border, combined with the U.S. desire to expand westward to the Pacific (\"Manifest Destiny\"). The U.S. won large territories in the Southwest.",
+    reason: "Fought between the United States and Mexico. It is one acceptable answer for a war fought by the U.S. in the 1800s.",
+    test: ["<strong>Q91:</strong> Name one war fought by the U.S. in the 1800s → <em>Mexican-American War.</em>"]
+  },
+  {
+    era: "Wars of the 1800s (Q91)",
+    name: "Civil War",
+    when: "1861–1865",
+    cause: "Southern states seceded over slavery — whether it could continue and spread to new states. The North (Union) fought to keep the country together; the war ended slavery.",
+    reason: "The U.S. war between the North (the Union) and the South (the Confederacy). It is the war that ended slavery. Abraham Lincoln led the United States during it and issued the Emancipation Proclamation. Key events: Fort Sumter, Gettysburg, the Emancipation Proclamation, and the surrender at Appomattox.",
+    test: ["<strong>Q91:</strong> A war fought by the U.S. in the 1800s → <em>Civil War.</em>","<strong>Q92:</strong> The U.S. war between the North and the South → <em>the Civil War.</em>","<strong>Q96:</strong> What U.S. war ended slavery? → <em>the Civil War.</em>","<strong>Q93:</strong> One important event of the Civil War → <em>Gettysburg, Fort Sumter, Emancipation Proclamation, Appomattox.</em>","<strong>Q94/Q95:</strong> Lincoln led the U.S. during the Civil War; the Emancipation Proclamation freed the slaves."]
+  },
+  {
+    era: "Wars of the 1800s (Q91)",
+    name: "Spanish-American War",
+    when: "1898",
+    cause: "The U.S. supported Cuba's fight for independence from Spain. The explosion of the U.S. battleship Maine in Havana harbor pushed the U.S. into war; it gained territory such as Puerto Rico, Guam, and the Philippines.",
+    reason: "Fought between the United States and Spain. It is one acceptable answer for a war fought by the U.S. in the 1800s.",
+    test: ["<strong>Q91:</strong> Name one war fought by the U.S. in the 1800s → <em>Spanish-American War.</em>"]
+  },
+  {
+    era: "Wars of the 1900s (Q100)",
+    name: "World War I",
+    when: "1914–1918",
+    cause: "A web of European alliances, militarism, and nationalism erupted into war after the assassination of Archduke Franz Ferdinand. The U.S. stayed out at first, then joined after Germany attacked U.S. (civilian) ships.",
+    reason: "One acceptable answer for a war fought by the U.S. in the 1900s. The U.S. entered because Germany attacked U.S. (civilian) ships, to support the Allied Powers, and to oppose the Central Powers. After WWI, all women gained the right to vote (19th Amendment, 1920).",
+    test: ["<strong>Q100:</strong> Name one war fought by the U.S. in the 1900s → <em>World War I.</em>","<strong>Q101:</strong> Why did the U.S. enter World War I? → <em>Germany attacked U.S. (civilian) ships / to support the Allied Powers / to oppose the Central Powers.</em>","<strong>Q102:</strong> All women got the right to vote in 1920, after World War I (19th Amendment)."]
+  },
+  {
+    era: "Wars of the 1900s (Q100)",
+    name: "World War II",
+    when: "1939–1945",
+    cause: "Nazi Germany under Hitler invaded its neighbors and Japan expanded aggressively in Asia. The U.S. entered after Japan bombed Pearl Harbor on December 7, 1941.",
+    reason: "One acceptable answer for a war fought by the U.S. in the 1900s. The U.S. entered after Japan attacked Pearl Harbor — to support the Allied Powers and oppose the Axis Powers. Franklin Roosevelt was president during WWII; Dwight Eisenhower was a general during the war.",
+    test: ["<strong>Q100:</strong> A war fought by the U.S. in the 1900s → <em>World War II.</em>","<strong>Q106:</strong> Why did the U.S. enter World War II? → <em>(Bombing of) Pearl Harbor / Japanese attacked Pearl Harbor.</em>","<strong>Q105:</strong> Franklin Roosevelt was president during the Great Depression and WWII.","<strong>Q107:</strong> Dwight Eisenhower was a general during World War II."]
+  },
+  {
+    era: "Wars of the 1900s (Q100)",
+    name: "Korean War",
+    when: "1950–1953",
+    cause: "Communist North Korea, backed by China and the Soviet Union, invaded South Korea. The U.S. intervened to stop the spread of communism. It ended in an armistice, leaving Korea divided.",
+    reason: "One acceptable answer for a war fought by the U.S. in the 1900s. The U.S. entered to stop the spread of communism. Eisenhower was president at the end of the Korean War.",
+    test: ["<strong>Q100:</strong> A war fought by the U.S. in the 1900s → <em>Korean War.</em>","<strong>Q110:</strong> Why did the U.S. enter the Korean War? → <em>to stop the spread of communism.</em>"]
+  },
+  {
+    era: "Wars of the 1900s (Q100)",
+    name: "Vietnam War",
+    when: "1955–1975",
+    cause: "Communist North Vietnam fought to unify the country under communism. The U.S. intervened to stop the spread of communism in Asia. The war ended with North Vietnam's victory.",
+    reason: "One acceptable answer for a war fought by the U.S. in the 1900s. The U.S. entered to stop the spread of communism.",
+    test: ["<strong>Q100:</strong> A war fought by the U.S. in the 1900s → <em>Vietnam War.</em>","<strong>Q111:</strong> Why did the U.S. enter the Vietnam War? → <em>to stop the spread of communism.</em>"]
+  },
+  {
+    era: "Wars of the 1900s (Q100)",
+    name: "Persian Gulf War",
+    when: "1990–1991",
+    cause: "Iraq, under Saddam Hussein, invaded and annexed oil-rich Kuwait. A U.S.-led coalition went to war to force the Iraqi military out of Kuwait.",
+    reason: "One acceptable answer for a war fought by the U.S. in the 1900s. The U.S. entered to force the Iraqi military out of Kuwait.",
+    test: ["<strong>Q100:</strong> A war fought by the U.S. in the 1900s → <em>(Persian) Gulf War.</em>","<strong>Q114:</strong> Why did the U.S. enter the Persian Gulf War? → <em>to force the Iraqi military from Kuwait.</em>"]
+  },
+  {
+    era: "The Cold War (Q108–109)",
+    name: "The Cold War",
+    when: "1947–1991",
+    cause: "After World War II, the democratic, capitalist United States and the communist Soviet Union competed for global influence. There was no direct fighting between them, but an arms race, the threat of nuclear war, and proxy wars (like Korea and Vietnam).",
+    reason: "Not a shooting war but a long rivalry. The United States' main rival during the Cold War was the Soviet Union (USSR). The main U.S. concerns were communism and nuclear war — the same fears that led the U.S. into the Korean and Vietnam Wars.",
+    test: ["<strong>Q108:</strong> Who was the United States' main rival during the Cold War? → <em>Soviet Union / USSR / Russia.</em>","<strong>Q109:</strong> One main concern of the U.S. during the Cold War → <em>communism / nuclear war.</em>"]
+  },
+  {
+    era: "After 9/11 (Q116)",
+    name: "War on Terror — Afghanistan & Iraq",
+    when: "2001–present",
+    cause: "After the September 11, 2001 terrorist attacks by al-Qaeda, the U.S. invaded Afghanistan to remove the Taliban regime that sheltered the terrorists, and later invaded Iraq. The broader effort is called the (Global) War on Terror.",
+    reason: "After the September 11, 2001 terrorist attacks, the U.S. fought several military conflicts: the (Global) War on Terror, the War in Afghanistan, and the War in Iraq. Any one of these is an acceptable answer.",
+    test: ["<strong>Q115:</strong> On September 11, 2001, terrorists attacked the United States.","<strong>Q116:</strong> Name one U.S. military conflict after the 9/11 attacks → <em>(Global) War on Terror / War in Afghanistan / War in Iraq.</em>"]
+  }
+];
+
+const listEl = document.getElementById('list');
+const emptyEl = document.getElementById('empty');
+const countEl = document.getElementById('count');
+const searchEl = document.getElementById('search');
+const themeBtn = document.getElementById('themeBtn');
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function render(filter = '') {
+  const q = filter.trim().toLowerCase();
+  const matches = WARS.filter(w =>
+    !q || w.name.toLowerCase().includes(q) || w.reason.toLowerCase().includes(q) ||
+    w.when.toLowerCase().includes(q) || w.era.toLowerCase().includes(q) ||
+    (w.cause && w.cause.toLowerCase().includes(q)) ||
+    (w.test && w.test.join(' ').toLowerCase().includes(q))
+  );
+
+  countEl.textContent = `(${matches.length} of ${WARS.length} shown)`;
+  listEl.innerHTML = '';
+  emptyEl.style.display = matches.length ? 'none' : 'block';
+
+  let lastEra = null;
+  for (const w of matches) {
+    if (w.era !== lastEra) {
+      const h = document.createElement('div');
+      h.className = 'era';
+      h.textContent = w.era;
+      listEl.appendChild(h);
+      lastEra = w.era;
+    }
+    const card = document.createElement('div');
+    card.className = 'war';
+    const testBlock = w.test && w.test.length
+      ? `<div class="test"><strong>On the test</strong><ul>${w.test.map(t => `<li>${t}</li>`).join('')}</ul></div>`
+      : '';
+    const causeBlock = w.cause
+      ? `<p class="cause"><strong>Why it happened:</strong> ${escapeHtml(w.cause)}</p>`
+      : '';
+    card.innerHTML =
+      `<h2>${escapeHtml(w.name)}</h2>` +
+      `<span class="when">${escapeHtml(w.when)}</span>` +
+      causeBlock +
+      `<p>${escapeHtml(w.reason)}</p>` +
+      testBlock;
+    listEl.appendChild(card);
+  }
+}
+
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  themeBtn.textContent = t === 'dark' ? '☀️' : '🌙';
+  try { localStorage.setItem('wars-theme', t); } catch (e) {}
+}
+
+themeBtn.addEventListener('click', () => {
+  const cur = document.documentElement.getAttribute('data-theme');
+  applyTheme(cur === 'dark' ? 'light' : 'dark');
+});
+
+searchEl.addEventListener('input', e => render(e.target.value));
+
+// ===== Tabs / views =====
+let view = 'list';
+let flashIndex = 0;       // fixed order: indexes WARS in array order (oldest → newest)
+let flashFlipped = false;
+
+function setView(v) {
+  view = v;
+  document.getElementById('tab-list').classList.toggle('active', v === 'list');
+  document.getElementById('tab-flash').classList.toggle('active', v === 'flash');
+  document.getElementById('listView').style.display = v === 'list' ? 'block' : 'none';
+  document.getElementById('flashView').style.display = v === 'flash' ? 'block' : 'none';
+  searchEl.style.display = v === 'list' ? '' : 'none';
+  if (v === 'flash') renderFlash();
+}
+
+function renderFlash() {
+  const w = WARS[flashIndex];
+  const stage = document.getElementById('flashStage');
+  const testBlock = w.test && w.test.length
+    ? `<div class="fc-test"><strong>On the test</strong><ul>${w.test.map(t => `<li>${t}</li>`).join('')}</ul></div>`
+    : '';
+  const causeBlock = w.cause
+    ? `<p class="cause"><strong>Why it happened:</strong> ${escapeHtml(w.cause)}</p>`
+    : '';
+  const answer = flashFlipped
+    ? `<div class="fc-answer">${causeBlock}<p>${escapeHtml(w.reason)}</p>${testBlock}</div>`
+    : `<div class="fc-hint">(click card to reveal)</div>`;
+  stage.innerHTML =
+    `<div class="flashcard" onclick="flashFlip()">` +
+      `<div class="fc-era">${escapeHtml(w.era)}</div>` +
+      `<h2 class="fc-name">${escapeHtml(w.name)}</h2>` +
+      `<div class="fc-when">${escapeHtml(w.when)}</div>` +
+      answer +
+    `</div>` +
+    `<div class="flash-controls">` +
+      `<button onclick="flashPrev()">← Prev</button>` +
+      `<button class="primary" onclick="flashFlip()">${flashFlipped ? 'Hide' : 'Reveal'}</button>` +
+      `<button onclick="flashNext()">Next →</button>` +
+    `</div>` +
+    `<div class="flash-progress">${flashIndex + 1} / ${WARS.length}</div>`;
+}
+
+function flashFlip() { flashFlipped = !flashFlipped; renderFlash(); }
+function flashPrev() { flashIndex = (flashIndex - 1 + WARS.length) % WARS.length; flashFlipped = false; renderFlash(); }
+function flashNext() { flashIndex = (flashIndex + 1) % WARS.length; flashFlipped = false; renderFlash(); }
+
+let savedTheme = 'light';
+try { savedTheme = localStorage.getItem('wars-theme') || 'light'; } catch (e) {}
+applyTheme(savedTheme);
+render();
+</script>
+</body>
+</html>
