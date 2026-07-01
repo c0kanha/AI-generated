@@ -3,298 +3,231 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>U.S. Presidents — Citizenship Study Guide</title>
+<title>U.S. Presidents — Citizenship Study</title>
 <style>
-  :root {
-    --bg: #f7f7f5;
-    --card: #ffffff;
-    --text: #1c1c1a;
-    --muted: #6b6b66;
-    --accent: #3c3b6e;
-    --flag: #b22234;
-    --border: #e3e3df;
-    --shadow: 0 1px 3px rgba(0,0,0,0.06);
-    --star: #d4a017;
+  :root{
+    --bg:#f5f6f8; --card:#fff; --fg:#1a1f2e; --muted:#5b6478;
+    --accent:#1d4ed8; --accent-fg:#fff; --border:#e2e5ec; --star:#d4a017;
   }
-  [data-theme="dark"] {
-    --bg: #16161a;
-    --card: #1f1f25;
-    --text: #ececec;
-    --muted: #9a9aa0;
-    --accent: #8b8acd;
-    --flag: #ef4655;
-    --border: #2e2e36;
-    --shadow: 0 1px 3px rgba(0,0,0,0.4);
-    --star: #f5c542;
+  [data-theme="dark"]{
+    --bg:#10131a; --card:#1a1f2b; --fg:#eef1f6; --muted:#9aa3b5;
+    --accent:#3b82f6; --accent-fg:#fff; --border:#2a3140; --star:#f1c84b;
   }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-    transition: background 0.2s, color 0.2s;
-  }
-  header {
-    position: sticky; top: 0; z-index: 10;
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-    padding: 16px 20px;
-    box-shadow: var(--shadow);
-  }
-  .header-inner {
-    max-width: 880px; margin: 0 auto;
-    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-  }
-  h1 { font-size: 1.35rem; margin: 0; flex: 1 1 auto; }
-  .controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-  input[type="search"] {
-    padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px;
-    background: var(--bg); color: var(--text); font-size: 0.95rem; width: 190px;
-  }
-  button, label.toggle {
-    padding: 8px 14px; border: 1px solid var(--border); border-radius: 8px;
-    background: var(--bg); color: var(--text); cursor: pointer; font-size: 0.9rem;
-    display: inline-flex; align-items: center; gap: 6px;
-  }
-  button:hover { border-color: var(--accent); color: var(--accent); }
-  .tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .tab.active:hover { color: #fff; }
-  main { max-width: 880px; margin: 0 auto; padding: 24px 20px 80px; }
-  .intro { color: var(--muted); margin: 0 0 24px; font-size: 0.98rem; }
-  .legend { font-size: 0.85rem; color: var(--muted); margin-bottom: 20px; }
-  .badge {
-    display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em;
-    background: var(--star); color: #1c1c1a; border-radius: 5px; padding: 2px 7px;
-    vertical-align: middle;
-  }
-  .pres {
-    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
-    padding: 14px 18px; margin-bottom: 12px; box-shadow: var(--shadow);
-  }
-  .pres.test { border-left: 4px solid var(--star); }
-  .pres-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-  .num {
-    font-weight: 700; color: var(--flag); font-size: 1.05rem;
-    min-width: 34px; flex-shrink: 0;
-  }
-  .name { font-size: 1.1rem; font-weight: 700; margin: 0; }
-  .years { font-size: 0.82rem; color: var(--accent); font-weight: 600; }
-  .pres p { margin: 8px 0 0; }
-  .pres .test-note { color: var(--text); font-size: 0.92rem; margin-top: 8px;
-    background: rgba(212,160,23,0.12); border-radius: 6px; padding: 8px 10px; }
-  .pres .test-note strong { color: var(--flag); }
-  .count { color: var(--muted); font-size: 0.85rem; }
-  .empty { color: var(--muted); text-align: center; padding: 40px; display: none; }
-
-  /* Flashcards */
-  .flash-stage { display: flex; flex-direction: column; align-items: center; padding: 20px 0; }
-  .flashcard {
-    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
-    padding: 40px 30px; width: 100%; max-width: 600px; min-height: 260px;
-    display: flex; flex-direction: column; justify-content: center; text-align: center;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.08); cursor: pointer; user-select: none;
-  }
-  .flashcard.test { border-left: 4px solid var(--star); }
-  .fc-num { font-size: 0.85rem; color: var(--flag); font-weight: 700; margin-bottom: 6px; }
-  .fc-name { font-size: 1.6rem; font-weight: 700; margin: 0; }
-  .fc-years { font-size: 0.95rem; color: var(--accent); font-weight: 600; margin-top: 4px; }
-  .fc-hint { color: var(--muted); font-size: 0.85rem; margin-top: 22px; }
-  .fc-answer { margin-top: 22px; padding-top: 20px; border-top: 2px solid var(--accent); text-align: left; }
-  .fc-answer p { margin: 0; }
-  .fc-test { margin-top: 12px; background: rgba(212,160,23,0.12); border-radius: 6px; padding: 10px 12px; font-size: 0.92rem; }
-  .fc-test strong { color: var(--flag); }
-  .flash-controls { margin-top: 22px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
-  .flash-controls button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .flash-controls button.primary:hover { color: #fff; }
-  .flash-progress { color: var(--muted); font-size: 0.85rem; margin-top: 12px; }
-
-  footer { max-width: 880px; margin: 0 auto; padding: 0 20px 40px; color: var(--muted); font-size: 0.8rem; }
-  footer a { color: var(--accent); }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--fg);line-height:1.5}
+  header{padding:20px 16px 8px;text-align:center}
+  h1{margin:0 0 4px;font-size:1.5rem}
+  .sub{color:var(--muted);font-size:.9rem;margin:0}
+  .wrap{max-width:720px;margin:0 auto;padding:0 16px 60px}
+  .bar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:16px 0}
+  button{font:inherit;cursor:pointer;border:1px solid var(--border);background:var(--card);
+    color:var(--fg);padding:8px 14px;border-radius:8px;transition:.15s}
+  button:hover{border-color:var(--accent)}
+  button.active{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+  .toggles{display:flex;gap:8px;justify-content:center;align-items:center;font-size:.85rem;color:var(--muted)}
+  .toggles label{cursor:pointer;display:flex;align-items:center;gap:5px}
+  /* Browse */
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;
+    padding:14px 16px;margin:10px 0}
+  .qn{font-size:.78rem;color:var(--muted);font-weight:600}
+  .qtext{font-weight:600;margin:2px 0 8px}
+  .ans{margin:0;padding-left:18px}
+  .ans li{margin:2px 0}
+  .star{color:var(--star)}
+  .speak{padding:4px 10px;font-size:.8rem;margin-top:8px}
+  /* Flash */
+  .flash{background:var(--card);border:1px solid var(--border);border-radius:16px;
+    min-height:260px;display:flex;flex-direction:column;justify-content:center;align-items:center;
+    text-align:center;padding:28px 24px;cursor:pointer;position:relative;user-select:none}
+  .flash .qn{position:absolute;top:12px;left:16px}
+  .flash .face{font-size:1.25rem;font-weight:600}
+  .flash .hint{position:absolute;bottom:12px;font-size:.78rem;color:var(--muted)}
+  .flash .alist{text-align:left;margin:0;padding-left:20px;font-weight:500}
+  .flash .alist li{margin:4px 0}
+  .nav{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:14px}
+  .progress{color:var(--muted);font-size:.85rem;text-align:center;flex:1}
+  .hidden{display:none}
+  /* Reference table */
+  .ref{margin-top:32px}
+  .ref h2{font-size:1.1rem;margin:0 0 10px}
+  table{width:100%;border-collapse:collapse;background:var(--card);
+    border:1px solid var(--border);border-radius:12px;overflow:hidden;font-size:.9rem}
+  th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+  th{background:var(--accent);color:var(--accent-fg);font-weight:600}
+  td:first-child{white-space:nowrap;font-weight:600;width:1%}
+  tr:last-child td{border-bottom:none}
 </style>
 </head>
 <body>
 <header>
-  <div class="header-inner">
-    <h1>U.S. Presidents</h1>
-    <div class="controls">
-      <button class="tab active" id="tab-list" onclick="setView('list')">List</button>
-      <button class="tab" id="tab-flash" onclick="setView('flash')">Flashcards</button>
-      <input type="search" id="search" placeholder="Search a name…" aria-label="Search">
-      <label class="toggle"><input type="checkbox" id="testOnly"> Test only ★</label>
-      <button id="theme">Dark</button>
-    </div>
-  </div>
+  <h1>🇺🇸 U.S. Presidents</h1>
+  <p class="sub">Official USCIS 2025 civics questions about the presidency</p>
 </header>
 
-<main>
-  <div id="listView">
-    <p class="intro">All U.S. presidents in order, with a short note on why each matters. Rows with a gold <span class="badge">TEST</span> badge are the ones named in the USCIS 2025 civics test — focus your study there.</p>
-    <p class="count" id="count"></p>
-    <div id="list"></div>
-    <p class="empty" id="empty">No president matches your search.</p>
+<div class="wrap">
+  <div class="bar">
+    <button id="tab-browse" class="active" onclick="setMode('browse')">Browse</button>
+    <button id="tab-flash" onclick="setMode('flash')">Flashcards</button>
+    <button onclick="toggleTheme()">🌓 Theme</button>
+  </div>
+  <div class="toggles">
+    <label><input type="checkbox" id="autoRead" checked> 🔊 Auto read-aloud</label>
   </div>
 
-  <div id="flashView" style="display:none">
-    <p class="intro">Flashcards in fixed order (#1 → #47). Click the card to flip; use Prev / Next to move through them in order.</p>
-    <div class="flash-stage" id="flashStage"></div>
-  </div>
-</main>
+  <!-- BROWSE -->
+  <div id="browse"></div>
 
-<footer>
-  Test facts match the official <a href="https://www.uscis.gov/citizenship/find-study-materials-and-resources" target="_blank">USCIS 2025 (128-question)</a> civics test.
-  The current president (#38 on the test) is time-sensitive — verify at
-  <a href="https://www.uscis.gov/citizenship/testupdates" target="_blank">uscis.gov/citizenship/testupdates</a>.
-</footer>
+  <!-- FLASH -->
+  <div id="flash" class="hidden">
+    <div class="flash" id="flashCard" onclick="flipCard()">
+      <div class="qn" id="flashNum"></div>
+      <div id="flashFace" class="face"></div>
+      <div class="hint" id="flashHint">Tap card to flip</div>
+    </div>
+    <div class="nav">
+      <button onclick="prevCard(event)">‹ Prev</button>
+      <button class="speak" onclick="speakCurrent(event)">🔊 Read</button>
+      <div class="progress" id="flashProgress"></div>
+      <button onclick="shuffleCards(event)">🔀 Shuffle</button>
+      <button onclick="nextCard(event)">Next ›</button>
+    </div>
+  </div>
+
+  <!-- REFERENCE TABLE: presidents named in these questions -->
+  <div class="ref">
+    <h2>Presidents in this questionnaire</h2>
+    <table>
+      <thead><tr><th>President</th><th>Famous for</th></tr></thead>
+      <tbody>
+        <tr><td>George Washington <span class="star">★</span></td><td>1st President; "Father of Our Country"; General of the Continental Army; President of the Constitutional Convention (Q86)</td></tr>
+        <tr><td>Thomas Jefferson</td><td>3rd President; wrote the Declaration of Independence; Louisiana Purchase; first Secretary of State (Q87)</td></tr>
+        <tr><td>James Madison</td><td>4th President; "Father of the Constitution"; President during the War of 1812; writer of the Federalist Papers (Q88)</td></tr>
+        <tr><td>Abraham Lincoln <span class="star">★</span></td><td>16th President; freed the slaves (Emancipation Proclamation); preserved the Union; led during the Civil War; Gettysburg Address (Q94)</td></tr>
+        <tr><td>Franklin Roosevelt</td><td>32nd President; President during the Great Depression and World War II (Q105)</td></tr>
+        <tr><td>Dwight Eisenhower</td><td>34th President; General during World War II; President during the Korean War; created the Interstate Highway System (Q107)</td></tr>
+        <tr><td>Donald J. Trump <span class="star">★</span></td><td>45th and 47th President; current President of the United States (Q38)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
 <script>
-// num, name, years, desc (general importance), test (citizenship-test fact, or null)
-const PRESIDENTS = [
-  {num:1, name:"George Washington", years:"1789–1797", desc:"First president; commanded the Continental Army in the Revolution and led the Constitutional Convention.", test:"Q86: \"Father of Our Country,\" first president, General of the Continental Army, President of the Constitutional Convention."},
-  {num:2, name:"John Adams", years:"1797–1801", desc:"Second president; a leading Founding Father and the first vice president.", test:null},
-  {num:3, name:"Thomas Jefferson", years:"1801–1809", desc:"Third president; principal author of the Declaration of Independence; made the Louisiana Purchase.", test:"Q78 & Q87: Wrote the Declaration of Independence; third president; doubled the country's size (Louisiana Purchase); first Secretary of State."},
-  {num:4, name:"James Madison", years:"1809–1817", desc:"Fourth president; \"Father of the Constitution\" and a writer of the Federalist Papers.", test:"Q88 & Q83: \"Father of the Constitution,\" fourth president, president during the War of 1812, one of the writers of the Federalist Papers."},
-  {num:5, name:"James Monroe", years:"1817–1825", desc:"Issued the Monroe Doctrine, warning Europe against new colonization in the Americas.", test:null},
-  {num:6, name:"John Quincy Adams", years:"1825–1829", desc:"Son of John Adams; later a strong anti-slavery voice in Congress.", test:null},
-  {num:7, name:"Andrew Jackson", years:"1829–1837", desc:"Founder of the modern Democratic Party; signed the Indian Removal Act (Trail of Tears).", test:null},
-  {num:8, name:"Martin Van Buren", years:"1837–1841", desc:"Eighth president; key organizer of the early party system.", test:null},
-  {num:9, name:"William Henry Harrison", years:"1841", desc:"Died after one month in office — the shortest presidency.", test:null},
-  {num:10, name:"John Tyler", years:"1841–1845", desc:"First vice president to become president on the death of a president.", test:null},
-  {num:11, name:"James K. Polk", years:"1845–1849", desc:"Led the U.S. through the Mexican-American War, greatly expanding the country westward.", test:null},
-  {num:12, name:"Zachary Taylor", years:"1849–1850", desc:"War hero who died early in his term.", test:null},
-  {num:13, name:"Millard Fillmore", years:"1850–1853", desc:"Signed the Compromise of 1850 over slavery.", test:null},
-  {num:14, name:"Franklin Pierce", years:"1853–1857", desc:"Signed the Kansas-Nebraska Act, which deepened the slavery conflict.", test:null},
-  {num:15, name:"James Buchanan", years:"1857–1861", desc:"President as the nation slid toward the Civil War.", test:null},
-  {num:16, name:"Abraham Lincoln", years:"1861–1865", desc:"Led the Union through the Civil War; issued the Emancipation Proclamation; assassinated in 1865.", test:"Q94: Freed the slaves (Emancipation Proclamation), saved the Union, led the U.S. during the Civil War, 16th president, delivered the Gettysburg Address."},
-  {num:17, name:"Andrew Johnson", years:"1865–1869", desc:"Became president after Lincoln; first president to be impeached.", test:null},
-  {num:18, name:"Ulysses S. Grant", years:"1869–1877", desc:"Union's top Civil War general; as president, enforced Reconstruction and civil rights.", test:null},
-  {num:19, name:"Rutherford B. Hayes", years:"1877–1881", desc:"His disputed election ended Reconstruction.", test:null},
-  {num:20, name:"James A. Garfield", years:"1881", desc:"Assassinated a few months into his term.", test:null},
-  {num:21, name:"Chester A. Arthur", years:"1881–1885", desc:"Signed civil-service reform (the Pendleton Act).", test:null},
-  {num:22, name:"Grover Cleveland", years:"1885–1889", desc:"Only president to serve two non-consecutive terms (also #24).", test:null},
-  {num:23, name:"Benjamin Harrison", years:"1889–1893", desc:"Signed the Sherman Antitrust Act.", test:null},
-  {num:24, name:"Grover Cleveland", years:"1893–1897", desc:"Second, non-consecutive term during a major economic depression.", test:null},
-  {num:25, name:"William McKinley", years:"1897–1901", desc:"Led the U.S. in the Spanish-American War; assassinated in 1901.", test:null},
-  {num:26, name:"Theodore Roosevelt", years:"1901–1909", desc:"Trust-buster and conservationist; built the Panama Canal.", test:null},
-  {num:27, name:"William Howard Taft", years:"1909–1913", desc:"Only person to serve as both president and Chief Justice.", test:null},
-  {num:28, name:"Woodrow Wilson", years:"1913–1921", desc:"President during World War I; pushed for the League of Nations.", test:null},
-  {num:29, name:"Warren G. Harding", years:"1921–1923", desc:"Term marked by the Teapot Dome scandal.", test:null},
-  {num:30, name:"Calvin Coolidge", years:"1923–1929", desc:"Presided over the economic boom of the 1920s.", test:null},
-  {num:31, name:"Herbert Hoover", years:"1929–1933", desc:"President when the Great Depression began (1929 crash).", test:null},
-  {num:32, name:"Franklin D. Roosevelt", years:"1933–1945", desc:"Led the U.S. through the Great Depression and most of World War II; created the New Deal; only president elected four times.", test:"Q105: President during the Great Depression and World War II."},
-  {num:33, name:"Harry S. Truman", years:"1945–1953", desc:"Ended WWII (atomic bombs); started the Cold War policy of containment and the Korean War.", test:null},
-  {num:34, name:"Dwight D. Eisenhower", years:"1953–1961", desc:"WWII supreme commander; built the Interstate Highway System; ended the Korean War.", test:"Q107: General during WWII, president at the end of the Korean War, 34th president, signed the Federal-Aid Highway Act of 1956 (created the Interstate System)."},
-  {num:35, name:"John F. Kennedy", years:"1961–1963", desc:"Handled the Cuban Missile Crisis; began the space program; assassinated in 1963.", test:null},
-  {num:36, name:"Lyndon B. Johnson", years:"1963–1969", desc:"Signed the Civil Rights Act and Voting Rights Act; escalated the Vietnam War.", test:null},
-  {num:37, name:"Richard Nixon", years:"1969–1974", desc:"Opened relations with China; only president to resign (Watergate).", test:null},
-  {num:38, name:"Gerald Ford", years:"1974–1977", desc:"Only president never elected as president or vice president; pardoned Nixon.", test:null},
-  {num:39, name:"Jimmy Carter", years:"1977–1981", desc:"Brokered the Camp David Accords; later a noted humanitarian.", test:null},
-  {num:40, name:"Ronald Reagan", years:"1981–1989", desc:"Cut taxes; his arms buildup is credited with helping end the Cold War.", test:null},
-  {num:41, name:"George H. W. Bush", years:"1989–1993", desc:"Led the Persian Gulf War; in office as the Cold War ended.", test:null},
-  {num:42, name:"Bill Clinton", years:"1993–2001", desc:"Presided over a strong economy; impeached but acquitted.", test:null},
-  {num:43, name:"George W. Bush", years:"2001–2009", desc:"President during 9/11; launched the wars in Afghanistan and Iraq.", test:null},
-  {num:44, name:"Barack Obama", years:"2009–2017", desc:"First African American president; passed the Affordable Care Act.", test:null},
-  {num:45, name:"Donald J. Trump", years:"2017–2021", desc:"45th president; businessman; first of two non-consecutive terms.", test:null},
-  {num:46, name:"Joe Biden", years:"2021–2025", desc:"46th president; previously vice president under Obama.", test:null},
-  {num:47, name:"Donald J. Trump", years:"2025–present", desc:"47th president, serving a second, non-consecutive term — the current president.", test:"Q38: The current president of the United States (time-sensitive — verify on uscis.gov)."},
+// Official USCIS 2025 (128-question) civics test — presidency questions only.
+// star:true marks 65/20 list questions; varies:true marks time-sensitive answers.
+const QUESTIONS = [
+  {n:17, q:"The President of the United States is in charge of which branch of government?", a:["Executive branch"]},
+  {n:36, q:"The President of the United States is elected for how many years?", a:["Four (4) years"], star:true},
+  {n:37, q:"The President of the United States can serve only two terms. Why?", a:["(Because of) the 22nd Amendment","To keep the president from becoming too powerful"]},
+  {n:38, q:"What is the name of the President of the United States now?", a:["Donald J. Trump"], varies:true, star:true},
+  {n:39, q:"What is the name of the Vice President of the United States now?", a:["JD Vance"], varies:true, star:true},
+  {n:40, q:"If the president can no longer serve, who becomes president?", a:["The Vice President (of the United States)"]},
+  {n:41, q:"Name one power of the president.", a:["Signs bills into law","Vetoes bills","Enforces laws","Commander in Chief (of the military)","Chief diplomat","Appoints federal judges"]},
+  {n:42, q:"Who is Commander in Chief of the U.S. military?", a:["The President (of the United States)"]},
+  {n:43, q:"Who signs bills to become laws?", a:["The President (of the United States)"]},
+  {n:44, q:"Who vetoes bills?", a:["The President (of the United States)"], star:true},
+  {n:45, q:"Who appoints federal judges?", a:["The President (of the United States)"]},
+  {n:46, q:"The executive branch has many parts. Name one.", a:["President (of the United States)","Cabinet","Federal departments and agencies"]},
+  {n:47, q:"What does the President's Cabinet do?", a:["Advises the President (of the United States)"]},
+  {n:49, q:"Why is the Electoral College important?", a:["It decides who is elected president.","It provides a compromise between the popular election of the president and congressional selection."]},
+  {n:86, q:"George Washington is famous for many things. Name one.", a:["\"Father of Our Country\"","First president of the United States","General of the Continental Army","President of the Constitutional Convention"], star:true},
+  {n:87, q:"Thomas Jefferson is famous for many things. Name one.", a:["Writer of the Declaration of Independence","Third president of the United States","Doubled the size of the United States (Louisiana Purchase)","First Secretary of State","Founded the University of Virginia","Writer of the Virginia Statute on Religious Freedom"]},
+  {n:88, q:"James Madison is famous for many things. Name one.", a:["\"Father of the Constitution\"","Fourth president of the United States","President during the War of 1812","One of the writers of the Federalist Papers"]},
+  {n:94, q:"Abraham Lincoln is famous for many things. Name one.", a:["Freed the slaves (Emancipation Proclamation)","Saved (or preserved) the Union","Led the United States during the Civil War","16th president of the United States","Delivered the Gettysburg Address"], star:true},
+  {n:105, q:"Who was president during the Great Depression and World War II?", a:["(Franklin) Roosevelt"]},
+  {n:107, q:"Dwight Eisenhower is famous for many things. Name one.", a:["General during World War II","President at the end of (during) the Korean War","34th president of the United States","Signed the Federal-Aid Highway Act of 1956 (Created the Interstate System)"]},
 ];
 
-var root = document.documentElement, btn = document.getElementById('theme');
-var saved = localStorage.getItem('pres-theme');
-if (saved) root.setAttribute('data-theme', saved);
-function syncBtn() { btn.textContent = root.getAttribute('data-theme') === 'dark' ? 'Light' : 'Dark'; }
-syncBtn();
-btn.addEventListener('click', function () {
-  var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  root.setAttribute('data-theme', next);
-  localStorage.setItem('pres-theme', next);
-  syncBtn();
-});
+/* ---------- helpers ---------- */
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function autoReadOn(){return document.getElementById('autoRead').checked;}
 
-var listEl = document.getElementById('list');
-var countEl = document.getElementById('count');
-var emptyEl = document.getElementById('empty');
-var search = document.getElementById('search');
-var testOnly = document.getElementById('testOnly');
-
-function esc(s) {
-  return String(s).replace(/[&<>"']/g, function (c) {
-    return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
-  });
+/* ---------- read-aloud (Web Speech API) ---------- */
+function speak(text){
+  if(!('speechSynthesis' in window))return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.rate=0.95; u.lang='en-US';
+  window.speechSynthesis.speak(u);
 }
 
-function render() {
-  var q = search.value.trim().toLowerCase();
-  var onlyTest = testOnly.checked;
-  var shown = 0, testCount = 0;
-  var html = '';
-  PRESIDENTS.forEach(function (p) {
-    if (onlyTest && !p.test) return;
-    if (q && p.name.toLowerCase().indexOf(q) === -1) return;
-    shown++;
-    if (p.test) testCount++;
-    html += '<div class="pres' + (p.test ? ' test' : '') + '">' +
-      '<div class="pres-head">' +
-        '<span class="num">' + p.num + '</span>' +
-        '<span class="name">' + esc(p.name) + '</span>' +
-        '<span class="years">' + esc(p.years) + '</span>' +
-        (p.test ? ' <span class="badge">TEST</span>' : '') +
-      '</div>' +
-      '<p>' + esc(p.desc) + '</p>' +
-      (p.test ? '<div class="test-note"><strong>On the test —</strong> ' + esc(p.test) + '</div>' : '') +
-    '</div>';
-  });
-  listEl.innerHTML = html;
-  emptyEl.style.display = shown === 0 ? 'block' : 'none';
-  countEl.textContent = 'Showing ' + shown + ' of ' + PRESIDENTS.length + ' presidencies · ' + testCount + ' on the citizenship test.';
+/* ---------- theme ---------- */
+function toggleTheme(){
+  const cur=document.documentElement.getAttribute('data-theme');
+  const next=cur==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',next);
+  try{localStorage.setItem('pres_theme',next);}catch(e){}
 }
 
-search.addEventListener('input', render);
-testOnly.addEventListener('change', render);
-
-// ===== Tabs / views =====
-var view = 'list';
-var flashIndex = 0;     // fixed order: always indexes PRESIDENTS in order
-var flashFlipped = false;
-
-function setView(v) {
-  view = v;
-  document.getElementById('tab-list').classList.toggle('active', v === 'list');
-  document.getElementById('tab-flash').classList.toggle('active', v === 'flash');
-  document.getElementById('listView').style.display = v === 'list' ? 'block' : 'none';
-  document.getElementById('flashView').style.display = v === 'flash' ? 'block' : 'none';
-  if (v === 'flash') renderFlash();
+/* ---------- modes ---------- */
+let mode='browse';
+function setMode(m){
+  mode=m;
+  document.getElementById('browse').classList.toggle('hidden',m!=='browse');
+  document.getElementById('flash').classList.toggle('hidden',m!=='flash');
+  document.getElementById('tab-browse').classList.toggle('active',m==='browse');
+  document.getElementById('tab-flash').classList.toggle('active',m==='flash');
+  if(m==='flash')renderFlash();
+  window.speechSynthesis && window.speechSynthesis.cancel();
 }
 
-function renderFlash() {
-  var p = PRESIDENTS[flashIndex];
-  var stage = document.getElementById('flashStage');
-  var answer = flashFlipped
-    ? '<div class="fc-answer"><p>' + esc(p.desc) + '</p>' +
-        (p.test ? '<div class="fc-test"><strong>On the test —</strong> ' + esc(p.test) + '</div>' : '') +
-      '</div>'
-    : '<div class="fc-hint">(click card to reveal)</div>';
-  stage.innerHTML =
-    '<div class="flashcard' + (p.test ? ' test' : '') + '" onclick="flashFlip()">' +
-      '<div class="fc-num">President #' + p.num + (p.test ? ' &nbsp;★ TEST' : '') + '</div>' +
-      '<h2 class="fc-name">' + esc(p.name) + '</h2>' +
-      '<div class="fc-years">' + esc(p.years) + '</div>' +
-      answer +
-    '</div>' +
-    '<div class="flash-controls">' +
-      '<button onclick="flashPrev()">← Prev</button>' +
-      '<button class="primary" onclick="flashFlip()">' + (flashFlipped ? 'Hide' : 'Reveal') + '</button>' +
-      '<button onclick="flashNext()">Next →</button>' +
-    '</div>' +
-    '<div class="flash-progress">' + (flashIndex + 1) + ' / ' + PRESIDENTS.length + '</div>';
+/* ---------- browse ---------- */
+function renderBrowse(){
+  const el=document.getElementById('browse');
+  el.innerHTML=QUESTIONS.map(q=>{
+    const star=q.star?' <span class="star" title="65/20 list">★</span>':'';
+    const varies=q.varies?' <span class="qn" title="Subject to change">(may change)</span>':'';
+    const lis=q.a.map(a=>`<li>${escapeHtml(a)}</li>`).join('');
+    return `<div class="card">
+      <div class="qn">Question ${q.n}${star}${varies}</div>
+      <div class="qtext">${escapeHtml(q.q)}</div>
+      <ul class="ans">${lis}</ul>
+      <button class="speak" onclick="speak(${JSON.stringify(q.q+'. '+q.a[0]).replace(/"/g,'&quot;')})">🔊 Read</button>
+    </div>`;
+  }).join('');
 }
 
-function flashFlip() { flashFlipped = !flashFlipped; renderFlash(); }
-function flashPrev() { flashIndex = (flashIndex - 1 + PRESIDENTS.length) % PRESIDENTS.length; flashFlipped = false; renderFlash(); }
-function flashNext() { flashIndex = (flashIndex + 1) % PRESIDENTS.length; flashFlipped = false; renderFlash(); }
+/* ---------- flashcards ---------- */
+let flashOrder=QUESTIONS.map(q=>q.n);
+let flashIndex=0;
+let flipped=false;
+function currentFlashQ(){return QUESTIONS.find(x=>x.n===flashOrder[flashIndex]);}
+function renderFlash(){
+  const q=currentFlashQ();
+  flipped=false;
+  document.getElementById('flashNum').textContent='Question '+q.n+(q.star?' ★':'');
+  document.getElementById('flashFace').innerHTML=escapeHtml(q.q);
+  document.getElementById('flashHint').textContent='Tap card to flip';
+  document.getElementById('flashProgress').textContent=(flashIndex+1)+' / '+flashOrder.length;
+  if(autoReadOn())speak(q.q);
+}
+function flipCard(){
+  const q=currentFlashQ();
+  flipped=!flipped;
+  const face=document.getElementById('flashFace');
+  if(flipped){
+    face.innerHTML='<ul class="alist">'+q.a.map(a=>`<li>${escapeHtml(a)}</li>`).join('')+'</ul>';
+    document.getElementById('flashHint').textContent='Tap to see question';
+    if(autoReadOn())speak(q.a.join('. or, '));
+  }else{
+    face.innerHTML=escapeHtml(q.q);
+    document.getElementById('flashHint').textContent='Tap card to flip';
+    if(autoReadOn())speak(q.q);
+  }
+}
+function nextCard(e){if(e)e.stopPropagation();flashIndex=(flashIndex+1)%flashOrder.length;renderFlash();}
+function prevCard(e){if(e)e.stopPropagation();flashIndex=(flashIndex-1+flashOrder.length)%flashOrder.length;renderFlash();}
+function shuffleCards(e){if(e)e.stopPropagation();flashOrder=shuffle(flashOrder);flashIndex=0;renderFlash();}
+function speakCurrent(e){
+  if(e)e.stopPropagation();
+  const q=currentFlashQ();
+  speak(flipped?q.a.join('. or, '):q.q);
+}
 
-render();
+/* ---------- init ---------- */
+try{const t=localStorage.getItem('pres_theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+renderBrowse();
 </script>
 </body>
 </html>

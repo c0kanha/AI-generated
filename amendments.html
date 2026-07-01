@@ -3,268 +3,221 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Constitutional Amendments — Citizenship Study Guide</title>
+<title>U.S. Amendments — Citizenship Study</title>
 <style>
-  :root {
-    --bg: #f7f7f5;
-    --card: #ffffff;
-    --text: #1c1c1a;
-    --muted: #6b6b66;
-    --accent: #3c3b6e;
-    --flag: #b22234;
-    --border: #e3e3df;
-    --shadow: 0 1px 3px rgba(0,0,0,0.06);
-    --star: #d4a017;
+  :root{
+    --bg:#f5f6f8; --card:#fff; --fg:#1a1f2e; --muted:#5b6478;
+    --accent:#6d28d9; --accent-fg:#fff; --border:#e2e5ec; --star:#d4a017;
   }
-  [data-theme="dark"] {
-    --bg: #16161a;
-    --card: #1f1f25;
-    --text: #ececec;
-    --muted: #9a9aa0;
-    --accent: #8b8acd;
-    --flag: #ef4655;
-    --border: #2e2e36;
-    --shadow: 0 1px 3px rgba(0,0,0,0.4);
-    --star: #f5c542;
+  [data-theme="dark"]{
+    --bg:#10131a; --card:#1a1f2b; --fg:#eef1f6; --muted:#9aa3b5;
+    --accent:#8b5cf6; --accent-fg:#fff; --border:#2a3140; --star:#f1c84b;
   }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-    transition: background 0.2s, color 0.2s;
-  }
-  header {
-    position: sticky; top: 0; z-index: 10;
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-    padding: 16px 20px;
-    box-shadow: var(--shadow);
-  }
-  .header-inner {
-    max-width: 880px; margin: 0 auto;
-    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-  }
-  h1 { font-size: 1.35rem; margin: 0; flex: 1 1 auto; }
-  .controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-  input[type="search"] {
-    padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px;
-    background: var(--bg); color: var(--text); font-size: 0.95rem; width: 190px;
-  }
-  button, label.toggle {
-    padding: 8px 14px; border: 1px solid var(--border); border-radius: 8px;
-    background: var(--bg); color: var(--text); cursor: pointer; font-size: 0.9rem;
-    display: inline-flex; align-items: center; gap: 6px;
-  }
-  button:hover { border-color: var(--accent); color: var(--accent); }
-  .tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .tab.active:hover { color: #fff; }
-  main { max-width: 880px; margin: 0 auto; padding: 24px 20px 80px; }
-  .intro { color: var(--muted); margin: 0 0 24px; font-size: 0.98rem; }
-  .badge {
-    display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em;
-    background: var(--star); color: #1c1c1a; border-radius: 5px; padding: 2px 7px;
-    vertical-align: middle;
-  }
-  .badge.vote { background: var(--accent); color: #fff; }
-  .amd {
-    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
-    padding: 14px 18px; margin-bottom: 12px; box-shadow: var(--shadow);
-    border-left: 4px solid var(--star);
-  }
-  .amd-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-  .num { font-weight: 700; color: var(--flag); font-size: 1.05rem; min-width: 52px; flex-shrink: 0; }
-  .title { font-size: 1.1rem; font-weight: 700; margin: 0; }
-  .year { font-size: 0.82rem; color: var(--accent); font-weight: 600; }
-  .amd p { margin: 8px 0 0; }
-  .amd .test-note { color: var(--text); font-size: 0.92rem; margin-top: 8px;
-    background: rgba(212,160,23,0.12); border-radius: 6px; padding: 8px 10px; }
-  .amd .test-note strong { color: var(--flag); }
-  .count { color: var(--muted); font-size: 0.85rem; }
-  .empty { color: var(--muted); text-align: center; padding: 40px; display: none; }
-
-  /* Flashcards */
-  .flash-stage { display: flex; flex-direction: column; align-items: center; padding: 10px 0; }
-  .flashcard {
-    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
-    padding: 36px 28px; width: 100%; max-width: 620px; min-height: 280px;
-    display: flex; flex-direction: column; justify-content: center;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.08); cursor: pointer; user-select: none;
-  }
-  .fc-num { font-size: 0.85rem; color: var(--flag); font-weight: 700; text-align: center; margin-bottom: 6px; }
-  .fc-title { font-size: 1.5rem; font-weight: 700; margin: 0; text-align: center; }
-  .fc-year { font-size: 0.95rem; color: var(--accent); font-weight: 600; text-align: center; margin-top: 4px; }
-  .fc-hint { color: var(--muted); font-size: 0.85rem; text-align: center; margin-top: 22px; }
-  .fc-answer { margin-top: 20px; padding-top: 18px; border-top: 2px solid var(--accent); }
-  .fc-answer p { margin: 0; }
-  .fc-test { margin-top: 12px; background: rgba(212,160,23,0.12); border-radius: 8px; padding: 10px 12px; font-size: 0.9rem; }
-  .fc-test strong { color: var(--flag); }
-  .flash-controls { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
-  .flash-controls button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .flash-controls button.primary:hover { color: #fff; }
-  .flash-progress { color: var(--muted); font-size: 0.85rem; margin-top: 12px; }
-
-  footer { max-width: 880px; margin: 0 auto; padding: 0 20px 40px; color: var(--muted); font-size: 0.8rem; }
-  footer a { color: var(--accent); }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--fg);line-height:1.5}
+  header{padding:20px 16px 8px;text-align:center}
+  h1{margin:0 0 4px;font-size:1.5rem}
+  .sub{color:var(--muted);font-size:.9rem;margin:0}
+  .wrap{max-width:720px;margin:0 auto;padding:0 16px 60px}
+  .bar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:16px 0}
+  button{font:inherit;cursor:pointer;border:1px solid var(--border);background:var(--card);
+    color:var(--fg);padding:8px 14px;border-radius:8px;transition:.15s}
+  button:hover{border-color:var(--accent)}
+  button.active{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+  .toggles{display:flex;gap:8px;justify-content:center;align-items:center;font-size:.85rem;color:var(--muted)}
+  .toggles label{cursor:pointer;display:flex;align-items:center;gap:5px}
+  /* Browse */
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;
+    padding:14px 16px;margin:10px 0}
+  .qn{font-size:.78rem;color:var(--muted);font-weight:600}
+  .qtext{font-weight:600;margin:2px 0 8px}
+  .ans{margin:0;padding-left:18px}
+  .ans li{margin:2px 0}
+  .star{color:var(--star)}
+  .speak{padding:4px 10px;font-size:.8rem;margin-top:8px}
+  /* Flash */
+  .flash{background:var(--card);border:1px solid var(--border);border-radius:16px;
+    min-height:260px;display:flex;flex-direction:column;justify-content:center;align-items:center;
+    text-align:center;padding:28px 24px;cursor:pointer;position:relative;user-select:none}
+  .flash .qn{position:absolute;top:12px;left:16px}
+  .flash .face{font-size:1.25rem;font-weight:600}
+  .flash .hint{position:absolute;bottom:12px;font-size:.78rem;color:var(--muted)}
+  .flash .alist{text-align:left;margin:0;padding-left:20px;font-weight:500}
+  .flash .alist li{margin:4px 0}
+  .nav{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:14px}
+  .progress{color:var(--muted);font-size:.85rem;text-align:center;flex:1}
+  .hidden{display:none}
+  /* Reference table */
+  .ref{margin-top:32px}
+  .ref h2{font-size:1.1rem;margin:0 0 10px}
+  table{width:100%;border-collapse:collapse;background:var(--card);
+    border:1px solid var(--border);border-radius:12px;overflow:hidden;font-size:.9rem}
+  th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+  th{background:var(--accent);color:var(--accent-fg);font-weight:600}
+  td:first-child{white-space:nowrap;font-weight:600;width:1%}
+  tr:last-child td{border-bottom:none}
 </style>
 </head>
 <body>
 <header>
-  <div class="header-inner">
-    <h1>📜 Amendments on the Citizenship Test</h1>
-    <div class="controls">
-      <button class="tab active" id="tab-list" onclick="setView('list')">List</button>
-      <button class="tab" id="tab-flash" onclick="setView('flash')">Flashcards</button>
-      <input type="search" id="search" placeholder="Search…" aria-label="Search">
-      <button id="theme">Dark</button>
-    </div>
-  </div>
+  <h1>📜 U.S. Constitutional Amendments</h1>
+  <p class="sub">Official USCIS 2025 civics questions about amendments &amp; the Bill of Rights</p>
 </header>
 
-<main>
-  <div id="listView">
-    <p class="intro">Only the constitutional amendments referenced in the <strong>USCIS 2025 civics test</strong>, in order. The Constitution has <strong>27 amendments</strong> total (Q7); the first 10 are the <strong>Bill of Rights</strong> (Q6). A blue <span class="badge vote">VOTING</span> badge marks the four amendments about who can vote (Q63). <span class="count" id="count"></span></p>
-    <div id="list"></div>
-    <p class="empty" id="empty">No amendment matches your search.</p>
+<div class="wrap">
+  <div class="bar">
+    <button id="tab-browse" class="active" onclick="setMode('browse')">Browse</button>
+    <button id="tab-flash" onclick="setMode('flash')">Flashcards</button>
+    <button onclick="toggleTheme()">🌓 Theme</button>
+  </div>
+  <div class="toggles">
+    <label><input type="checkbox" id="autoRead" checked> 🔊 Auto read-aloud</label>
   </div>
 
-  <div id="flashView" style="display:none">
-    <p class="intro">Flashcards in fixed order (1st → 26th). Click the card to flip; use Prev / Next to move through them in order.</p>
-    <div class="flash-stage" id="flashStage"></div>
-  </div>
-</main>
+  <!-- BROWSE -->
+  <div id="browse"></div>
 
-<footer>
-  Facts match the official <a href="https://www.uscis.gov/citizenship/find-study-materials-and-resources" target="_blank">USCIS 2025 (128-question)</a> civics test, using the official answer wording.
-</footer>
+  <!-- FLASH -->
+  <div id="flash" class="hidden">
+    <div class="flash" id="flashCard" onclick="flipCard()">
+      <div class="qn" id="flashNum"></div>
+      <div id="flashFace" class="face"></div>
+      <div class="hint" id="flashHint">Tap card to flip</div>
+    </div>
+    <div class="nav">
+      <button onclick="prevCard(event)">‹ Prev</button>
+      <button class="speak" onclick="speakCurrent(event)">🔊 Read</button>
+      <div class="progress" id="flashProgress"></div>
+      <button onclick="shuffleCards(event)">🔀 Shuffle</button>
+      <button onclick="nextCard(event)">Next ›</button>
+    </div>
+  </div>
+
+  <!-- REFERENCE TABLE: amendments named in these questions -->
+  <div class="ref">
+    <h2>Amendments in this questionnaire</h2>
+    <table>
+      <thead><tr><th>Amendment</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>10th</td><td>Powers not given to the federal government belong to the states or the people (Q60)</td></tr>
+        <tr><td>14th</td><td>Citizenship for all persons born or naturalized in the U.S. (Q97)</td></tr>
+        <tr><td>15th</td><td>Right to vote regardless of race — all men could vote (Q98)</td></tr>
+        <tr><td>16th</td><td>Allows the federal income tax (Q71)</td></tr>
+        <tr><td>19th</td><td>Women's right to vote (Q102)</td></tr>
+        <tr><td>22nd</td><td>President limited to two terms (Q37)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
 <script>
-// label, title, year, desc, test (citizenship Q&A), vote (one of the 4 voting amendments)
-const AMENDMENTS = [
-  {label:"1st", title:"Freedoms of Speech & Religion", year:"1791", vote:false,
-    desc:"Protects freedom of religion, freedom of speech, freedom of the press, freedom of assembly, and the right to petition the government. It is part of the Bill of Rights.",
-    test:"Q65: Three rights of everyone living in the U.S. → freedom of expression, speech, assembly, petition, and religion. Q6: The Bill of Rights protects the basic rights of people in the U.S."},
-  {label:"2nd", title:"Right to Bear Arms", year:"1791", vote:false,
-    desc:"Protects the right to keep and bear arms. It is part of the Bill of Rights.",
-    test:"Q65: One of the rights of everyone living in the United States → the right to bear arms."},
-  {label:"10th", title:"Powers Reserved to the States", year:"1791", vote:false,
-    desc:"States that any powers not given to the federal government belong to the states or to the people. It is part of the Bill of Rights.",
-    test:"Q60: What is the purpose of the 10th Amendment? → Powers not given to the federal government belong to the states or to the people."},
-  {label:"14th", title:"Citizenship & Equal Protection", year:"1868", vote:false,
-    desc:"Says all persons born or naturalized in the United States, and subject to its jurisdiction, are U.S. citizens. It also guarantees equal protection of the laws.",
-    test:"Q97: Which amendment says all persons born or naturalized in the U.S. are citizens? → 14th Amendment. Q68: One way to become a citizen → be born in the U.S. under the conditions of the 14th Amendment."},
-  {label:"15th", title:"Right to Vote — Race", year:"1870", vote:true,
-    desc:"Gave all men the right to vote regardless of race or color. This is when all men (of any race) got the right to vote, during Reconstruction after the Civil War.",
-    test:"Q98: When did all men get the right to vote? → After the Civil War / 15th Amendment / 1870. Q63: A male citizen of any race can vote."},
-  {label:"16th", title:"Federal Income Tax", year:"1913", vote:false,
-    desc:"Gives the federal government the power to collect an income tax. It is why paying federal taxes is required by the Constitution.",
-    test:"Q71: Why is it important to pay federal taxes? → Required by the Constitution (16th Amendment); it funds the federal government; civic duty."},
-  {label:"19th", title:"Women's Right to Vote", year:"1920", vote:true,
-    desc:"Gave women the right to vote. This is when all women got the right to vote, after World War I.",
-    test:"Q102: When did all women get the right to vote? → 1920 / after World War I / 19th Amendment. Q63: Women and men (any citizen) can vote."},
-  {label:"22nd", title:"Two-Term Limit for President", year:"1951", vote:false,
-    desc:"Limits the president to being elected to only two terms. It keeps the president from becoming too powerful.",
-    test:"Q37: The president can serve only two terms. Why? → Because of the 22nd Amendment / to keep the president from becoming too powerful."},
-  {label:"24th", title:"No Poll Tax to Vote", year:"1964", vote:true,
-    desc:"Bans the poll tax — you do not have to pay money in order to vote in federal elections.",
-    test:"Q63: One of the four voting amendments → You don't have to pay (a poll tax) to vote."},
-  {label:"26th", title:"Voting Age Set to 18", year:"1971", vote:true,
-    desc:"Set the national voting age at 18 — citizens eighteen (18) and older can vote.",
-    test:"Q63: One of the four voting amendments → Citizens eighteen (18) and older can vote."},
+// Official USCIS 2025 (128-question) civics test — amendment & Bill of Rights questions only.
+// star:true marks 65/20 list questions.
+const QUESTIONS = [
+  {n:5, q:"How are changes made to the U.S. Constitution?", a:["Amendments","The amendment process"]},
+  {n:6, q:"What does the Bill of Rights protect?", a:["(The basic) rights of Americans","(The basic) rights of people living in the United States"]},
+  {n:7, q:"How many amendments does the U.S. Constitution have?", a:["Twenty-seven (27)"], star:true},
+  {n:37, q:"The President of the United States can serve only two terms. Why?", a:["(Because of) the 22nd Amendment","To keep the president from becoming too powerful"]},
+  {n:60, q:"What is the purpose of the 10th Amendment?", a:["(It states that the) powers not given to the federal government belong to the states or to the people."]},
+  {n:63, q:"There are four amendments to the U.S. Constitution about who can vote. Describe one of them.", a:["Citizens eighteen (18) and older (can vote).","You don't have to pay (a poll tax) to vote.","Any citizen can vote. (Women and men can vote.)","A male citizen of any race (can vote)."]},
+  {n:65, q:"What are three rights of everyone living in the United States?", a:["Freedom of expression","Freedom of speech","Freedom of assembly","Freedom to petition the government","Freedom of religion","The right to bear arms"]},
+  {n:71, q:"Why is it important to pay federal taxes?", a:["Required by law","All people pay to fund the federal government","Required by the (U.S.) Constitution (16th Amendment)","Civic duty"]},
+  {n:97, q:"What amendment says all persons born or naturalized in the United States, and subject to the jurisdiction thereof, are U.S. citizens?", a:["14th Amendment"]},
+  {n:98, q:"When did all men get the right to vote?", a:["After the Civil War","During Reconstruction","(With the) 15th Amendment","1870"]},
+  {n:102, q:"When did all women get the right to vote?", a:["1920","After World War I","(With the) 19th Amendment"]},
 ];
 
-var root = document.documentElement, btn = document.getElementById('theme');
-var saved = localStorage.getItem('amd-theme');
-if (saved) root.setAttribute('data-theme', saved);
-function syncBtn() { btn.textContent = root.getAttribute('data-theme') === 'dark' ? 'Light' : 'Dark'; }
-syncBtn();
-btn.addEventListener('click', function () {
-  var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  root.setAttribute('data-theme', next);
-  localStorage.setItem('amd-theme', next);
-  syncBtn();
-});
+/* ---------- helpers ---------- */
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function autoReadOn(){return document.getElementById('autoRead').checked;}
 
-var listEl = document.getElementById('list');
-var countEl = document.getElementById('count');
-var emptyEl = document.getElementById('empty');
-var search = document.getElementById('search');
-
-function esc(s) {
-  return String(s).replace(/[&<>"']/g, function (c) {
-    return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
-  });
+/* ---------- read-aloud (Web Speech API) ---------- */
+function speak(text){
+  if(!('speechSynthesis' in window))return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.rate=0.95; u.lang='en-US';
+  window.speechSynthesis.speak(u);
 }
 
-function render() {
-  var q = search.value.trim().toLowerCase();
-  var shown = 0;
-  var html = '';
-  AMENDMENTS.forEach(function (a) {
-    if (q && (a.label + ' ' + a.title + ' ' + a.desc + ' ' + a.test).toLowerCase().indexOf(q) === -1) return;
-    shown++;
-    html += '<div class="amd">' +
-      '<div class="amd-head">' +
-        '<span class="num">' + esc(a.label) + '</span>' +
-        '<span class="title">' + esc(a.title) + '</span>' +
-        '<span class="year">ratified ' + esc(a.year) + '</span>' +
-        (a.vote ? ' <span class="badge vote">VOTING</span>' : '') +
-      '</div>' +
-      '<p>' + esc(a.desc) + '</p>' +
-      '<div class="test-note"><strong>On the test —</strong> ' + esc(a.test) + '</div>' +
-    '</div>';
-  });
-  listEl.innerHTML = html;
-  emptyEl.style.display = shown === 0 ? 'block' : 'none';
-  countEl.textContent = shown + ' of ' + AMENDMENTS.length + ' amendments shown.';
+/* ---------- theme ---------- */
+function toggleTheme(){
+  const cur=document.documentElement.getAttribute('data-theme');
+  const next=cur==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',next);
+  try{localStorage.setItem('amend_theme',next);}catch(e){}
 }
 
-// ===== Tabs / views =====
-var view = 'list';
-var flashIndex = 0;       // fixed order: indexes AMENDMENTS in order
-var flashFlipped = false;
-
-function setView(v) {
-  view = v;
-  document.getElementById('tab-list').classList.toggle('active', v === 'list');
-  document.getElementById('tab-flash').classList.toggle('active', v === 'flash');
-  document.getElementById('listView').style.display = v === 'list' ? 'block' : 'none';
-  document.getElementById('flashView').style.display = v === 'flash' ? 'block' : 'none';
-  search.style.display = v === 'list' ? '' : 'none';
-  if (v === 'flash') renderFlash();
+/* ---------- modes ---------- */
+let mode='browse';
+function setMode(m){
+  mode=m;
+  document.getElementById('browse').classList.toggle('hidden',m!=='browse');
+  document.getElementById('flash').classList.toggle('hidden',m!=='flash');
+  document.getElementById('tab-browse').classList.toggle('active',m==='browse');
+  document.getElementById('tab-flash').classList.toggle('active',m==='flash');
+  if(m==='flash')renderFlash();
+  window.speechSynthesis && window.speechSynthesis.cancel();
 }
 
-function renderFlash() {
-  var a = AMENDMENTS[flashIndex];
-  var stage = document.getElementById('flashStage');
-  var answer = flashFlipped
-    ? '<div class="fc-answer"><p>' + esc(a.desc) + '</p>' +
-        '<div class="fc-test"><strong>On the test —</strong> ' + esc(a.test) + '</div>' +
-      '</div>'
-    : '<div class="fc-hint">(click card to reveal)</div>';
-  stage.innerHTML =
-    '<div class="flashcard" onclick="flashFlip()">' +
-      '<div class="fc-num">' + esc(a.label) + ' Amendment' + (a.vote ? ' &nbsp;• voting' : '') + '</div>' +
-      '<h2 class="fc-title">' + esc(a.title) + '</h2>' +
-      '<div class="fc-year">ratified ' + esc(a.year) + '</div>' +
-      answer +
-    '</div>' +
-    '<div class="flash-controls">' +
-      '<button onclick="flashPrev()">← Prev</button>' +
-      '<button class="primary" onclick="flashFlip()">' + (flashFlipped ? 'Hide' : 'Reveal') + '</button>' +
-      '<button onclick="flashNext()">Next →</button>' +
-    '</div>' +
-    '<div class="flash-progress">' + (flashIndex + 1) + ' / ' + AMENDMENTS.length + '</div>';
+/* ---------- browse ---------- */
+function renderBrowse(){
+  const el=document.getElementById('browse');
+  el.innerHTML=QUESTIONS.map(q=>{
+    const star=q.star?' <span class="star" title="65/20 list">★</span>':'';
+    const varies=q.varies?' <span class="qn" title="Subject to change">(may change)</span>':'';
+    const lis=q.a.map(a=>`<li>${escapeHtml(a)}</li>`).join('');
+    return `<div class="card">
+      <div class="qn">Question ${q.n}${star}${varies}</div>
+      <div class="qtext">${escapeHtml(q.q)}</div>
+      <ul class="ans">${lis}</ul>
+      <button class="speak" onclick="speak(${JSON.stringify(q.q+'. '+q.a[0]).replace(/"/g,'&quot;')})">🔊 Read</button>
+    </div>`;
+  }).join('');
 }
 
-function flashFlip() { flashFlipped = !flashFlipped; renderFlash(); }
-function flashPrev() { flashIndex = (flashIndex - 1 + AMENDMENTS.length) % AMENDMENTS.length; flashFlipped = false; renderFlash(); }
-function flashNext() { flashIndex = (flashIndex + 1) % AMENDMENTS.length; flashFlipped = false; renderFlash(); }
+/* ---------- flashcards ---------- */
+let flashOrder=QUESTIONS.map(q=>q.n);
+let flashIndex=0;
+let flipped=false;
+function currentFlashQ(){return QUESTIONS.find(x=>x.n===flashOrder[flashIndex]);}
+function renderFlash(){
+  const q=currentFlashQ();
+  flipped=false;
+  document.getElementById('flashNum').textContent='Question '+q.n+(q.star?' ★':'');
+  document.getElementById('flashFace').innerHTML=escapeHtml(q.q);
+  document.getElementById('flashHint').textContent='Tap card to flip';
+  document.getElementById('flashProgress').textContent=(flashIndex+1)+' / '+flashOrder.length;
+  if(autoReadOn())speak(q.q);
+}
+function flipCard(){
+  const q=currentFlashQ();
+  flipped=!flipped;
+  const face=document.getElementById('flashFace');
+  if(flipped){
+    face.innerHTML='<ul class="alist">'+q.a.map(a=>`<li>${escapeHtml(a)}</li>`).join('')+'</ul>';
+    document.getElementById('flashHint').textContent='Tap to see question';
+    if(autoReadOn())speak(q.a.join('. or, '));
+  }else{
+    face.innerHTML=escapeHtml(q.q);
+    document.getElementById('flashHint').textContent='Tap card to flip';
+    if(autoReadOn())speak(q.q);
+  }
+}
+function nextCard(e){if(e)e.stopPropagation();flashIndex=(flashIndex+1)%flashOrder.length;renderFlash();}
+function prevCard(e){if(e)e.stopPropagation();flashIndex=(flashIndex-1+flashOrder.length)%flashOrder.length;renderFlash();}
+function shuffleCards(e){if(e)e.stopPropagation();flashOrder=shuffle(flashOrder);flashIndex=0;renderFlash();}
+function speakCurrent(e){
+  if(e)e.stopPropagation();
+  const q=currentFlashQ();
+  speak(flipped?q.a.join('. or, '):q.q);
+}
 
-search.addEventListener('input', render);
-render();
+/* ---------- init ---------- */
+try{const t=localStorage.getItem('amend_theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+renderBrowse();
 </script>
 </body>
 </html>
