@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Civics Test — 20 Questions</title>
+<style>
+  :root{
+    --bg:#f5f6f8; --card:#fff; --ink:#1a1d21; --muted:#5a6472;
+    --accent:#2563eb; --line:#e2e6ec; --good:#16a34a; --bad:#dc2626;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.5}
+  header{padding:20px 16px 8px;text-align:center}
+  header h1{margin:0;font-size:22px}
+  header p{margin:6px 0 0;color:var(--muted);font-size:14px}
+  main{max-width:760px;margin:0 auto;padding:8px 16px 70px}
+
+  .qz{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:12px 0}
+  .qzq{font-weight:600;margin-bottom:6px;display:flex;align-items:flex-start;gap:10px}
+  .num{background:var(--accent);color:#fff;font-weight:700;font-size:13px;
+    border-radius:8px;padding:3px 9px;flex-shrink:0}
+  .qztext{flex:1}
+  .speak{border:none;background:var(--line);border-radius:8px;cursor:pointer;
+    font-size:15px;padding:4px 9px;flex-shrink:0}
+  .speak:hover{filter:brightness(.95)}
+  .opt{display:block;border:1px solid var(--line);border-radius:10px;padding:10px 12px;
+    margin:7px 0;cursor:pointer;font-size:15px;background:#fafbfc}
+  .opt input{margin-right:9px}
+  .opt.correct{border-color:var(--good);background:#f0fdf4}
+  .opt.wrong{border-color:var(--bad);background:#fef2f2}
+
+  .bar{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg) 40%);
+    padding:12px 0 4px;margin-top:8px}
+  .btn{display:block;width:100%;padding:14px;border:none;border-radius:10px;
+    background:var(--accent);color:#fff;font-size:16px;font-weight:700;cursor:pointer}
+  .btn.alt{background:var(--card);color:var(--accent);border:1px solid var(--accent);margin-top:8px}
+  .score{position:sticky;top:0;z-index:5;text-align:center;font-size:19px;font-weight:700;
+    margin:0 0 8px;padding:14px;background:var(--card);border:1px solid var(--line);
+    border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+  .score small{display:block;font-weight:500;color:var(--muted);font-size:13px;margin-top:4px}
+</style>
+</head>
+<body>
+<header>
+  <h1>U.S. Civics Test</h1>
+  <p>20 random questions · USCIS 2025 (128) · refresh for a new set</p>
+</header>
+<main id="app"></main>
+
+<script>
+const POOL = [
+  {n:1, q:"What is the form of government of the United States?", a:["Republic","Constitution-based federal republic","Representative democracy"]},
+  {n:2, q:"What is the supreme law of the land?", a:["(U.S.) Constitution"]},
+  {n:3, q:"Name one thing the U.S. Constitution does.", a:["Forms the government","Defines powers of government","Defines the parts of government","Protects the rights of the people"]},
+  {n:4, q:"The U.S. Constitution starts with the words \"We the People.\" What does \"We the People\" mean?", a:["Self-government","Popular sovereignty","Consent of the governed","People should govern themselves","(Example of) social contract"]},
+  {n:5, q:"How are changes made to the U.S. Constitution?", a:["Amendments","The amendment process"]},
+  {n:6, q:"What does the Bill of Rights protect?", a:["(The basic) rights of Americans","(The basic) rights of people living in the United States"]},
+  {n:7, q:"How many amendments does the U.S. Constitution have?", a:["Twenty-seven (27)"]},
+  {n:8, q:"Why is the Declaration of Independence important?", a:["It says America is free from British control.","It says all people are created equal.","It identifies inherent rights.","It identifies individual freedoms."]},
+  {n:9, q:"What founding document said the American colonies were free from Britain?", a:["Declaration of Independence"]},
+  {n:10, q:"Name two important ideas from the Declaration of Independence and the U.S. Constitution.", a:["Equality","Liberty","Social contract","Natural rights","Limited government","Self-government"]},
+  {n:11, q:"The words \"Life, Liberty, and the pursuit of Happiness\" are in what founding document?", a:["Declaration of Independence"]},
+  {n:12, q:"What is the economic system of the United States?", a:["Capitalism","Free market economy"]},
+  {n:13, q:"What is the rule of law?", a:["Everyone must follow the law.","Leaders must obey the law.","Government must obey the law.","No one is above the law."]},
+  {n:14, q:"Many documents influenced the U.S. Constitution. Name one.", a:["Declaration of Independence","Articles of Confederation","Federalist Papers","Anti-Federalist Papers","Virginia Declaration of Rights","Fundamental Orders of Connecticut","Mayflower Compact","Iroquois Great Law of Peace"]},
+  {n:15, q:"There are three branches of government. Why?", a:["So one part does not become too powerful","Checks and balances","Separation of powers"]},
+  {n:16, q:"Name the three branches of government.", a:["Legislative, executive, and judicial","Congress, president, and the courts"]},
+  {n:17, q:"The President of the United States is in charge of which branch of government?", a:["Executive branch"]},
+  {n:18, q:"What part of the federal government writes laws?", a:["(U.S.) Congress","(U.S. or national) legislature","Legislative branch"]},
+  {n:19, q:"What are the two parts of the U.S. Congress?", a:["Senate and House (of Representatives)"]},
+  {n:20, q:"Name one power of the U.S. Congress.", a:["Writes laws","Declares war","Makes the federal budget"]},
+  {n:21, q:"How many U.S. senators are there?", a:["One hundred (100)"]},
+  {n:22, q:"How long is a term for a U.S. senator?", a:["Six (6) years"]},
+  {n:23, q:"Who is one of your state's U.S. senators now?", a:["Cory Booker (New Jersey)","Andy Kim (New Jersey) — either one is acceptable"]},
+  {n:24, q:"How many voting members are in the House of Representatives?", a:["Four hundred thirty-five (435)"]},
+  {n:25, q:"How long is a term for a member of the House of Representatives?", a:["Two (2) years"]},
+  {n:26, q:"Why do U.S. representatives serve shorter terms than U.S. senators?", a:["To more closely follow public opinion"]},
+  {n:27, q:"How many senators does each state have?", a:["Two (2)"]},
+  {n:28, q:"Why does each state have two senators?", a:["Equal representation (for small states)","The Great Compromise (Connecticut Compromise)"]},
+  {n:29, q:"Name your U.S. representative.", a:["Bonnie Watson Coleman (NJ-12 — Franklin Park, Somerset County)"]},
+  {n:30, q:"What is the name of the Speaker of the House of Representatives now?", a:["Mike Johnson"]},
+  {n:31, q:"Who does a U.S. senator represent?", a:["Citizens of their state","People of their state"]},
+  {n:32, q:"Who elects U.S. senators?", a:["Citizens from their state"]},
+  {n:33, q:"Who does a member of the House of Representatives represent?", a:["Citizens in their (congressional) district","Citizens in their district","People from their (congressional) district","People in their district"]},
+  {n:34, q:"Who elects members of the House of Representatives?", a:["Citizens from their (congressional) district"]},
+  {n:35, q:"Some states have more representatives than other states. Why?", a:["(Because of) the state's population","(Because) they have more people","(Because) some states have more people"]},
+  {n:36, q:"The President of the United States is elected for how many years?", a:["Four (4) years"]},
+  {n:37, q:"The President of the United States can serve only two terms. Why?", a:["(Because of) the 22nd Amendment","To keep the president from becoming too powerful"]},
+  {n:38, q:"What is the name of the President of the United States now?", a:["Donald J. Trump"]},
+  {n:39, q:"What is the name of the Vice President of the United States now?", a:["JD Vance"]},
+  {n:40, q:"If the president can no longer serve, who becomes president?", a:["The Vice President (of the United States)"]},
+  {n:41, q:"Name one power of the president.", a:["Signs bills into law","Vetoes bills","Enforces laws","Commander in Chief (of the military)","Chief diplomat","Appoints federal judges"]},
+  {n:42, q:"Who is Commander in Chief of the U.S. military?", a:["The President (of the United States)"]},
+  {n:43, q:"Who signs bills to become laws?", a:["The President (of the United States)"]},
+  {n:44, q:"Who vetoes bills?", a:["The President (of the United States)"]},
+  {n:45, q:"Who appoints federal judges?", a:["The President (of the United States)"]},
+  {n:46, q:"The executive branch has many parts. Name one.", a:["President (of the United States)","Cabinet","Federal departments and agencies"]},
+  {n:47, q:"What does the President's Cabinet do?", a:["Advises the President (of the United States)"]},
+  {n:48, q:"What are two Cabinet-level positions?", a:["Attorney General","Secretary of Agriculture","Secretary of Commerce","Secretary of Education","Secretary of Energy","Secretary of Health and Human Services","Secretary of Homeland Security","Secretary of Housing and Urban Development","Secretary of the Interior","Secretary of Labor","Secretary of State","Secretary of Transportation","Secretary of the Treasury","Secretary of Veterans Affairs","Secretary of War (Defense)","Vice-President","Administrator of the Environmental Protection Agency","Administrator of the Small Business Administration","Director of the Central Intelligence Agency","Director of the Office of Management and Budget","Director of National Intelligence","United States Trade Representative"]},
+  {n:49, q:"Why is the Electoral College important?", a:["It decides who is elected president.","It provides a compromise between the popular election of the president and congressional selection."]},
+  {n:50, q:"What is one part of the judicial branch?", a:["Supreme Court","Federal Courts"]},
+  {n:51, q:"What does the judicial branch do?", a:["Reviews laws","Explains laws","Resolves disputes (disagreements) about the law","Decides if a law goes against the (U.S.) Constitution"]},
+  {n:52, q:"What is the highest court in the United States?", a:["Supreme Court"]},
+  {n:53, q:"How many seats are on the Supreme Court?", a:["Nine (9)"]},
+  {n:54, q:"How many Supreme Court justices are usually needed to decide a case?", a:["Five (5)"]},
+  {n:55, q:"How long do Supreme Court justices serve?", a:["(For) life","Lifetime appointment","(Until) retirement"]},
+  {n:56, q:"Supreme Court justices serve for life. Why?", a:["To be independent (of politics)","To limit outside (political) influence"]},
+  {n:57, q:"Who is the Chief Justice of the United States now?", a:["John G. Roberts, Jr."]},
+  {n:58, q:"Name one power that is only for the federal government.", a:["Print paper money","Mint coins","Declare war","Create an army","Make treaties","Set foreign policy"]},
+  {n:59, q:"Name one power that is only for the states.", a:["Provide schooling and education","Provide protection (police)","Provide safety (fire departments)","Give a driver's license","Approve zoning and land use"]},
+  {n:60, q:"What is the purpose of the 10th Amendment?", a:["(It states that the) powers not given to the federal government belong to the states or to the people."]},
+  {n:61, q:"Who is the governor of your state now?", a:["Mikie Sherrill (Governor of New Jersey)"]},
+  {n:62, q:"What is the capital of your state?", a:["Trenton"]},
+  {n:63, q:"There are four amendments to the U.S. Constitution about who can vote. Describe one of them.", a:["Citizens eighteen (18) and older (can vote).","You don't have to pay (a poll tax) to vote.","Any citizen can vote. (Women and men can vote.)","A male citizen of any race (can vote)."]},
+  {n:64, q:"Who can vote in federal elections, run for federal office, and serve on a jury in the United States?", a:["Citizens","Citizens of the United States","U.S. citizens"]},
+  {n:65, q:"What are three rights of everyone living in the United States?", a:["Freedom of expression","Freedom of speech","Freedom of assembly","Freedom to petition the government","Freedom of religion","The right to bear arms"]},
+  {n:66, q:"What do we show loyalty to when we say the Pledge of Allegiance?", a:["The United States","The flag"]},
+  {n:67, q:"Name two promises that new citizens make in the Oath of Allegiance.", a:["Give up loyalty to other countries","Defend the (U.S.) Constitution","Obey the laws of the United States","Serve in the military (if needed)","Serve (help, do important work for) the nation (if needed)","Be loyal to the United States"]},
+  {n:68, q:"How can people become United States citizens?", a:["Be born in the United States, under the conditions set by the 14th Amendment","Naturalize","Derive citizenship (under conditions set by Congress)"]},
+  {n:69, q:"What are two examples of civic participation in the United States?", a:["Vote","Run for office","Join a political party","Help with a campaign","Join a civic group","Join a community group","Give an elected official your opinion (on an issue)","Contact elected officials","Support or oppose an issue or policy","Write to a newspaper"]},
+  {n:70, q:"What is one way Americans can serve their country?", a:["Vote","Pay taxes","Obey the law","Serve in the military","Run for office","Work for local, state, or federal government"]},
+  {n:71, q:"Why is it important to pay federal taxes?", a:["Required by law","All people pay to fund the federal government","Required by the (U.S.) Constitution (16th Amendment)","Civic duty"]},
+  {n:72, q:"It is important for all men age 18 through 25 to register for the Selective Service. Name one reason why.", a:["Required by law","Civic duty","Makes the draft fair, if needed"]},
+  {n:73, q:"The colonists came to America for many reasons. Name one.", a:["Freedom","Political liberty","Religious freedom","Economic opportunity","Escape persecution"]},
+  {n:74, q:"Who lived in America before the Europeans arrived?", a:["American Indians","Native Americans"]},
+  {n:75, q:"What group of people was taken and sold as slaves?", a:["Africans","People from Africa"]},
+  {n:76, q:"What war did the Americans fight to win independence from Britain?", a:["American Revolution","The (American) Revolutionary War","War for (American) Independence"]},
+  {n:77, q:"Name one reason why the Americans declared independence from Britain.", a:["High taxes","Taxation without representation","British soldiers stayed in Americans' houses (boarding, quartering)","They did not have self-government","Boston Massacre","Boston Tea Party (Tea Act)","Stamp Act","Sugar Act","Townshend Acts","Intolerable (Coercive) Acts"]},
+  {n:78, q:"Who wrote the Declaration of Independence?", a:["(Thomas) Jefferson"]},
+  {n:79, q:"When was the Declaration of Independence adopted?", a:["July 4, 1776"]},
+  {n:80, q:"The American Revolution had many important events. Name one.", a:["(Battle of) Bunker Hill","Declaration of Independence","Washington Crossing the Delaware (Battle of Trenton)","(Battle of) Saratoga","Valley Forge (Encampment)","(Battle of) Yorktown (British surrender at Yorktown)"]},
+  {n:81, q:"There were 13 original states. Name five.", a:["New Hampshire","Massachusetts","Rhode Island","Connecticut","New York","New Jersey","Pennsylvania","Delaware","Maryland","Virginia","North Carolina","South Carolina","Georgia"]},
+  {n:82, q:"What founding document was written in 1787?", a:["(U.S.) Constitution"]},
+  {n:83, q:"The Federalist Papers supported the passage of the U.S. Constitution. Name one of the writers.", a:["(James) Madison","(Alexander) Hamilton","(John) Jay","Publius"]},
+  {n:84, q:"Why were the Federalist Papers important?", a:["They helped people understand the (U.S.) Constitution.","They supported passing the (U.S.) Constitution."]},
+  {n:85, q:"Benjamin Franklin is famous for many things. Name one.", a:["Founded the first free public libraries","First Postmaster General of the United States","Helped write the Declaration of Independence","Inventor","U.S. diplomat"]},
+  {n:86, q:"George Washington is famous for many things. Name one.", a:["\"Father of Our Country\"","First president of the United States","General of the Continental Army","President of the Constitutional Convention"]},
+  {n:87, q:"Thomas Jefferson is famous for many things. Name one.", a:["Writer of the Declaration of Independence","Third president of the United States","Doubled the size of the United States (Louisiana Purchase)","First Secretary of State","Founded the University of Virginia","Writer of the Virginia Statute on Religious Freedom"]},
+  {n:88, q:"James Madison is famous for many things. Name one.", a:["\"Father of the Constitution\"","Fourth president of the United States","President during the War of 1812","One of the writers of the Federalist Papers"]},
+  {n:89, q:"Alexander Hamilton is famous for many things. Name one.", a:["First Secretary of the Treasury","One of the writers of the Federalist Papers","Helped establish the First Bank of the United States","Aide to General George Washington","Member of the Continental Congress"]},
+  {n:90, q:"What territory did the United States buy from France in 1803?", a:["Louisiana Territory","Louisiana"]},
+  {n:91, q:"Name one war fought by the United States in the 1800s.", a:["War of 1812","Mexican-American War","Civil War","Spanish-American War"]},
+  {n:92, q:"Name the U.S. war between the North and the South.", a:["The Civil War"]},
+  {n:93, q:"The Civil War had many important events. Name one.", a:["(Battle of) Fort Sumter","Emancipation Proclamation","(Battle of) Vicksburg","(Battle of) Gettysburg","Sherman's March","(Surrender at) Appomattox","(Battle of) Antietam/Sharpsburg","Lincoln was assassinated."]},
+  {n:94, q:"Abraham Lincoln is famous for many things. Name one.", a:["Freed the slaves (Emancipation Proclamation)","Saved (or preserved) the Union","Led the United States during the Civil War","16th president of the United States","Delivered the Gettysburg Address"]},
+  {n:95, q:"What did the Emancipation Proclamation do?", a:["Freed the slaves","Freed slaves in the Confederacy","Freed slaves in the Confederate states","Freed slaves in most Southern states"]},
+  {n:96, q:"What U.S. war ended slavery?", a:["The Civil War"]},
+  {n:97, q:"What amendment says all persons born or naturalized in the United States, and subject to the jurisdiction thereof, are U.S. citizens?", a:["14th Amendment"]},
+  {n:98, q:"When did all men get the right to vote?", a:["After the Civil War","During Reconstruction","(With the) 15th Amendment","1870"]},
+  {n:99, q:"Name one leader of the women's rights movement in the 1800s.", a:["Susan B. Anthony","Elizabeth Cady Stanton","Sojourner Truth","Harriet Tubman","Lucretia Mott","Lucy Stone"]},
+  {n:100, q:"Name one war fought by the United States in the 1900s.", a:["World War I","World War II","Korean War","Vietnam War","(Persian) Gulf War"]},
+  {n:101, q:"Why did the United States enter World War I?", a:["Because Germany attacked U.S. (civilian) ships","To support the Allied Powers (England, France, Italy, and Russia)","To oppose the Central Powers (Germany, Austria-Hungary, the Ottoman Empire, and Bulgaria)"]},
+  {n:102, q:"When did all women get the right to vote?", a:["1920","After World War I","(With the) 19th Amendment"]},
+  {n:103, q:"What was the Great Depression?", a:["Longest economic recession in modern history"]},
+  {n:104, q:"When did the Great Depression start?", a:["The Great Crash (1929)","Stock market crash of 1929"]},
+  {n:105, q:"Who was president during the Great Depression and World War II?", a:["(Franklin) Roosevelt"]},
+  {n:106, q:"Why did the United States enter World War II?", a:["(Bombing of) Pearl Harbor","Japanese attacked Pearl Harbor","To support the Allied Powers (England, France, and Russia)","To oppose the Axis Powers (Germany, Italy, and Japan)"]},
+  {n:107, q:"Dwight Eisenhower is famous for many things. Name one.", a:["General during World War II","President at the end of (during) the Korean War","34th president of the United States","Signed the Federal-Aid Highway Act of 1956 (Created the Interstate System)"]},
+  {n:108, q:"Who was the United States' main rival during the Cold War?", a:["Soviet Union","USSR","Russia"]},
+  {n:109, q:"During the Cold War, what was one main concern of the United States?", a:["Communism","Nuclear war"]},
+  {n:110, q:"Why did the United States enter the Korean War?", a:["To stop the spread of communism"]},
+  {n:111, q:"Why did the United States enter the Vietnam War?", a:["To stop the spread of communism"]},
+  {n:112, q:"What did the civil rights movement do?", a:["Fought to end racial discrimination"]},
+  {n:113, q:"Martin Luther King, Jr. is famous for many things. Name one.", a:["Fought for civil rights","Worked for equality for all Americans","Worked to ensure that people would \"not be judged by the color of their skin, but by the content of their character\""]},
+  {n:114, q:"Why did the United States enter the Persian Gulf War?", a:["To force the Iraqi military from Kuwait"]},
+  {n:115, q:"What major event happened on September 11, 2001 in the United States?", a:["Terrorists attacked the United States","Terrorists took over two planes and crashed them into the World Trade Center in New York City","Terrorists took over a plane and crashed into the Pentagon in Arlington, Virginia","Terrorists took over a plane originally aimed at Washington, D.C., and crashed in a field in Pennsylvania"]},
+  {n:116, q:"Name one U.S. military conflict after the September 11, 2001 attacks.", a:["(Global) War on Terror","War in Afghanistan","War in Iraq"]},
+  {n:117, q:"Name one American Indian tribe in the United States.", a:["Apache","Blackfeet","Cayuga","Cherokee","Cheyenne","Chippewa","Choctaw","Creek","Crow","Hopi","Huron","Inupiat","Lakota","Mohawk","Mohegan","Navajo","Oneida","Onondaga","Pueblo","Seminole","Seneca","Shawnee","Sioux","Teton","Tuscarora"]},
+  {n:118, q:"Name one example of an American innovation.", a:["Light bulb","Automobile (cars, internal combustion engine)","Skyscrapers","Airplane","Assembly line","Landing on the moon","Integrated circuit (IC)"]},
+  {n:119, q:"What is the capital of the United States?", a:["Washington, D.C."]},
+  {n:120, q:"Where is the Statue of Liberty?", a:["New York (Harbor)","Liberty Island (also acceptable: New Jersey, near New York City, on the Hudson River)"]},
+  {n:121, q:"Why does the flag have 13 stripes?", a:["(Because there were) 13 original colonies","(Because the stripes) represent the original colonies"]},
+  {n:122, q:"Why does the flag have 50 stars?", a:["(Because there is) one star for each state","(Because) each star represents a state","(Because there are) 50 states"]},
+  {n:123, q:"What is the name of the national anthem?", a:["The Star-Spangled Banner"]},
+  {n:124, q:"The Nation's first motto was \"E Pluribus Unum.\" What does that mean?", a:["Out of many, one","We all become one"]},
+  {n:125, q:"What is Independence Day?", a:["A holiday to celebrate U.S. independence (from Britain)","The country's birthday"]},
+  {n:126, q:"Name three national U.S. holidays.", a:["New Year's Day","Martin Luther King, Jr. Day","Presidents Day (Washington's Birthday)","Memorial Day","Juneteenth","Independence Day","Labor Day","Columbus Day","Veterans Day","Thanksgiving Day","Christmas Day"]},
+  {n:127, q:"What is Memorial Day?", a:["A holiday to honor soldiers who died in military service"]},
+  {n:128, q:"What is Veterans Day?", a:["A holiday to honor people in the (U.S.) military","A holiday to honor people who have served (in the U.S. military)"]}
+];
+
+const TEST_SIZE = 20;
+
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function shuffle(arr){arr=arr.slice();for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+
+function speak(text){
+  if(!('speechSynthesis' in window))return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.rate=0.95;u.lang='en-US';
+  window.speechSynthesis.speak(u);
+}
+
+/* ---- Plausible same-type distractors ----
+   Each question maps to a "kind". Wrong choices are drawn only from answers of
+   the same kind, so options stay on-topic and the right answer isn't obvious. */
+function byN(n){return POOL.find(q=>q.n===n);}
+function norm(s){return s.toLowerCase().replace(/[^a-z0-9]/g,'');}
+
+// Kinds whose candidate answers are pooled from other questions of that kind.
+const POOLED = {
+  founders:   [85,86,87,88,89,94,107,113],
+  wars:       [76,91,92,96,100,116],
+  warReasons: [101,106,110,111,114],
+  events:     [80,93,115],
+  flag:       [121,122],
+  holidays:   [125,126,127,128],
+  powers:     [20,41,58,59],
+  documents:  [2,9,11,14,82]
+};
+// Kinds with a curated bank of plausible (mostly wrong) options.
+const BANKS = {
+  people_now:["Donald J. Trump","JD Vance","Mike Johnson","John G. Roberts, Jr.","Cory Booker","Andy Kim","Mikie Sherrill","Chuck Schumer","Hakeem Jeffries"],
+  founderNames:["(Thomas) Jefferson","(James) Madison","(Alexander) Hamilton","(John) Jay","(George) Washington","(Benjamin) Franklin","(John) Adams"],
+  womenLeaders:["Susan B. Anthony","Elizabeth Cady Stanton","Sojourner Truth","Harriet Tubman","Lucretia Mott","Lucy Stone","Clara Barton","Abigail Adams","Dolley Madison"],
+  presidentNames:["(Franklin) Roosevelt","(Theodore) Roosevelt","(Abraham) Lincoln","(Woodrow) Wilson","(Harry) Truman","(Dwight) Eisenhower","(Herbert) Hoover"],
+  terms:["Two (2) years","Four (4) years","Six (6) years","Eight (8) years","One (1) year"],
+  counts:["Twenty-seven (27)","One hundred (100)","Four hundred thirty-five (435)","Two (2)","Nine (9)","Five (5)","Fifty (50)","Thirteen (13)","Three (3)","Six (6)"],
+  dates:["July 4, 1776","1776","1787","1791","1812","1865","1870","1920","1929","1941","After the Civil War","During Reconstruction"],
+  amendments:["14th Amendment","10th Amendment","15th Amendment","19th Amendment","1st Amendment","22nd Amendment","16th Amendment","13th Amendment"],
+  economy:["Capitalism","Free market economy","Socialism","Communism","Command economy","Mixed economy"],
+  actors:["The President (of the United States)","The Vice President (of the United States)","(U.S.) Congress","The Supreme Court","The Senate","The Chief Justice","The Cabinet"],
+  branches:["Executive branch","Legislative branch","Judicial branch","Supreme Court","Federal Courts","(U.S.) Congress"],
+  places:["Washington, D.C.","Trenton","New York (Harbor)","Philadelphia","Boston","New York City","Liberty Island"],
+  innovation:["Light bulb","Automobile (cars, internal combustion engine)","Airplane","Skyscrapers","Assembly line","Landing on the moon","Telephone","Television","Internet"],
+  tribe:["Comanche","Iroquois","Pawnee","Ute","Osage","Nez Perce","Paiute","Modoc"],
+  natives:["American Indians","Native Americans","Europeans","Africans","The English","Spanish settlers"],
+  slaves:["Africans","People from Africa","Native Americans","Europeans","Indentured servants","Asians"],
+  cabinet:["Speaker of the House","Chief Justice of the United States","Governor","Mayor","U.S. Senator","Postmaster General"],
+  rival:["Soviet Union","Russia","China","Cuba","Germany","Japan"],
+  concern:["Communism","Nuclear war","Terrorism","Fascism","Economic collapse"],
+  anthem:["The Star-Spangled Banner","America the Beautiful","God Bless America","My Country, 'Tis of Thee"],
+  motto:["Out of many, one","We all become one","In God We Trust","Liberty and Justice for All","Land of the Free"],
+  territory:["Louisiana Territory","Louisiana","Florida","Texas","Alaska","Oregon Territory","California"],
+  states:["Vermont","Kentucky","Ohio","Maine","Tennessee","Florida","Texas"],
+  rights:["The right to a fair trial","The right to vote","The right to privacy","The right to an attorney","The right to own property","Freedom from unfair taxation"]
+};
+// Questions whose answers are descriptive civics statements (default kind).
+const CONCEPT_QS=[1,3,4,5,8,10,13,15,19,26,28,31,32,33,34,35,37,47,49,51,55,56,60,64,66,67,68,69,70,71,72,73,77,84,95,103,112];
+
+const KIND_MAP={};
+function setKinds(kind,ns){ns.forEach(n=>{KIND_MAP[n]=kind;});}
+Object.keys(POOLED).forEach(k=>setKinds(k,POOLED[k]));
+setKinds('people_now',[23,29,30,38,39,57,61]);
+setKinds('founderNames',[78,83]);
+setKinds('womenLeaders',[99]);
+setKinds('presidentNames',[105]);
+setKinds('terms',[22,25,36]);
+setKinds('counts',[7,21,24,27,53,54]);
+setKinds('dates',[79,98,102,104]);
+setKinds('amendments',[97]);
+setKinds('economy',[12]);
+setKinds('actors',[40,42,43,44,45]);
+setKinds('branches',[16,17,18,46,50,52]);
+setKinds('places',[62,119,120]);
+setKinds('innovation',[118]);
+setKinds('tribe',[117]);
+setKinds('natives',[74]);
+setKinds('slaves',[75]);
+setKinds('cabinet',[48]);
+setKinds('rival',[108]);
+setKinds('concern',[109]);
+setKinds('anthem',[123]);
+setKinds('motto',[124]);
+setKinds('territory',[90]);
+setKinds('states',[81]);
+setKinds('rights',[6,63,65]);
+
+function candidatePool(q){
+  const kind=KIND_MAP[q.n]||'concepts';
+  let arr;
+  if(POOLED[kind]) arr=POOLED[kind].flatMap(n=>byN(n).a);
+  else if(BANKS[kind]) arr=BANKS[kind].slice();
+  else arr=CONCEPT_QS.flatMap(n=>byN(n).a);
+  const own=new Set(q.a.map(norm));
+  return [...new Set(arr)].filter(s=>!own.has(norm(s)));
+}
+function distractorsFor(q){
+  let c=shuffle(candidatePool(q)).slice(0,3);
+  if(c.length<3){ // top up so every question always has 4 options
+    const own=new Set(q.a.map(norm));
+    const used=new Set(c.map(norm));
+    const extra=shuffle(POOL.map(o=>o.a[0]))
+      .filter(s=>!own.has(norm(s)) && !used.has(norm(s)));
+    c=c.concat(extra).slice(0,3);
+  }
+  return c;
+}
+
+let items=[], picks=[], submitted=false;
+
+function build(){
+  const chosen=shuffle(POOL).slice(0,TEST_SIZE);
+  items=chosen.map(item=>{
+    const correct=item.a[0];
+    return {item, correct, opts:shuffle([correct,...distractorsFor(item)])};
+  });
+  picks=items.map(()=>null);
+  submitted=false;
+}
+function pickOpt(i,val){ if(!submitted) picks[i]=val; }
+function submit(){ submitted=true; render(); window.scrollTo(0,0); }
+function again(){ build(); render(); window.scrollTo(0,0); }
+
+function render(){
+  let h='';
+  if(submitted){
+    const score=items.reduce((s,it,i)=>s+(picks[i]===it.correct?1:0),0);
+    const pct=Math.round(score/items.length*100);
+    const pass=pct>=60;
+    h+=`<div class="score" style="color:${pass?'var(--good)':'var(--bad)'}">
+      ${score} / ${items.length} &nbsp;(${pct}%) ${pass?'✓ Pass':'✗ Keep studying'}
+      <small>USCIS passing score is 60% (12 of 20). Correct answers shown in green.</small>
+    </div>`;
+  }
+  items.forEach((it,i)=>{
+    h+=`<div class="qz">
+      <div class="qzq">
+        <span class="num">${it.item.n}</span>
+        <span class="qztext">${i+1}. ${escapeHtml(it.item.q)}</span>
+        <button class="speak" title="Read aloud" onclick='speak(${JSON.stringify(it.item.q)})'>🔊</button>
+      </div>`;
+    it.opts.forEach(o=>{
+      let cls='opt';
+      if(submitted){
+        if(o===it.correct)cls+=' correct';
+        else if(picks[i]===o)cls+=' wrong';
+      }
+      const checked=picks[i]===o?'checked':'';
+      const dis=submitted?'disabled':'';
+      h+=`<label class="${cls}">
+        <input type="radio" name="q${i}" ${checked} ${dis} onchange='pickOpt(${i},${JSON.stringify(o)})'>
+        ${escapeHtml(o)}
+      </label>`;
+    });
+    h+=`</div>`;
+  });
+  h+=`<div class="bar">`;
+  h+= submitted
+    ? `<button class="btn" onclick="again()">New 20 Questions</button>`
+    : `<button class="btn" onclick="submit()">Submit Test</button>
+       <button class="btn alt" onclick="again()">Shuffle New 20</button>`;
+  h+=`</div>`;
+  document.getElementById('app').innerHTML=h;
+}
+
+build();
+render();
+</script>
+</body>
+</html>

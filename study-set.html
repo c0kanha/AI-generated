@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Civics Study Set</title>
+<style>
+  :root{
+    --bg:#f5f6f8; --card:#fff; --ink:#1a1d21; --muted:#5a6472;
+    --accent:#2563eb; --line:#e2e6ec; --good:#16a34a; --bad:#dc2626; --te:#7c3aed;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.5}
+  header{padding:20px 16px 12px;text-align:center}
+  header h1{margin:0;font-size:22px}
+  header p{margin:4px 0 0;color:var(--muted);font-size:14px}
+  .telugu{font-size:14.5px}
+  .te-text{color:var(--te);font-family:"Noto Sans Telugu","Gautami",sans-serif}
+
+  .togglebar{display:flex;justify-content:center;margin:10px 0 0}
+  .toggle{display:inline-flex;align-items:center;gap:8px;cursor:pointer;
+    background:var(--card);border:1px solid var(--line);border-radius:20px;
+    padding:6px 14px;font-size:14px;font-weight:600;color:var(--muted);user-select:none}
+  .toggle.on{background:var(--te);color:#fff;border-color:var(--te)}
+
+  .tabs{display:flex;gap:8px;justify-content:center;margin:16px auto 4px;max-width:760px;padding:0 16px}
+  .tab{flex:1;padding:10px;border:1px solid var(--line);background:var(--card);
+    border-radius:10px;cursor:pointer;font-size:15px;font-weight:600;color:var(--muted)}
+  .tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  main{max-width:760px;margin:0 auto;padding:12px 16px 60px}
+
+  /* Browse */
+  .q{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;margin:12px 0}
+  .qhead{display:flex;align-items:flex-start;gap:10px}
+  .num{background:var(--accent);color:#fff;font-weight:700;font-size:13px;
+    border-radius:8px;padding:3px 9px;flex-shrink:0}
+  .qtext{font-weight:600;flex:1}
+  .speak{border:none;background:var(--line);border-radius:8px;cursor:pointer;
+    font-size:16px;padding:4px 9px;flex-shrink:0}
+  .speak.te{background:#ede9fe}
+  .speak:hover{filter:brightness(.95)}
+  ul.ans{margin:10px 0 0 42px;padding-left:16px;color:var(--ink)}
+  ul.ans li{margin:3px 0}
+
+  /* Flashcards */
+  #flashView{text-align:center}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    min-height:230px;display:flex;flex-direction:column;justify-content:center;
+    align-items:center;padding:28px 22px;margin:16px 0;cursor:pointer;
+    box-shadow:0 2px 10px rgba(0,0,0,.05)}
+  .cardlabel{color:var(--muted);font-size:13px;text-transform:uppercase;
+    letter-spacing:.5px;margin-bottom:10px}
+  .cardtext{font-size:20px;font-weight:600}
+  .cardtext ul{text-align:left;font-size:17px;margin:6px 0 0;padding-left:22px}
+  .cardtext li{margin:4px 0}
+  .hint{color:var(--muted);font-size:13px;margin-top:14px}
+  .controls{display:flex;gap:10px;justify-content:center;align-items:center;margin-top:12px;flex-wrap:wrap}
+  .controls button{padding:10px 16px;border:1px solid var(--line);background:var(--card);
+    border-radius:10px;cursor:pointer;font-size:15px;font-weight:600}
+  .controls button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .progress{color:var(--muted);font-size:14px;min-width:64px}
+
+  /* Quiz */
+  .qz{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:12px 0}
+  .qzq{font-weight:600;margin-bottom:10px}
+  .qzq .num{margin-right:8px}
+  .opt{display:block;border:1px solid var(--line);border-radius:10px;padding:10px 12px;
+    margin:7px 0;cursor:pointer;font-size:15px;background:#fafbfc}
+  .opt input{margin-right:9px}
+  .opt.correct{border-color:var(--good);background:#f0fdf4}
+  .opt.wrong{border-color:var(--bad);background:#fef2f2}
+  .quizbtn{display:block;width:100%;padding:13px;border:none;border-radius:10px;
+    background:var(--accent);color:#fff;font-size:16px;font-weight:700;cursor:pointer;margin-top:8px}
+  .score{text-align:center;font-size:20px;font-weight:700;margin:12px 0;padding:14px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Civics Study Set</h1>
+  <p>13 selected USCIS 2025 civics questions</p>
+  <div class="togglebar">
+    <span class="toggle" id="teToggle" onclick="toggleTelugu()">🌐 Telugu / తెలుగు</span>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" id="tabBrowse" onclick="setMode('browse')">Browse</button>
+  <button class="tab" id="tabFlash" onclick="setMode('flash')">Flashcards</button>
+  <button class="tab" id="tabQuiz" onclick="setMode('quiz')">Quiz</button>
+</div>
+
+<main>
+  <div id="browseView"></div>
+
+  <div id="flashView" style="display:none">
+    <div class="card" id="card" onclick="flip()">
+      <div class="cardlabel" id="cardLabel">Question</div>
+      <div class="cardtext" id="cardText"></div>
+      <div class="hint">Tap card to flip</div>
+    </div>
+    <div class="controls">
+      <button onclick="prevCard()">‹ Prev</button>
+      <button class="primary" onclick="speakCurrent('en')">🔊 EN</button>
+      <button class="primary" onclick="speakCurrent('te')" style="background:var(--te);border-color:var(--te)">🔊 తె</button>
+      <span class="progress" id="progress"></span>
+      <button onclick="nextCard()">Next ›</button>
+    </div>
+  </div>
+
+  <div id="quizView" style="display:none"></div>
+</main>
+
+<script>
+const QUESTIONS = [
+  {n:10, q:"Name two important ideas from the Declaration of Independence and the U.S. Constitution.",
+    qT:"స్వాతంత్ర్య ప్రకటన మరియు U.S. రాజ్యాంగం నుండి రెండు ముఖ్యమైన ఆలోచనలను పేర్కొనండి.",
+    a:["Equality","Liberty","Social contract","Natural rights","Limited government","Self-government"],
+    aT:["సమానత్వం","స్వేచ్ఛ","సామాజిక ఒప్పందం","సహజ హక్కులు","పరిమిత ప్రభుత్వం","స్వయం పాలన"]},
+  {n:12, q:"What is the economic system of the United States?",
+    qT:"యునైటెడ్ స్టేట్స్ యొక్క ఆర్థిక వ్యవస్థ ఏమిటి?",
+    a:["Capitalism","Free market economy"],
+    aT:["పెట్టుబడిదారీ విధానం","స్వేచ్ఛా మార్కెట్ ఆర్థిక వ్యవస్థ"]},
+  {n:13, q:"What is the rule of law?",
+    qT:"చట్ట పాలన అంటే ఏమిటి?",
+    a:["Everyone must follow the law.","Leaders must obey the law.","Government must obey the law.","No one is above the law."],
+    aT:["ప్రతి ఒక్కరూ చట్టాన్ని పాటించాలి.","నాయకులు చట్టాన్ని పాటించాలి.","ప్రభుత్వం చట్టాన్ని పాటించాలి.","ఎవరూ చట్టానికి అతీతులు కాదు."]},
+  {n:14, q:"Many documents influenced the U.S. Constitution. Name one.",
+    qT:"అనేక పత్రాలు U.S. రాజ్యాంగాన్ని ప్రభావితం చేశాయి. ఒకదాన్ని పేర్కొనండి.",
+    a:["Declaration of Independence","Articles of Confederation","Federalist Papers","Anti-Federalist Papers","Virginia Declaration of Rights","Fundamental Orders of Connecticut","Mayflower Compact","Iroquois Great Law of Peace"],
+    aT:["స్వాతంత్ర్య ప్రకటన","సమాఖ్య నిబంధనలు","ఫెడరలిస్ట్ పేపర్స్","యాంటీ-ఫెడరలిస్ట్ పేపర్స్","వర్జీనియా హక్కుల ప్రకటన","కనెక్టికట్ ప్రాథమిక ఉత్తర్వులు","మేఫ్లవర్ ఒప్పందం","ఇరోక్వాయిస్ గ్రేట్ లా ఆఫ్ పీస్"]},
+  {n:18, q:"What part of the federal government writes laws?",
+    qT:"ఫెడరల్ ప్రభుత్వంలో ఏ భాగం చట్టాలను రాస్తుంది?",
+    a:["(U.S.) Congress","(U.S. or national) legislature","Legislative branch"],
+    aT:["(U.S.) కాంగ్రెస్","(U.S. లేదా జాతీయ) శాసనసభ","శాసన శాఖ"]},
+  {n:49, q:"Why is the Electoral College important?",
+    qT:"ఎలక్టోరల్ కాలేజ్ ఎందుకు ముఖ్యమైనది?",
+    a:["It decides who is elected president.","It provides a compromise between the popular election of the president and congressional selection."],
+    aT:["ఇది అధ్యక్షుడిగా ఎవరు ఎన్నికవుతారో నిర్ణయిస్తుంది.","ఇది అధ్యక్షుడి ప్రజా ఎన్నిక మరియు కాంగ్రెస్ ఎంపిక మధ్య ఒక రాజీని అందిస్తుంది."]},
+  {n:67, q:"Name two promises that new citizens make in the Oath of Allegiance.",
+    qT:"విధేయతా ప్రమాణంలో కొత్త పౌరులు చేసే రెండు వాగ్దానాలను పేర్కొనండి.",
+    a:["Give up loyalty to other countries","Defend the (U.S.) Constitution","Obey the laws of the United States","Serve in the military (if needed)","Serve (help, do important work for) the nation (if needed)","Be loyal to the United States"],
+    aT:["ఇతర దేశాల పట్ల విధేయతను వదులుకోవడం","(U.S.) రాజ్యాంగాన్ని రక్షించడం","యునైటెడ్ స్టేట్స్ చట్టాలను పాటించడం","(అవసరమైతే) సైన్యంలో సేవ చేయడం","(అవసరమైతే) దేశానికి సేవ చేయడం","యునైటెడ్ స్టేట్స్ పట్ల విధేయంగా ఉండటం"]},
+  {n:73, q:"The colonists came to America for many reasons. Name one.",
+    qT:"వలసవాదులు అనేక కారణాల వల్ల అమెరికాకు వచ్చారు. ఒకదాన్ని పేర్కొనండి.",
+    a:["Freedom","Political liberty","Religious freedom","Economic opportunity","Escape persecution"],
+    aT:["స్వేచ్ఛ","రాజకీయ స్వాతంత్ర్యం","మత స్వేచ్ఛ","ఆర్థిక అవకాశం","వేధింపుల నుండి తప్పించుకోవడం"]},
+  {n:77, q:"Name one reason why the Americans declared independence from Britain.",
+    qT:"అమెరికన్లు బ్రిటన్ నుండి స్వాతంత్ర్యం ప్రకటించడానికి ఒక కారణాన్ని పేర్కొనండి.",
+    a:["High taxes","Taxation without representation","British soldiers stayed in Americans' houses (boarding, quartering)","They did not have self-government","Boston Massacre","Boston Tea Party (Tea Act)","Stamp Act","Sugar Act","Townshend Acts","Intolerable (Coercive) Acts"],
+    aT:["అధిక పన్నులు","ప్రాతినిధ్యం లేకుండా పన్ను విధించడం","బ్రిటిష్ సైనికులు అమెరికన్ల ఇళ్లలో ఉండటం","వారికి స్వయం పాలన లేదు","బోస్టన్ మారణకాండ","బోస్టన్ టీ పార్టీ (టీ చట్టం)","స్టాంప్ చట్టం","షుగర్ చట్టం","టౌన్‌షెండ్ చట్టాలు","భరించలేని (బలవంతపు) చట్టాలు"]},
+  {n:80, q:"The American Revolution had many important events. Name one.",
+    qT:"అమెరికన్ విప్లవంలో అనేక ముఖ్యమైన సంఘటనలు జరిగాయి. ఒకదాన్ని పేర్కొనండి.",
+    a:["(Battle of) Bunker Hill","Declaration of Independence","Washington Crossing the Delaware (Battle of Trenton)","(Battle of) Saratoga","Valley Forge (Encampment)","(Battle of) Yorktown (British surrender at Yorktown)"],
+    aT:["(బంకర్ హిల్ యుద్ధం)","స్వాతంత్ర్య ప్రకటన","వాషింగ్టన్ డెలావేర్ దాటడం (ట్రెంటన్ యుద్ధం)","(సరటోగా యుద్ధం)","వ్యాలీ ఫోర్జ్ (శిబిరం)","(యార్క్‌టౌన్ యుద్ధం) (యార్క్‌టౌన్ వద్ద బ్రిటిష్ లొంగుబాటు)"]},
+  {n:87, q:"Thomas Jefferson is famous for many things. Name one.",
+    qT:"థామస్ జెఫర్సన్ అనేక విషయాలకు ప్రసిద్ధి చెందారు. ఒకదాన్ని పేర్కొనండి.",
+    a:["Writer of the Declaration of Independence","Third president of the United States","Doubled the size of the United States (Louisiana Purchase)","First Secretary of State","Founded the University of Virginia","Writer of the Virginia Statute on Religious Freedom"],
+    aT:["స్వాతంత్ర్య ప్రకటన రచయిత","యునైటెడ్ స్టేట్స్ మూడవ అధ్యక్షుడు","యునైటెడ్ స్టేట్స్ పరిమాణాన్ని రెట్టింపు చేశారు (లూసియానా కొనుగోలు)","మొదటి విదేశాంగ కార్యదర్శి","వర్జీనియా విశ్వవిద్యాలయాన్ని స్థాపించారు","మత స్వేచ్ఛపై వర్జీనియా శాసనం రచయిత"]},
+  {n:89, q:"Alexander Hamilton is famous for many things. Name one.",
+    qT:"అలెగ్జాండర్ హామిల్టన్ అనేక విషయాలకు ప్రసిద్ధి చెందారు. ఒకదాన్ని పేర్కొనండి.",
+    a:["First Secretary of the Treasury","One of the writers of the Federalist Papers","Helped establish the First Bank of the United States","Aide to General George Washington","Member of the Continental Congress"],
+    aT:["మొదటి ఖజానా కార్యదర్శి","ఫెడరలిస్ట్ పేపర్స్ రచయితలలో ఒకరు","యునైటెడ్ స్టేట్స్ మొదటి బ్యాంకును స్థాపించడంలో సహాయం చేశారు","జనరల్ జార్జ్ వాషింగ్టన్‌కు సహాయకుడు","కాంటినెంటల్ కాంగ్రెస్ సభ్యుడు"]},
+  {n:99, q:"Name one leader of the women's rights movement in the 1800s.",
+    qT:"1800లలో మహిళా హక్కుల ఉద్యమంలో ఒక నాయకురాలిని పేర్కొనండి.",
+    a:["Susan B. Anthony","Elizabeth Cady Stanton","Sojourner Truth","Harriet Tubman","Lucretia Mott","Lucy Stone"],
+    aT:["సుసాన్ B. ఆంథోనీ","ఎలిజబెత్ కేడీ స్టాంటన్","సోజర్నర్ ట్రూత్","హ్యారియట్ టబ్‌మన్","లుక్రేషియా మోట్","లూసీ స్టోన్"]}
+];
+
+let showTe=false;
+
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+/* ---- Read-aloud (Web Speech API) ---- */
+function pickVoice(lang){
+  const vs=window.speechSynthesis.getVoices();
+  return vs.find(v=>v.lang&&v.lang.toLowerCase().startsWith(lang));
+}
+function speak(text,lang){
+  if(!('speechSynthesis' in window))return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.rate=0.95;
+  u.lang = lang==='te' ? 'te-IN' : 'en-US';
+  const v=pickVoice(lang==='te'?'te':'en');
+  if(v)u.voice=v;
+  window.speechSynthesis.speak(u);
+}
+// preload voices
+if('speechSynthesis' in window){window.speechSynthesis.onvoiceschanged=()=>{};window.speechSynthesis.getVoices();}
+
+/* ---- Telugu toggle ---- */
+function toggleTelugu(){
+  showTe=!showTe;
+  document.getElementById('teToggle').classList.toggle('on',showTe);
+  renderBrowse(); renderCard(); if(quizSubmitted!==null) renderQuiz();
+}
+
+/* ---- Browse ---- */
+function renderBrowse(){
+  let h='';
+  for(const item of QUESTIONS){
+    const ans=item.a.map((a,i)=>
+      `<li>${escapeHtml(a)}${showTe?` <span class="te-text">— ${escapeHtml(item.aT[i])}</span>`:''}</li>`).join('');
+    const enRead=`Question ${item.n}. ${item.q}. Answers: ${item.a.join('. ')}`;
+    const teRead=`${item.qT} ${item.aT.join('. ')}`;
+    h+=`<div class="q">
+      <div class="qhead">
+        <span class="num">${item.n}</span>
+        <span class="qtext">${escapeHtml(item.q)}${showTe?`<br><span class="te-text telugu">${escapeHtml(item.qT)}</span>`:''}</span>
+        <button class="speak" title="Read English" onclick='speak(${JSON.stringify(enRead)},"en")'>🔊</button>
+        ${showTe?`<button class="speak te" title="Read Telugu" onclick='speak(${JSON.stringify(teRead)},"te")'>🔊తె</button>`:''}
+      </div>
+      <ul class="ans">${ans}</ul>
+    </div>`;
+  }
+  document.getElementById('browseView').innerHTML=h;
+}
+
+/* ---- Flashcards ---- */
+let idx=0, showingAnswer=false;
+function renderCard(){
+  const item=QUESTIONS[idx];
+  const label=document.getElementById('cardLabel');
+  const text=document.getElementById('cardText');
+  if(showingAnswer){
+    label.textContent='Answer';
+    text.innerHTML='<ul>'+item.a.map((a,i)=>
+      `<li>${escapeHtml(a)}${showTe?`<br><span class="te-text">${escapeHtml(item.aT[i])}</span>`:''}</li>`).join('')+'</ul>';
+  }else{
+    label.textContent='Question '+item.n;
+    text.innerHTML=escapeHtml(item.q)+(showTe?`<br><span class="te-text telugu">${escapeHtml(item.qT)}</span>`:'');
+  }
+  document.getElementById('progress').textContent=(idx+1)+' / '+QUESTIONS.length;
+}
+function flip(){showingAnswer=!showingAnswer;renderCard();}
+function nextCard(){idx=(idx+1)%QUESTIONS.length;showingAnswer=false;renderCard();}
+function prevCard(){idx=(idx-1+QUESTIONS.length)%QUESTIONS.length;showingAnswer=false;renderCard();}
+function speakCurrent(lang){
+  const item=QUESTIONS[idx];
+  if(lang==='te')
+    speak(showingAnswer ? item.aT.join('. ') : item.qT, 'te');
+  else
+    speak(showingAnswer ? 'Answers: '+item.a.join('. ') : `Question ${item.n}. ${item.q}`, 'en');
+}
+
+/* ---- Quiz (multiple choice) ---- */
+let quizItems=[], quizPicks=[], quizSubmitted=null;
+function shuffle(arr){arr=arr.slice();for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+
+function buildQuiz(){
+  quizItems=QUESTIONS.map((item,qi)=>{
+    const correct={t:item.a[0], tT:item.aT[0]};
+    // distractors: first answers from other questions
+    const others=shuffle(QUESTIONS.filter((_,j)=>j!==qi)).slice(0,3)
+      .map(o=>({t:o.a[0], tT:o.aT[0]}));
+    const opts=shuffle([correct,...others]);
+    return {qi, correctText:correct.t, opts};
+  });
+  quizPicks=quizItems.map(()=>null);
+  quizSubmitted=false;
+}
+function pickOpt(i,val){ if(quizSubmitted)return; quizPicks[i]=val; }
+function submitQuiz(){ quizSubmitted=true; renderQuiz(); window.scrollTo(0,0); }
+function resetQuiz(){ buildQuiz(); renderQuiz(); window.scrollTo(0,0); }
+
+function renderQuiz(){
+  if(quizSubmitted===null) buildQuiz();
+  let h='';
+  if(quizSubmitted){
+    const score=quizItems.reduce((s,it,i)=>s+(quizPicks[i]===it.correctText?1:0),0);
+    h+=`<div class="score">Score: ${score} / ${quizItems.length}</div>`;
+  }
+  quizItems.forEach((it,i)=>{
+    const item=QUESTIONS[it.qi];
+    h+=`<div class="qz"><div class="qzq"><span class="num">${item.n}</span>${escapeHtml(item.q)}`;
+    if(showTe)h+=`<br><span class="te-text telugu">${escapeHtml(item.qT)}</span>`;
+    h+=`</div>`;
+    it.opts.forEach(o=>{
+      let cls='opt';
+      if(quizSubmitted){
+        if(o.t===it.correctText)cls+=' correct';
+        else if(quizPicks[i]===o.t)cls+=' wrong';
+      }
+      const checked=quizPicks[i]===o.t?'checked':'';
+      const dis=quizSubmitted?'disabled':'';
+      h+=`<label class="${cls}">
+        <input type="radio" name="q${i}" ${checked} ${dis} onchange='pickOpt(${i},${JSON.stringify(o.t)})'>
+        ${escapeHtml(o.t)}${showTe?` <span class="te-text">— ${escapeHtml(o.tT)}</span>`:''}
+      </label>`;
+    });
+    h+=`</div>`;
+  });
+  h+= quizSubmitted
+    ? `<button class="quizbtn" onclick="resetQuiz()">Try Again</button>`
+    : `<button class="quizbtn" onclick="submitQuiz()">Submit Answers</button>`;
+  document.getElementById('quizView').innerHTML=h;
+}
+
+/* ---- Tabs ---- */
+function setMode(m){
+  for(const v of ['browse','flash','quiz'])
+    document.getElementById(v+'View').style.display = m===v?'block':'none';
+  document.getElementById('tabBrowse').classList.toggle('active',m==='browse');
+  document.getElementById('tabFlash').classList.toggle('active',m==='flash');
+  document.getElementById('tabQuiz').classList.toggle('active',m==='quiz');
+  if('speechSynthesis' in window)window.speechSynthesis.cancel();
+  if(m==='flash')renderCard();
+  if(m==='quiz')renderQuiz();
+}
+
+renderBrowse();
+</script>
+</body>
+</html>
